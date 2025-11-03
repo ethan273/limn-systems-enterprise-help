@@ -1,0 +1,280 @@
+# Administrator Guide
+
+Complete guide for Limn Systems administrators.
+
+## Overview
+
+As an administrator, you have access to all system features and are responsible for:
+- User management and access control
+- System configuration
+- Security monitoring
+- Data management
+
+## Dashboard
+
+### Accessing Admin Dashboard
+1. Log in with Google SSO
+2. Navigate to Dashboard → Admin Dashboard
+3. View key metrics:
+   - Active users
+   - System health
+   - Recent activity
+   - Security events
+
+## User Management
+
+### Adding New Users
+
+**For Employees (Google SSO):**
+1. Navigate to Admin → Users
+2. Click "Add User"
+3. Enter email (@limn.us.com)
+4. Assign role (Super Admin, Admin, Manager, User)
+5. Assign permissions
+6. Click "Create User"
+
+**For External Users (Portal Access):**
+1. User submits access request through portal
+2. Navigate to Admin → Approvals
+3. Review request details
+4. Select portal type (customer, designer, factory, QC)
+5. Select allowed modules
+6. Click "Approve"
+7. User receives approval email
+
+### Managing User Roles
+
+#### Available Roles
+- **Super Admin** - Full system access
+- **Admin** - Administrative access (no system config)
+- **Manager** - Department management
+- **User** - Standard employee access
+- **Client** - Limited external access
+- **Guest** - Read-only access
+
+#### Assigning Roles
+1. Navigate to Admin → Users
+2. Find user
+3. Click "Edit"
+4. Select roles
+5. Save changes
+
+### Portal Access Management
+
+Located at `/admin/portal-access`:
+
+#### View All Portal Users
+- Filter by portal type
+- Search by email
+- Sort by date created
+
+#### Update Portal Access
+1. Find user in list
+2. Click "Edit"
+3. Modify:
+   - Portal type
+   - Allowed modules
+   - Active status
+4. Save changes
+
+#### Revoke Access
+1. Find user
+2. Click "Revoke Access"
+3. Confirm - user can no longer access portal
+4. Can be reactivated later
+
+## Role-Based Access Control (RBAC)
+
+### Permission Management
+
+#### Viewing Permissions
+1. Navigate to Admin → Roles
+2. Click on a role
+3. View assigned permissions
+
+#### Assigning Permissions
+1. Navigate to Admin → Roles
+2. Click role → "Edit Permissions"
+3. Select permissions:
+   - read_content
+   - edit_content
+   - delete_content
+   - manage_users
+   - manage_system
+   - etc.
+4. Save changes
+
+#### Permission Templates
+
+For common permission sets:
+1. Navigate to Admin → Permission Templates
+2. Use templates:
+   - Onboarding Template - New employee permissions
+   - Department Template - Department-specific permissions
+   - Project Template - Project-based permissions
+3. Apply template to user/role
+
+### Delegation
+
+Allow users to temporarily delegate permissions:
+1. Navigate to Admin → Permissions → Delegation
+2. View active delegations
+3. Revoke if needed
+
+## API Management
+
+### API Credentials
+
+Located at `/admin/api-management`:
+
+#### Creating API Keys
+1. Navigate to Admin → API Management
+2. Click "Create API Key"
+3. Enter:
+   - Name (e.g., "QuickBooks Integration")
+   - Description
+   - Expiration date
+4. Click "Generate"
+5. Copy API key (shown only once)
+6. Store securely
+
+#### Automatic Key Rotation
+
+Enabled by default for security:
+1. Keys auto-rotate every 90 days
+2. Email notification 7 days before
+3. Update systems with new key
+4. Old key valid for 7 day overlap
+
+#### API Health Monitoring
+1. Navigate to Admin → API Health
+2. View:
+   - Endpoint status
+   - Response times
+   - Error rates
+   - Usage limits
+3. Set up alerts for failures
+
+## Security
+
+### Security Events
+
+Monitor at `/admin/security-events`:
+
+#### Event Types
+- Failed login attempts
+- Unusual access patterns
+- Permission changes
+- API key usage
+- Data exports
+
+#### Taking Action
+1. Review event details
+2. If suspicious:
+   - Revoke user access
+   - Reset API keys
+   - Review audit logs
+3. Document incident
+
+### Activity Monitoring
+
+Located at `/admin/activity`:
+
+#### Audit Logs
+- User actions
+- Data changes
+- Permission modifications
+- Login history
+
+#### Compliance Reports
+- Export audit logs
+- GDPR compliance reports
+- Access logs for SOC 2
+
+## Data Management
+
+### Data Export
+
+Located at `/admin/export`:
+
+#### Export Types
+- Users
+- Orders
+- Products
+- Financial data
+- Audit logs
+
+#### Export Process
+1. Select data type
+2. Choose date range
+3. Select format (CSV, JSON, Excel)
+4. Click "Export"
+5. Download when ready
+
+### Database Maintenance
+
+Contact support for:
+- Database backups
+- Performance tuning
+- Index optimization
+- Schema changes
+
+## System Settings
+
+### Integration Status
+
+Monitor at `/admin/integration-status`:
+
+#### Active Integrations
+- QuickBooks - Accounting sync
+- Resend - Email service
+- Supabase - Database & auth
+- SEKO - Shipping
+- Sentry - Error tracking
+
+#### Health Checks
+- View connection status
+- Test integration
+- View recent errors
+- Configure webhooks
+
+### Notifications
+
+Configure system-wide notifications:
+1. Navigate to Admin → Settings → Notifications
+2. Configure:
+   - Email templates
+   - Notification preferences
+   - Alert thresholds
+3. Save settings
+
+## Troubleshooting
+
+### Common Admin Tasks
+
+#### User Can't Login
+1. Check user account status (active?)
+2. Verify email address
+3. Check role assignments
+4. Review security events for blocks
+
+#### Portal Access Issues
+1. Navigate to Admin → Portal Access
+2. Find user
+3. Verify:
+   - Correct portal type
+   - Modules granted
+   - Account is active
+
+#### API Integration Failing
+1. Navigate to Admin → API Health
+2. Check endpoint status
+3. Verify API key hasn't expired
+4. Review error logs
+
+### Getting Help
+
+For admin-specific issues:
+- Internal: #admins Slack channel
+- Support: admin-support@limn.us.com
+- Emergency: Contact DevOps team

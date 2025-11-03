@@ -1,116 +1,337 @@
 # Authentication
 
-Learn how to access the Limn Systems Enterprise platform and manage your account.
+Limn Systems Enterprise uses different authentication methods based on user type.
 
-## Logging In
+## Employee Login (Google SSO)
 
-### Employee Login (Google SSO)
+Internal employees use Google Workspace Single Sign-On.
 
-Internal employees use Google Workspace Single Sign-On:
+### How to Login
+1. Navigate to the Limn Systems login page
+2. Click "Sign in with Google"
+3. Select your @limn.us.com Google account
+4. You'll be automatically logged in
 
-1. Navigate to the Limn Systems Enterprise login page
-2. Click "Continue with Google"
-3. Select your Limn Systems Google Workspace account
-4. You'll be automatically logged in and redirected to your dashboard
+### Supported Roles
+- **Super Admin** - Full system access
+- **Admin** - Administrative access (no system config)
+- **Manager** - Department management
+- **User** - Standard employee access
 
-**Note:** Only authorized Google Workspace accounts can access the system.
-
-### External Portal Login (Magic Links)
-
-Customers, designers, factory partners, and QC teams use magic link authentication:
-
-1. You'll receive an email invitation when your account is approved
-2. Click the "Access Portal" link in the email
-3. This one-time link will log you in automatically
-4. Your session will remain active based on your portal type
-
-**Portal Types:**
-- **Customer Portal** - Order tracking and project visibility
-- **Designer Portal** - Project collaboration and deliverable submission
-- **Factory Portal** - Production management and quality reporting
-- **QC Portal** - Quality inspection and reporting
-
-## Session Management
+### First Time Login
+When you log in for the first time with Google SSO:
+1. Your account is automatically created
+2. Default role is assigned (usually "User")
+3. Administrator grants additional permissions
+4. You receive email notification of access
 
 ### Session Duration
+- Sessions last **7 days** by default
+- Can be extended up to **30 days**
+- Constrained by security policies (IP, device, location)
 
-Your login session duration depends on your user type:
+## External User Login (Magic Link)
 
-- **Employees (SSO)** - 30 days (configurable by admin)
-- **External Portals** - Varies by portal type and admin settings
+Customers, designers, factory partners, and QC teams use magic link authentication.
 
-### Staying Logged In
+### How It Works
+1. Navigate to your portal URL:
+   - **Customer Portal**: app.limn.us.com/auth/customer
+   - **Designer Portal**: app.limn.us.com/auth/designer
+   - **Factory Portal**: app.limn.us.com/auth/factory
+   - **QC Portal**: app.limn.us.com/auth/qc
 
-- Your session is automatically maintained while you're active
-- If you close the browser, you may need to log in again depending on settings
-- Sessions expire after a period of inactivity for security
+2. Enter your email address
+3. Click "Send Magic Link"
+4. Check your email
+5. Click the magic link (valid for **1 hour**)
+6. You'll be automatically logged in
+
+### Magic Link Email
+The email contains:
+- **Subject**: "Your Limn Systems Login Link"
+- **From**: noreply@limn.us.com
+- **Link**: One-time use, expires in 1 hour
+- **Security Note**: Link is tied to your IP address and device
+
+### First Time Users
+
+If you've been invited to access a portal:
+1. You'll receive an **approval email** from an administrator
+2. Email subject: "Your Limn Systems Portal Access Approved"
+3. Click **"Access Portal"** button in the email
+4. This creates your account and logs you in
+5. Future logins use the magic link process above
+
+### Email Not Received?
+If you don't receive the magic link:
+1. **Check spam folder** - emails may be filtered
+2. **Wait 2-3 minutes** - delivery can be delayed
+3. **Verify email address** - ensure it's correct
+4. **Request new link** - links expire after 1 hour
+5. **Contact support** - support@limn.us.com if issue persists
+
+## Portal Access
+
+### Access Request Process
+1. **Submit Request**: Go to portal login page, enter email, click "Request Access"
+2. **Admin Review**: Administrator receives notification and reviews your request
+3. **Approval Configuration**: Admin selects:
+   - Portal type (customer, designer, factory, QC)
+   - Allowed modules within that portal
+   - Any special permissions
+4. **Approval Email**: You receive email with "Access Portal" button
+5. **Establish Session**: Click button to create account and log in
+
+### Portal Types & Modules
+
+#### Customer Portal
+- **Orders** - View and track your orders
+- **Documents** - Access project documents
+- **Financials** - View invoices and payments
+- **Shipping** - Track shipments
+- **Profile** - Manage your profile
+
+#### Designer Portal
+- **Projects** - View assigned design projects
+- **Submissions** - Submit deliverables
+- **Documents** - Access design files
+- **Quality** - View quality reports
+- **Settings** - Manage preferences
+
+#### Factory Portal
+- **Orders** - View production orders
+- **Quality** - View and submit QC data
+- **Shipping** - Manage shipments
+- **Documents** - Access production docs
+- **Settings** - Configure notifications
+
+#### QC Portal
+- **Dashboard** - QC metrics overview
+- **Inspections** - Create and manage inspections
+- **History** - View past inspections
+- **Upload** - Bulk photo upload
+- **Status Updates** - Update inspection status
+
+### Module Permissions
+Administrators can grant access to specific modules within each portal. For example:
+- Customer may have Orders + Documents, but not Financials
+- Designer may have Projects + Documents, but not Quality
+- Factory may have Orders + Shipping, but not Quality
+
+### Checking Your Access
+To see which portals and modules you have access to:
+1. Log in to any portal
+2. View the navigation menu
+3. Only modules you have access to will appear
 
 ## Security Features
 
-### Two-Factor Authentication (2FA)
+### Session Management
 
-For enhanced security, administrators can enable 2FA:
+#### Session Duration
+- **Default**: 7 days of inactivity
+- **Maximum**: 30 days
+- **Configurable**: Admin can set custom durations
 
-- Managed through your Google Workspace account (for employees)
-- Portal users follow email-based verification
+#### Session Constraints
+Sessions can be constrained by:
+- **IP Address** - Only specific IPs allowed
+- **Time Windows** - Only certain hours/days
+- **Device Type** - Desktop only, mobile only, etc.
+- **Geographic Location** - Country/region restrictions
 
-### Password Management
+#### Multiple Sessions
+- Can log in from multiple devices
+- Each device has separate session
+- Logout from one device doesn't affect others
+- Admin can force logout from all devices
 
-- **Employees** - Passwords are managed through Google Workspace
-- **Portal Users** - Magic link system eliminates the need for passwords
+### Multi-Factor Authentication (MFA)
+
+Available for high-security roles:
+- **Enrollment**: Admin enables MFA for your account
+- **Setup**: Download authenticator app (Google Authenticator, Authy)
+- **Scan QR Code**: Link your account
+- **Enter Code**: Provide 6-digit code on login
+- **Recovery Codes**: Save 10 backup codes for emergencies
+
+### Password Reset
+Not applicable - Limn Systems uses **passwordless authentication**:
+- Google SSO for employees (managed by Google)
+- Magic links for external users (no password needed)
+
+### Security Best Practices
+
+#### For Employees
+- Keep Google Workspace password secure
+- Enable 2FA on Google account
+- Log out from shared computers
+- Don't share your credentials
+- Report suspicious activity immediately
+
+#### For External Users
+- Don't share magic links
+- Magic links expire after 1 hour
+- Request new link for each login
+- Log out when done using portal
+- Use secure, private network
 
 ## Troubleshooting
 
-### Can't Log In with Google
+### "Magic link expired"
+**Cause**: Links are valid for 1 hour only.
 
-If you're having trouble with Google SSO:
+**Solution**: Request a new magic link from the login page.
 
-1. Ensure you're using your Limn Systems Google Workspace account
-2. Clear your browser cache and cookies
-3. Try using an incognito/private browsing window
-4. Contact your IT administrator if issues persist
+### "Access denied"
+**Causes**:
+- Portal access not approved yet
+- Access was revoked
+- Wrong portal URL for your account type
 
-### Magic Link Not Working
+**Solution**: Contact support@limn.us.com or your administrator.
 
-If your portal access link isn't working:
+### "Session expired"
+**Cause**: Session exceeded 7 days of inactivity, or security policy constraints.
 
-1. Check that you're using the most recent email invitation
-2. Verify the link hasn't expired (links are time-limited)
-3. Request a new magic link from your administrator
-4. Ensure you're clicking the link from the same device/browser
+**Solution**: Log in again. Your data is preserved.
 
-### Session Expired
+### "Invalid email address"
+**Cause**: Email not registered in system.
 
-If your session expires:
+**Solution**: Request portal access from login page, or contact administrator.
 
-1. **Employees** - Simply log in again with Google SSO
-2. **Portal Users** - Request a new magic link from your administrator
+### Can't receive magic link email
+**Troubleshooting Steps**:
+1. Check spam/junk folder
+2. Verify email address spelling
+3. Wait 2-3 minutes for delivery
+4. Ensure inbox isn't full
+5. Contact support if issue persists
 
-## Account Management
+### Google SSO not working
+**Troubleshooting Steps**:
+1. Verify you're using @limn.us.com email
+2. Clear browser cache and cookies
+3. Try incognito/private browsing mode
+4. Check if Google Workspace is accessible
+5. Contact IT support
 
-### Updating Your Profile
+### Session keeps logging out
+**Causes**:
+- IP address changing (VPN, mobile network)
+- Browser blocking cookies
+- Security policy constraints
+- Device not trusted
 
-Once logged in, you can update your profile information:
+**Solution**:
+- Use stable network connection
+- Enable cookies in browser
+- Contact admin to adjust security policies
 
-1. Click your profile icon in the top-right corner
-2. Select "Profile" or "Settings"
-3. Update your information as needed
-4. Save your changes
+### Multiple failed login attempts
+**Security Response**:
+- Account may be temporarily locked (15 minutes)
+- Administrator receives alert
+- Must wait for lockout period to expire
+- Contact admin for immediate unlock
 
-### Changing Your Email
+## Session Management
 
-To change your email address:
+### Viewing Active Sessions
+1. Log in to portal
+2. Navigate to Profile → Security
+3. View list of active sessions:
+   - Device type
+   - IP address
+   - Location
+   - Last active time
 
-- **Employees** - Contact your IT administrator to update your Google Workspace account
-- **Portal Users** - Contact your system administrator for email updates
+### Ending Sessions
+- **End Single Session**: Click "Log Out" on that device
+- **End All Sessions**: Profile → Security → "Log Out All Devices"
+- **Admin Force Logout**: Contact administrator to force logout
 
-## Security Best Practices
+## Account Security
 
-- Never share your login credentials or magic links
-- Log out when using shared computers
-- Report suspicious activity immediately
-- Keep your contact information up to date
+### Updating Email Address
+**Employees**: Contact IT support to update Google Workspace email.
 
-## Need Help?
+**External Users**:
+1. Contact administrator
+2. Admin updates email in system
+3. You receive confirmation at new email
+4. Use new email for future logins
 
-If you continue to experience login issues, contact your system administrator or Limn Systems support.
+### Suspicious Activity
+If you notice unauthorized access:
+1. **Immediately** change Google password (employees)
+2. Log out all active sessions
+3. Contact administrator: admin@limn.us.com
+4. Document suspicious activity
+5. Review recent actions in audit log
+
+### Data Privacy
+- Login attempts logged for security
+- Session data stored securely
+- IP addresses recorded for fraud prevention
+- Compliant with GDPR and CCPA
+- Data retention: 90 days
+
+## API Access (Advanced)
+
+For systems integrating with Limn Systems via API:
+
+### API Key Authentication
+1. Request API key from administrator
+2. Admin creates key at Admin → API Management
+3. Receive API key (shown only once - save it!)
+4. Use key in Authorization header:
+   ```
+   Authorization: Bearer your-api-key-here
+   ```
+
+### API Key Rotation
+- Keys automatically rotate every **90 days**
+- Email notification **7 days** before rotation
+- Old key valid for **7 day overlap**
+- Update systems with new key during overlap
+
+### API Key Security
+- Store keys in environment variables
+- Never commit keys to version control
+- Use separate keys for dev/prod
+- Rotate keys if compromised
+- Monitor API key usage
+
+## Support
+
+### Getting Help with Authentication
+
+**Employees**:
+- IT Support Slack: #it-support
+- Email: it@limn.us.com
+- Emergency: Call IT hotline
+
+**External Users**:
+- Email: support@limn.us.com
+- Response time: Within 24 hours (weekdays)
+- Urgent issues: Contact your Limn account manager
+
+### Common Questions
+
+**Q: Can I use the same email for multiple portals?**
+A: No, each email is tied to one portal type. Use different emails for different portal access.
+
+**Q: How long does approval take?**
+A: Usually within 1 business day. Urgent requests can be expedited.
+
+**Q: Can I change my portal type?**
+A: Yes, contact administrator to request portal type change.
+
+**Q: Do magic links work on mobile?**
+A: Yes, magic links work on all devices. Open email on device you want to use.
+
+**Q: Can I share my portal access?**
+A: No, portal access is personal and non-transferable. Sharing violates terms of service.
