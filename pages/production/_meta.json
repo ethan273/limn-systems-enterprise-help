@@ -1,0 +1,14 @@
+{
+  "index": "Overview",
+  "orders": "Production Orders",
+  "tracking": "Production Tracking",
+  "shop-drawings": "Shop Drawings",
+  "factory-reviews": "Factory Reviews",
+  "quality-control": "Quality Control",
+  "qc-templates": "QC Templates",
+  "qc-mobile": "QC Mobile App",
+  "batches": "Production Batches",
+  "stages": "Production Stages",
+  "packing": "Packing",
+  "reset": "Production Reset"
+}

@@ -1,0 +1,32 @@
+{
+  "index": {
+    "title": "Home",
+    "type": "page"
+  },
+  "getting-started": {
+    "title": "Getting Started",
+    "type": "page"
+  },
+  "dashboards": "Dashboards",
+  "tasks": "Tasks",
+  "crm": "CRM & Sales",
+  "partners": "Partners",
+  "design": "Design",
+  "products": "Products",
+  "orders": "Orders",
+  "production": "Production",
+  "shipping": "Shipping",
+  "finance": "Finance",
+  "documents": "Documents",
+  "marketing": "Marketing",
+  "automation": "Automation",
+  "portals": "Portals",
+  "rbac": "Roles & Permissions",
+  "admin": "Administration",
+  "global-features": "Global Features",
+  "architecture": "Architecture",
+  "integrations": "Integrations",
+  "troubleshooting": "Troubleshooting",
+  "user-guides": "User Guides",
+  "faq": "FAQ"
+}

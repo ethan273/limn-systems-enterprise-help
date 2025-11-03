@@ -1,0 +1,222 @@
+# User Roles
+
+Limn Systems Enterprise uses a comprehensive role-based access control (RBAC) system to manage permissions across the platform.
+
+## Role Types
+
+### Internal Roles (Employees)
+
+Internal employees are assigned one or more roles based on their responsibilities:
+
+#### Super Admin
+- **Full system access** - Complete administrative control
+- Manage users, roles, and permissions
+- Access all modules and features
+- Configure system settings
+- View audit logs and analytics
+
+#### Admin
+- Manage day-to-day operations
+- Create and manage users
+- Assign roles and permissions
+- Access most administrative features
+- Limited system configuration
+
+#### Designer
+- Manage design projects
+- Upload and approve design deliverables
+- Collaborate on shop drawings
+- Access design-related modules
+- View assigned projects only
+
+#### Manufacturer
+- Manage production orders
+- Update production status
+- Access manufacturing modules
+- View production-related data
+- Update work order progress
+
+#### Finance
+- Manage invoices and payments
+- Access financial reports
+- Process billing and payments
+- View financial dashboards
+- Export financial data
+
+#### Sales
+- Manage customer relationships
+- Create quotes and orders
+- Track sales pipeline
+- Access CRM features
+- View sales analytics
+
+#### Quality Control (QC)
+- Perform quality inspections
+- Create inspection reports
+- Upload inspection photos
+- Manage QC workflows
+- View quality metrics
+
+#### Warehouse
+- Manage inventory
+- Process shipments
+- Update shipping status
+- Track materials
+- Scan barcodes
+
+### External Roles (Portal Users)
+
+External users access the system through dedicated portals:
+
+#### Customer
+- **Access**: Customer Portal
+- View orders and projects
+- Download documents and invoices
+- Track order status
+- Manage profile settings
+- View shipping information
+
+#### Designer (External)
+- **Access**: Designer Portal
+- Collaborate on design projects
+- Submit design deliverables
+- View shop drawings
+- Access project documents
+- Receive notifications
+
+#### Factory Partner
+- **Access**: Factory Portal
+- View assigned production orders
+- Update production status
+- Upload quality reports
+- Manage shipping information
+- Access production documents
+
+#### QC Inspector (External)
+- **Access**: QC Portal
+- Perform inspections
+- Upload inspection photos
+- Link inspections to orders
+- View inspection history
+- Update quality status
+
+## Permission System
+
+### Module Access
+
+Roles determine access to specific modules:
+
+| Module | Super Admin | Admin | Designer | Manufacturer | Finance | Sales | Customer | Factory |
+|--------|-------------|-------|----------|--------------|---------|-------|----------|---------|
+| Dashboard | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Tasks | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
+| CRM | ✅ | ✅ | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ |
+| Orders | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Production | ✅ | ✅ | ❌ | ✅ | ❌ | ❌ | ❌ | ✅ |
+| Finance | ✅ | ✅ | ❌ | ❌ | ✅ | ✅ | ✅ | ❌ |
+| Documents | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+| Settings | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |
+
+### Action Permissions
+
+Within each module, permissions control specific actions:
+
+- **View** - Read-only access to data
+- **Create** - Ability to create new records
+- **Edit** - Modify existing records
+- **Delete** - Remove records (usually restricted)
+- **Approve** - Approve workflows and submissions
+- **Export** - Download data and reports
+
+## Portal-Specific Permissions
+
+### Customer Portal Modules
+
+Customers can access specific modules within their portal:
+
+- **Orders** - View and track orders
+- **Documents** - Download order-related documents
+- **Financials** - View invoices and payment history
+- **Shipping** - Track shipments
+- **Profile** - Manage account settings
+
+### Designer Portal Modules
+
+External designers access:
+
+- **Projects** - View assigned projects
+- **Submissions** - Upload design deliverables
+- **Documents** - Access project documents
+- **Quality** - View quality reports
+- **Settings** - Manage profile
+
+### Factory Portal Modules
+
+Factory partners can access:
+
+- **Orders** - View production orders
+- **Quality** - Upload quality reports
+- **Shipping** - Manage shipment information
+- **Documents** - Access production documents
+- **Settings** - Update profile
+
+### QC Portal Modules
+
+QC inspectors access:
+
+- **Inspections** - Create and manage inspections
+- **History** - View past inspections
+- **Upload** - Submit inspection photos
+- **Documents** - Access quality documents
+- **Settings** - Manage profile
+
+## Multi-Tenancy
+
+The RBAC system supports multi-tenancy for organizations with multiple business units:
+
+- Users can have different roles in different tenants
+- Permissions are isolated between tenants
+- Cross-tenant access requires explicit permissions
+- Administrators can manage tenant-specific roles
+
+## Role Assignment
+
+### For Employees
+
+1. Administrators assign roles during user creation
+2. Users can have multiple roles simultaneously
+3. Effective permissions are the union of all assigned roles
+4. Role changes take effect immediately
+
+### For Portal Users
+
+1. Administrators approve portal access requests
+2. Portal type determines base permissions
+3. Administrators can customize allowed modules
+4. Changes take effect on next login
+
+## Viewing Your Permissions
+
+To see your current roles and permissions:
+
+1. Click your profile icon in the top-right
+2. Select "Profile" or "Account Settings"
+3. View your assigned roles in the "Roles & Permissions" section
+4. Contact your administrator to request additional permissions
+
+## Need Different Access?
+
+If you need access to additional features or modules:
+
+1. Contact your system administrator
+2. Explain which features you need and why
+3. Your administrator will review and update your permissions
+4. You may need manager approval for certain elevated permissions
+
+## Security Notes
+
+- Roles and permissions are audited for compliance
+- Permission changes are logged
+- Administrators regularly review access levels
+- Unused accounts are automatically deactivated
+- Follow the principle of least privilege

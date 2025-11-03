@@ -1,0 +1,10 @@
+{
+  "index": {
+    "title": "Introduction",
+    "type": "page"
+  },
+  "authentication": "Authentication",
+  "user-roles": "User Roles",
+  "navigation": "Navigation",
+  "first-steps": "First Steps"
+}

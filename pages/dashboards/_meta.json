@@ -1,0 +1,13 @@
+{
+  "index": "Overview",
+  "main": "Main Dashboard",
+  "analytics": "Analytics",
+  "executive": "Executive",
+  "financial": "Financial",
+  "projects": "Projects",
+  "manufacturing": "Manufacturing",
+  "design-dashboard": "Design",
+  "shipping-dashboard": "Shipping",
+  "quality": "Quality",
+  "partners-dashboard": "Partners"
+}

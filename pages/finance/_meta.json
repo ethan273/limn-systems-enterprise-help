@@ -1,0 +1,13 @@
+{
+  "index": "Overview",
+  "invoices": "Invoices",
+  "production-invoices": "Production Invoices",
+  "payments": "Payments",
+  "payment-allocation": "Payment Allocation",
+  "expenses": "Expenses",
+  "ar-aging": "AR Aging",
+  "reports": "Financial Reports",
+  "quickbooks": "QuickBooks",
+  "quickbooks-sync": "QuickBooks Sync",
+  "pandadoc": "PandaDoc"
+}

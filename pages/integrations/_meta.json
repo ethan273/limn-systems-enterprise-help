@@ -1,0 +1,12 @@
+{
+  "index": "Overview",
+  "supabase": "Supabase",
+  "resend": "Resend",
+  "upstash-redis": "Upstash Redis",
+  "google-workspace": "Google Workspace",
+  "quickbooks-int": "QuickBooks",
+  "pandadoc-int": "PandaDoc",
+  "seko": "SEKO Logistics",
+  "sentry": "Sentry",
+  "vercel": "Vercel"
+}
