@@ -1,35 +1,416 @@
 # Production Management
 
-Track manufacturing from production orders through quality control and packing.
-
 ## Overview
 
-The production management system provides comprehensive tools for managing manufacturing operations, including production orders, shop drawings, quality control, and packing. Integrates with factory partners and QC teams.
+The Production Management module is the central hub for managing all manufacturing and production operations in the Limn Systems platform. This comprehensive system handles the entire production lifecycle, from initial production order creation through factory coordination, quality control inspections, and final shipping preparation. It provides real-time visibility into production status, facilitates collaboration between internal teams and external factory partners, and ensures quality standards are met at every stage.
 
-## Key Modules
+The module integrates seamlessly with CRM orders, project management, inventory control, and shipping operations to create a unified workflow. Whether you're producing standard catalog items, custom prototypes, or concept pieces, the Production Management system provides the tools and automation needed to track progress, manage factory relationships, control quality, and deliver exceptional products on time.
 
-- **Production Orders** - Manufacturing work orders
-- **Production Tracking** - Real-time production status
-- **Shop Drawings** - Technical drawings and specifications
-- **Factory Reviews** - Factory approval workflows
-- **Quality Control** - QC inspections and testing
-- **QC Templates** - Reusable inspection templates
-- **QC Mobile App** - Mobile inspection tool
-- **Production Batches** - Batch tracking and management
-- **Production Stages** - Stage-based workflow
-- **Packing** - Packing list and preparation
-- **Production Reset** - Reset and restart production
+Key benefits include:
 
-## Key Features
+- **Automated Production Order Generation**: Create production orders automatically from CRM orders with unique order numbering (PO-YYYY-XXXX format)
+- **Multi-Stage Production Tracking**: Monitor production progress through customizable stages from design to shipping
+- **Factory Collaboration**: Dedicated factory portal for external manufacturing partners to access drawings, submit updates, and track assigned work
+- **Shop Drawing Management**: Complete version control and approval workflow for technical drawings and specifications
+- **Quality Control System**: Comprehensive QC inspections with mobile app support, photo documentation, and templated checklists
+- **Production Invoicing**: Automated deposit and balance invoice generation with payment tracking
+- **Batch Production**: Group similar items for efficient manufacturing and tracking
+- **Real-Time Notifications**: Keep customers informed with automated production milestone notifications
+- **Production Analytics**: Dashboard metrics showing factory workload, stage distribution, and production performance
+- **Audit Trail**: Complete production event logging for compliance and troubleshooting
 
-- Production order management
-- Shop drawing approval
-- QC inspection workflows
-- Mobile QC app
-- Batch tracking
-- Stage-based production
-- Factory portal integration
+---
 
-## Getting Started
+## Production Dashboard
 
-Learn how to manage production from order creation through final packing and shipping handoff.
+The Production Dashboard provides a comprehensive overview of all active manufacturing operations. Access the dashboard by navigating to `/production` from the main navigation menu. The dashboard displays real-time metrics and visualizations to help you monitor production health, identify bottlenecks, and allocate resources effectively.
+
+### Dashboard Features
+
+**Production Statistics Overview**: The top section displays key metrics including total active production orders, orders by current production stage, orders grouped by assigned factory, overdue production orders requiring attention, and items pending QC inspection.
+
+**Stage Distribution Chart**: A visual breakdown showing how many production orders are currently in each production stage (Design, Fabrication, Assembly, Finishing, QC, Packing, Shipping). This helps identify where production orders tend to accumulate and where additional resources may be needed.
+
+**Factory Workload Analysis**: See the distribution of active production orders across all assigned factories. This visualization helps balance workload across manufacturing partners and identify capacity constraints before assigning new production orders.
+
+**Recent Production Orders**: A table listing the most recently created or updated production orders with key details including order number, product name, quantity, assigned factory, current stage, estimated ship date, and overall progress percentage. Click any order to view full details.
+
+**Quick Filters**: Use dashboard filters to focus on specific subsets of production orders: filter by production stage, assigned factory, product type (catalog, prototype, concept), date range, or status (on-time, at-risk, overdue).
+
+**Real-Time Updates**: The dashboard refreshes automatically using React Query's polling mechanism to ensure you always see current production status without manual page refreshes.
+
+---
+
+## Production Orders
+
+### Creating Production Orders
+
+Production orders can be created through three primary methods: manual creation, from CRM orders, or bulk creation from projects. Manual creation involves navigating to Production > New Production Order and filling in required fields. From CRM orders, you can create production orders directly when marking items "Ready for Production." For large projects, use project-based bulk creation to generate multiple production orders simultaneously.
+
+### Order Number Generation
+
+Production order numbers follow the format **PO-YYYY-XXXX** (e.g., PO-2025-0001). The system uses PostgreSQL advisory locks to prevent race conditions when multiple users create orders simultaneously, ensuring unique sequential numbering.
+
+### Product Types
+
+**Catalog Items (90%)**: Standard products with established designs and manufacturing processes. **Prototypes**: Sample production for design validation, typically 1-5 units. **Concepts**: Early-stage design exploration items for client presentations.
+
+### Order Details
+
+Each production order captures product information (name, description, quantity, unit price), factory assignment, timeline (estimated ship date, completion dates), linkages (CRM order, project, catalog/prototype/concept IDs), and financial tracking (total cost, deposit/balance payment status).
+
+---
+
+## Production Lifecycle
+
+### Production Stages
+
+Typical production progresses through: **Design** (finalization and shop drawings), **Material Sourcing** (procurement), **Fabrication** (component manufacturing), **Assembly** (component assembly), **Finishing** (paints, stains, upholstery), **Quality Control** (QC inspection), **Packing** (shipment preparation), **Shipping** (carrier handoff).
+
+### Stage Tracking
+
+Progress percentage is calculated based on completed stages, time estimates, and milestone completion. Stage history tracks duration in each stage to identify bottlenecks and improve future estimates.
+
+### Production Milestones
+
+Milestones mark critical checkpoints: shop drawings uploaded/approved, materials received, first component completed, 50% fabrication complete, assembly complete, finish applied, QC passed, packed and ready. Milestones trigger notifications and provide granular progress visibility.
+
+---
+
+## Shop Drawings
+
+### Drawing Management
+
+Upload technical drawings (PDF, DWG, DXF, PNG, JPG) through the production order detail page. Drawings are stored with version control, organized by production order, and visible with thumbnail previews.
+
+### Drawing Types
+
+**Concept**: Early-stage sketches. **Technical**: Detailed engineering drawings. **Shop Drawings**: Factory-specific manufacturing drawings. **As-Built**: Final documentation of manufactured product.
+
+### Approval Workflow
+
+Two-phase approval: **Internal Approval** (design team reviews → designer revises → design lead approves), then **Factory Approval** (factory reviews manufacturability → discusses issues → factory approves). Production proceeds only after both approvals.
+
+### Collaborative Comments
+
+Threaded discussions on drawings with @mentions for team member notification. Comment types include general, questions, issues, and approval comments. Factories can participate through the factory portal.
+
+### Drawing Versions
+
+Automatic version numbering (v1, v2, v3) preserves complete revision history. Compare versions side-by-side, rollback to earlier versions if needed, and track which version received approval.
+
+---
+
+## Quality Control (QC)
+
+### QC Inspections
+
+Systematic examinations using standardized checklists. Inspectors mark each criterion as Pass/Fail, photograph defects, document severity (minor, major, critical), and submit overall pass/fail assessment.
+
+### QC Templates
+
+Reusable inspection checklists standardized by product category. Templates define inspection items, pass/fail criteria, photo requirements, and severity ratings to ensure consistent quality checks.
+
+### Mobile QC App
+
+Progressive Web App (PWA) for mobile inspections with offline capability, camera integration for photos, barcode/QR scanning for product identification, and automatic sync when online.
+
+### Manufacturer QC Records
+
+Factories submit QC documentation through the factory portal including inspection sheets, test results, photos, and material certifications. Internal teams review manufacturer QC before final inspection.
+
+### QC Workflow
+
+Assign inspector → perform inspection using template → document defects → upload photos → mark pass/fail → approve for packing or return for rework.
+
+---
+
+## Production Batches
+
+### Batch Creation
+
+Group multiple production orders for identical or similar items. Create batches when producing multiple units of the same item, variations of base designs, or items sharing processes and materials.
+
+### Batch Tracking
+
+Track batch-level progress (average across all orders), view individual order progress within batch, and advance all orders in batch simultaneously through stages.
+
+### Batch Reporting
+
+Generate performance reports showing actual vs estimated time, cost per unit, defect rates, stage duration analysis, and comparative analysis across multiple batches.
+
+---
+
+## Factory Integration
+
+### Factory Assignment
+
+Select factories based on specialization, current workload, capacity, lead times, cost structure, and quality ratings. Balance workload across factories to optimize throughput.
+
+### Factory Portal
+
+Dedicated external interface where factories view assigned production orders, access approved shop drawings, upload progress photos and QC records, update production status, and communicate with internal teams.
+
+### Factory Reviews
+
+Factories review shop drawings for manufacturability, provide feedback on designs, identify issues with equipment/materials/processes, and collaborate to resolve manufacturability concerns before approving drawings.
+
+---
+
+## Production Invoicing & Payments
+
+### Invoice Generation
+
+**Deposit Invoice (50%)**: Auto-generated when production order created. **Balance Invoice (50%)**: Generated when QC passes and production completes. **Final Invoice**: For cost adjustments or change orders.
+
+### Invoice Number Format
+
+Format: **INV-YYYY-XXXX** using PostgreSQL advisory locks for uniqueness, separate sequence from production order numbers.
+
+### Payment Tracking
+
+Track amount paid vs amount due, payment status (pending, partially paid, paid, overdue, cancelled), payment history with dates/amounts/methods, and multiple partial payments per invoice.
+
+### Payment Workflow
+
+Production order created → deposit invoice generated → deposit paid → production begins → production complete → balance invoice generated → balance paid → ready for shipping.
+
+---
+
+## Production Progress Tracking
+
+### Real-Time Progress
+
+Live updates with automatic dashboard refresh, continuous progress percentage recalculation, estimated completion date adjustments based on actual progress rate, and visual progress indicators (bars, timelines, Gantt charts, milestone checklists).
+
+### Production Events
+
+Complete chronological event timeline with automatic logging of stage transitions, approvals, QC results, payments, and manual event notes for important occurrences. Full audit trail for compliance and investigations.
+
+### Customer Notifications
+
+Automated notifications for production start, milestone completion, QC completion, shipping readiness, and delays. Configurable notification preferences with mandatory notifications for significant delays.
+
+---
+
+## Packing & Shipping Handoff
+
+### Packing List Generation
+
+Automatic packing list creation when reaching Packing stage, including item descriptions, quantities, packing materials required, special handling instructions, weight/dimensions, and item verification checklist.
+
+### Packing Workflow
+
+QC passed → generate packing list → verify items → pack with protection → mark as packed → handoff to shipping.
+
+### Shipping Preparation
+
+Shipping department views packed orders, generates shipping labels via carrier API, selects carrier and service level, assigns tracking numbers, and creates Bill of Lading for freight. Shipment updates sync to production and CRM orders.
+
+---
+
+## Integration
+
+### CRM Orders Integration
+
+Create production orders from CRM orders with auto-populated details, bidirectional status sync, order linkage for navigation, and customer portal visibility.
+
+### Projects Integration
+
+Link production orders to projects, view production progress on project pages, align production completion with project timelines, and generate project-level production reports.
+
+### Inventory Integration
+
+Allocate materials from inventory when production starts, track material consumption during production, update inventory on completion (decrement raw materials, increment finished goods), and alert on material shortages.
+
+### Shipping Integration
+
+Automatic handoff from packed production to shipping queue, shipment creation from production orders, tracking number sync to production and CRM orders, and delivery confirmation completion.
+
+---
+
+## Common Workflows
+
+### 1. Standard Catalog Production Workflow
+
+CRM order created → Production order created → Factory assigned → Shop drawings reviewed → Deposit invoice paid → Materials sourced → Fabrication → Assembly → Finishing → QC inspection → Balance invoice paid → Packing → Shipping (6-8 weeks total).
+
+### 2. Prototype Production Workflow
+
+Concept approved → Prototype production order → Design finalization → Shop drawings created → Factory review → Prototype fabrication → Design review during production → QC inspection → Customer/designer approval → Iterate or approve for full production (8-12 weeks).
+
+### 3. Shop Drawing Approval Workflow
+
+Designer uploads → Internal review and comments → Designer revisions → Internal approval → Factory review → Manufacturability discussion → Factory approval → Production proceeds (1-4 weeks depending on complexity).
+
+### 4. QC Inspection Workflow
+
+Production complete → QC inspector assigned → Mobile app inspection → Checklist execution → Defect documentation → Overall assessment → Inspector decision → Production manager review → Rework or approval → QC completion notification (30-60 minutes inspection; 3-7 days if rework needed).
+
+### 5. Batch Production Workflow
+
+Multiple identical items ordered → Create production batch → Create production orders in batch → Assign to factory → Batch fabrication → Batch assembly → Batch finishing → Batch QC → Batch packing → Batch shipment (significant per-unit efficiency gains).
+
+---
+
+## Best Practices
+
+1. Assign factories early for capacity planning
+2. Complete shop drawing approval before starting production
+3. Use QC templates for consistency
+4. Photo document all QC inspections
+5. Track progress daily
+6. Update stage status promptly
+7. Communicate delays proactively to customers
+8. Use batches for efficiency on repeated items
+9. Verify packing against packing list
+10. Keep factory portal updated
+11. Review manufacturer QC before final QC
+12. Ensure deposit paid before starting production
+13. Use milestones to track critical checkpoints
+14. Document all defects thoroughly in QC
+15. Version control shop drawings
+16. Request factory manufacturability feedback early
+17. Monitor factory workload to balance assignments
+18. Use production events for audit trail
+19. Coordinate shipping dates with production completion
+20. Communicate QC results to customers
+
+---
+
+## Troubleshooting
+
+**Production Order Number Generation Fails**: Retry immediately; check database connection; verify PostgreSQL advisory locks working.
+
+**Cannot Assign Factory**: Verify factory exists and is active; check user permissions; refresh factory list.
+
+**Shop Drawing Upload Fails**: Check file size under 50MB; verify supported format (PDF/DWG/DXF/PNG/JPG); try different browser; check storage quota.
+
+**Shop Drawing Approval Stuck**: Verify reviewers notified; contact reviewers directly; check for requested changes; ensure formally submitted for review.
+
+**QC Mobile App Not Loading**: Check internet connectivity; clear browser cache; reinstall PWA; refresh authentication; update device OS/browser.
+
+**Cannot Create Batch**: Ensure unique batch name; fill all required fields; check user permissions; remove special characters.
+
+**Invoice Not Generated**: Verify production order has total cost; check if invoice exists but filtered; manually generate; verify permissions.
+
+**Payment Not Tracking**: Verify payment recorded against correct invoice; check for partial payment; re-record if missing; manually refresh pages.
+
+**Production Stage Not Updating**: Check prerequisites met (e.g., drawings approved); verify permissions; refresh browser; check event log.
+
+**Customer Notification Not Sent**: Verify email address correct; check customer opted in; ask customer to check spam; review email logs; resend manually.
+
+**Packing List Missing Items**: Verify items linked to production order; regenerate packing list; check filters; manually add missing items.
+
+**Factory Portal Access Issues**: Verify factory user account active; reset password; check production order factory assignment; verify permissions.
+
+**Cannot Create Production from CRM Order**: Verify CRM item marked "Ready for Production"; check if production order already exists; ensure required CRM fields filled.
+
+**QC Template Not Available**: Verify template exists for product category; check template is active not archived; create custom inspection if needed.
+
+**Manufacturer QC Not Syncing**: Confirm factory submitted successfully; check filter settings; wait for sync delay (5-10 minutes); verify correct production order.
+
+---
+
+## Tips & Tricks
+
+- Use dashboard filters to focus on specific production subsets daily
+- Create comprehensive QC templates for each product category
+- Conduct inspections with mobile app on production floor for efficiency
+- Look for batching opportunities weekly to improve efficiency
+- Always version shop drawings to preserve design history
+- Monitor factory capacity before assigning new production
+- Set realistic estimated ship dates based on historical data
+- Configure milestones to track critical path items
+- Encourage factories to upload progress photos throughout production
+- Establish weekly update cadence with factories
+- Centralize drawing discussions in comment system not email
+- Track material consumption per production order for accuracy
+- Configure automatic customer notifications to reduce inquiries
+- Review manufacturer QC before final inspection to catch issues early
+- Use production event timeline for troubleshooting issues
+- Check overdue production orders filter every morning
+- Export batch reports for cost trend analysis over time
+- Review dashboard analytics monthly to identify bottlenecks
+- Coordinate installation schedules with production completion
+- Create factory performance scorecards for assignment decisions
+
+---
+
+## FAQ
+
+**What's the difference between catalog, prototype, and concept production?**
+Catalog items are standard products with established designs (90% of volume). Prototypes are samples for design validation (1-5 units). Concepts are early-stage design exploration items.
+
+**How are production order numbers generated?**
+Format PO-YYYY-XXXX using PostgreSQL advisory locks to prevent race conditions and ensure unique sequential numbers.
+
+**Can I modify a production order after it's started?**
+Yes, you can update most fields, but quantity/specification changes may require rework and cost adjustments. Major changes need formal change order process.
+
+**How do production orders link to CRM orders?**
+Production orders created from CRM orders store the source order ID and sync status changes bidirectionally.
+
+**What file formats are supported for shop drawings?**
+PDF (preferred), DWG, DXF, PNG, JPG formats are supported.
+
+**How does shop drawing approval work?**
+Two-phase: Internal approval (design team) then factory approval (manufacturability review).
+
+**Can factories see shop drawings?**
+Only after internal approval to protect IP during design development.
+
+**What is a QC template?**
+Reusable inspection checklist standardizing quality checks for product categories.
+
+**How do I use the mobile QC app?**
+Navigate to URL/qc/mobile, install PWA to home screen, conduct inspections offline with camera integration.
+
+**What happens if QC fails?**
+Production manager decides: rework (return to earlier stage), conditional acceptance (minor defects disclosed), or rejection (scrap/restart).
+
+**Can factories submit QC reports?**
+Yes, through factory portal. Internal teams review before performing final QC.
+
+**When are production invoices generated?**
+Deposit (50%) on order creation; balance (50%) when QC passes; final if cost adjustments occur.
+
+**What is a deposit invoice vs balance invoice?**
+Deposit (50%, due before production starts) ensures commitment. Balance (50%, due before shipping) completes payment.
+
+**How are production stages updated?**
+Manually by users as work progresses, or automatically on certain triggers (QC pass → Packing).
+
+**What are production milestones?**
+Critical checkpoints marking specific events within stages for granular progress visibility.
+
+**How is progress percentage calculated?**
+Based on completed stages, time elapsed vs estimated, and milestone completion with stage weighting.
+
+**When should I use production batches?**
+For multiple units of identical/similar items to reduce per-unit cost through economies of scale.
+
+**How are materials allocated from inventory?**
+Materials reserved when production starts, consumption tracked during production, inventory updated on completion.
+
+**Why use advisory locks for order numbers?**
+Prevents race conditions when multiple users create orders simultaneously, eliminating duplicate numbers.
+
+**How are production events logged?**
+Automatically for system actions (stage changes, approvals, payments) plus manual event notes for important occurrences.
+
+---
+
+## Support
+
+For additional assistance with Production Management:
+
+**Technical Support**: Email support@limnsystems.com | Phone 1-800-XXX-XXXX | Hours Monday-Friday 9 AM-6 PM EST
+
+**Production Team**: production@limnsystems.com for workflow guidance and factory coordination
+
+**Quality Assurance Team**: quality@limnsystems.com for QC templates and inspection procedures
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
