@@ -1,32 +1,325 @@
 # Design Management
 
-Comprehensive design project management from brief to final deliverables.
-
 ## Overview
 
-The design management system provides end-to-end tools for managing design projects, from initial briefs through approvals, revisions, and final delivery. Collaborate with internal teams and external designers.
+The Design Management system provides end-to-end tools for managing design projects from initial briefs through approvals, revisions, and final delivery. Collaborate with internal teams and external designers through integrated workflows, visual boards, and version-controlled deliverables.
 
-## Key Modules
+**Key Benefits:**
 
-- **Design Briefs** - Project requirements and specifications
-- **Design Projects** - Project management and tracking
-- **Design Boards** - Visual organization and collaboration
-- **Mood Boards** - Inspiration and concept development
-- **Design Files** - File management and versioning
-- **Deliverables** - Final design outputs and submissions
-- **Approvals** - Review and approval workflows
-- **Revisions** - Change management and iterations
-- **Design to Production** - Handoff to manufacturing
+- **Design Briefs**: Structured project requirements with client specifications, mood boards, brand guidelines, and creative direction.
+- **Design Projects**: Full project lifecycle management with timelines, milestones, budgets, team assignments, and progress tracking.
+- **Visual Boards**: Kanban-style organization boards for visualizing design workflow and collaboration across teams.
+- **File Versioning**: Complete version control with design file uploads, revision history, and rollback capabilities.
+- **Approval Workflows**: Multi-stage review and approval process with stakeholder feedback, revision requests, and sign-offs.
+- **Designer Portal**: External designer access for brief review, file submissions, feedback incorporation, and deliverable tracking.
+- **Production Handoff**: Seamless transition from approved designs to production with technical specifications and manufacturing requirements.
+- **Collaboration Tools**: Real-time comments, @mentions, file annotations, and activity feeds for team coordination.
 
-## Key Features
+---
 
-- Visual project boards
-- File versioning and history
-- Approval workflows
-- Collaboration tools
-- Designer portal integration
-- Production handoff tracking
+## Design Dashboard
 
-## Getting Started
+The Design Dashboard (`/dashboards/design`) provides a comprehensive overview of all active design projects with metrics, deadlines, and team performance.
 
-Learn how to manage design projects from concept to production-ready deliverables.
+### Dashboard Features
+
+**Active Projects Overview**: Total active design projects, in-progress briefs, pending approvals, and completed deliverables with status breakdown.
+
+**Timeline Visualization**: Gantt chart view of project timelines, milestone deadlines, designer assignments, and critical path identification.
+
+**Capacity Planning**: Designer workload distribution, available capacity, project allocation, and resource utilization metrics.
+
+**Approval Status**: Pending approvals requiring review, stuck projects awaiting feedback, overdue approvals, and approval bottlenecks.
+
+**Design Metrics**: Average project duration, time-to-first-draft, revision cycles, approval rates, and on-time delivery percentage.
+
+---
+
+## Design Briefs
+
+Design briefs capture project requirements, client specifications, creative direction, and constraints to guide designers from concept to completion.
+
+### Creating Briefs
+
+Navigate to Design > Briefs > New Brief. Required fields: project_name, client/project link, brief_description, deliverables, timeline, budget.
+
+**Brief Components**:
+- **Project Overview**: Scope, objectives, target audience, brand positioning
+- **Deliverables**: Specific outputs required (sketches, CAD files, renderings, specs)
+- **Creative Direction**: Style preferences, mood boards, inspiration references, brand guidelines
+- **Constraints**: Budget limits, technical requirements, material restrictions, timeline deadlines
+- **Success Criteria**: Measurable goals, approval checkpoints, quality standards
+
+### Brief Status
+
+- **Draft**: Brief being prepared, not yet assigned
+- **Active**: Brief assigned to designer, work in progress
+- **In Review**: Designer submitted initial concepts for review
+- **Approved**: Brief completed, moving to production
+- **On Hold**: Brief paused pending client decisions
+- **Cancelled**: Brief cancelled before completion
+
+### Brief-to-Project Workflow
+
+Briefs automatically create linked design projects upon designer assignment. Project inherits brief timeline, budget, deliverables, and requirements for tracking.
+
+---
+
+## Design Projects
+
+Design projects track the complete design lifecycle from brief assignment through final deliverable submission and production handoff.
+
+### Project Management
+
+**Project Details**: Name, description, client, assigned designer(s), brief link, timeline, budget, current status, progress percentage.
+
+**Timeline Management**: Start date, target completion, milestone dates, actual completion tracking, delay alerts, deadline notifications.
+
+**Team Assignment**: Lead designer, supporting designers, internal reviewers, client stakeholders, approval chain.
+
+**Budget Tracking**: Total budget, hours logged, expenses, remaining budget, cost overruns, hourly rate calculations.
+
+### Project Stages
+
+1. **Brief Review**: Designer reviews brief, clarifies requirements, accepts project
+2. **Concept Development**: Initial sketches, mood boards, concept presentations
+3. **Design Refinement**: Detailed designs, CAD modeling, material selection
+4. **Client Review**: Present designs, gather feedback, revision requests
+5. **Revisions**: Incorporate feedback, iterate on designs
+6. **Final Approval**: Stakeholder sign-off, design freeze
+7. **Production Handoff**: Technical specs, manufacturing drawings, material lists
+8. **Delivered**: Project complete, files archived
+
+### Progress Tracking
+
+Progress calculated based on: stage completion, milestone achievement, hours logged vs estimated, deliverables submitted, approvals obtained.
+
+---
+
+## Design Boards
+
+Visual Kanban boards organize design tasks, files, and feedback for team collaboration and workflow visualization.
+
+### Board Types
+
+- **Project Boards**: One board per design project with columns for workflow stages
+- **Team Boards**: Designer-specific boards showing all assigned tasks across projects
+- **Review Boards**: Stakeholder boards for reviewing and approving designs
+
+### Board Columns
+
+Customizable columns typically include: To Do, In Progress, In Review, Revisions Needed, Approved, Ready for Production.
+
+### Board Cards
+
+Cards represent design tasks or files with: thumbnail preview, file name, designer, due date, status, comment count, attachment count.
+
+**Card Actions**: Drag-and-drop between columns, add comments, attach files, assign reviewers, set due dates, mark approved.
+
+---
+
+## Design Files & Documents
+
+Centralized repository for all design files with version control, access permissions, and organization by project/type.
+
+### File Management
+
+**Upload Files**: CAD files (DWG, DXF, STEP), 3D models (OBJ, STL, BLEND), renderings (PNG, JPG, TIFF), specifications (PDF, DOC), presentations (PPT, PDF).
+
+**File Organization**: Organized by project > file type > version. Folder structure: `/projects/{project_id}/{file_type}/{filename_v{version}}`.
+
+**Version Control**: Automatic versioning on upload (v1, v2, v3...), compare versions side-by-side, rollback to previous versions, version comments/notes.
+
+**File Preview**: Thumbnail previews for images, PDF viewer for documents, 3D viewer for models (future enhancement).
+
+### Access Control
+
+- **Internal Team**: Full access to all design files
+- **External Designers**: Access only to assigned project files via designer portal
+- **Clients** (future): View-only access to approved deliverables
+
+### File Types
+
+- **Concept Sketches**: Early-stage hand sketches, digital sketches, inspiration images
+- **CAD Drawings**: Technical drawings, assembly drawings, detail drawings
+- **3D Models**: Product models, rendering models, manufacturing models
+- **Renderings**: Photo-realistic renderings, material studies, lighting studies
+- **Specifications**: Material specifications, finish specifications, dimension sheets
+- **Presentations**: Client presentations, mood boards, concept boards
+
+---
+
+## Approval Workflows
+
+Multi-stage approval process ensures design quality, stakeholder alignment, and production readiness before manufacturing.
+
+### Approval Stages
+
+1. **Internal Design Review**: Design team reviews for quality, feasibility, brand alignment
+2. **Technical Review**: Engineering reviews for manufacturability, cost, material availability
+3. **Client Review**: Client/stakeholder reviews for creative direction, requirements alignment
+4. **Final Sign-Off**: All stakeholders approve, design freeze enacted
+
+### Approval Actions
+
+- **Approve**: Design meets requirements, proceed to next stage
+- **Request Revisions**: Specific changes needed, return to designer with feedback
+- **Reject**: Design does not meet requirements, major rework needed
+- **On Hold**: Pending additional information or decisions
+
+### Approval Tracking
+
+Track approver, approval date, comments/feedback, revision requests, approval duration, approval bottlenecks.
+
+---
+
+## Designer Portal Integration
+
+External designers access dedicated portal for brief review, file submission, feedback response, and project tracking.
+
+### Portal Features
+
+**Briefs Module**: View assigned briefs, download reference materials, clarify requirements, accept/decline projects.
+
+**Projects Module**: View project details, timeline, milestones, budget, feedback, approval status.
+
+**File Uploads**: Submit design files with version notes, upload supporting materials, replace files with revisions.
+
+**Feedback Loop**: View stakeholder comments, respond to feedback, track revision requests, submit revised designs.
+
+**Deliverable Tracking**: View deliverable checklist, mark deliverables complete, upload final files, track approval status.
+
+---
+
+## Design to Production Handoff
+
+Structured process transfers approved designs to production with all technical specifications and manufacturing requirements.
+
+### Handoff Components
+
+**Production Drawings**: Manufacturing drawings, assembly instructions, detail drawings, tolerances, finish specifications.
+
+**Material Lists**: Complete bill of materials (BOM), material specifications, supplier recommendations, material samples.
+
+**Technical Specifications**: Dimensions, tolerances, finish requirements, quality standards, testing requirements.
+
+**Production Notes**: Special manufacturing considerations, assembly notes, quality checkpoints, packaging requirements.
+
+### Handoff Workflow
+
+1. Design approved and frozen
+2. Production drawings generated
+3. Material list finalized
+4. Technical specs documented
+5. Production team review
+6. Handoff package created
+7. Production order initiated
+8. Design archived
+
+---
+
+## Common Workflows
+
+### Workflow 1: Brief to Production
+
+1. Client submits design requirements
+2. Internal team creates design brief
+3. Brief assigned to designer (internal or external)
+4. Designer reviews brief, clarifies requirements
+5. Designer develops initial concepts
+6. Internal review and feedback
+7. Designer refines designs
+8. Client review presentation
+9. Revision cycle (if needed)
+10. Final design approval
+11. Production drawings created
+12. Handoff to manufacturing
+13. Timeline: 4-12 weeks depending on complexity
+
+### Workflow 2: External Designer Collaboration
+
+1. Design brief created
+2. External designer assigned via Partners module
+3. Designer receives portal access notification
+4. Designer logs into designer portal
+5. Designer reviews brief, downloads references
+6. Designer uploads initial concepts
+7. Internal team reviews via Design Board
+8. Feedback provided via portal comments
+9. Designer submits revisions
+10. Approval cycle continues until sign-off
+11. Final files submitted via portal
+12. Project marked complete
+13. Timeline: 6-10 weeks typical
+
+---
+
+## Best Practices
+
+1. Create detailed briefs with clear success criteria
+2. Include comprehensive mood boards and references
+3. Set realistic timelines accounting for revision cycles
+4. Assign clear approval chain before starting
+5. Use design boards for visual workflow management
+6. Version control all design files
+7. Document all stakeholder feedback
+8. Conduct internal review before client presentation
+9. Freeze designs before production handoff
+10. Archive completed projects for future reference
+
+---
+
+## Troubleshooting
+
+**Cannot Upload Design Files**: Check file size limits (50MB typical), verify supported file types, ensure project access permissions.
+
+**Approval Stuck**: Identify bottleneck approver, send reminder notifications, escalate to project manager if overdue >3 days.
+
+**Designer Portal Access Issues**: Verify designer portal access enabled, check email for magic link, resend portal access if needed.
+
+**Version Control Not Working**: Ensure unique filename for new versions, check upload completion, verify version incremented automatically.
+
+**Missing Production Drawings**: Verify final approval obtained, check if handoff initiated, contact designer for missing files.
+
+---
+
+## Tips & Tricks
+
+- Use mood boards to align stakeholders early
+- Set milestone checkpoints at 25%, 50%, 75% completion
+- Tag designs with material categories for easy filtering
+- Track actual hours vs estimated for future project planning
+- Use design board comments for async feedback
+- Export board snapshots for client status updates
+- Link design projects to CRM orders for end-to-end tracking
+- Archive concept alternatives for future reference
+- Use file preview thumbnails for quick visual scanning
+- Set approval deadlines to prevent bottlenecks
+
+---
+
+## FAQ
+
+**What file types are supported?** CAD files (DWG, DXF, STEP), 3D models (OBJ, STL), images (PNG, JPG, TIFF), documents (PDF, DOC, PPT).
+
+**How does version control work?** Files auto-version on upload (v1, v2, v3). View version history, compare versions, rollback if needed.
+
+**Can external designers access all projects?** No. Designers only access projects assigned to them via designer portal with module-level permissions.
+
+**What happens after final approval?** Design frozen, production drawings generated, material list finalized, handoff package created for manufacturing.
+
+**How long does typical design project take?** Standard products: 4-6 weeks. Custom designs: 8-12 weeks. Complex projects: 12-16 weeks depending on revision cycles.
+
+**Can I track designer workload?** Yes. Design Dashboard shows designer capacity, active projects, hours logged, and utilization percentage.
+
+---
+
+## Support
+
+**Technical Support**: support@limnsystems.com | 1-800-XXX-XXXX | Monday-Friday 9 AM-6 PM EST
+
+**Design Team**: design@limnsystems.com for creative questions and project coordination
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
