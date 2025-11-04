@@ -1,12 +1,3 @@
 {
-  "index": "Overview",
-  "roles": "Roles",
-  "permissions": "Permissions",
-  "role-assignment": "Role Assignment",
-  "permission-templates": "Permission Templates",
-  "delegation": "Delegation",
-  "conditional-access": "Conditional Access",
-  "session-constraints": "Session Constraints",
-  "multi-tenancy": "Multi-Tenancy",
-  "audit-logs": "Audit Logs"
+  "index": "Overview"
 }

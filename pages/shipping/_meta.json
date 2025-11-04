@@ -1,9 +1,3 @@
 {
-  "index": "Overview",
-  "shipments": "Shipments",
-  "tracking-dashboard": "Tracking Dashboard",
-  "carriers": "Carriers",
-  "seko-integration": "SEKO Integration",
-  "pickup-requests": "Pickup Requests",
-  "delivery": "Delivery"
+  "index": "Overview"
 }

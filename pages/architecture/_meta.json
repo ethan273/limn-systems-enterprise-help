@@ -1,10 +1,3 @@
 {
-  "index": "Overview",
-  "system": "System Architecture",
-  "technology-stack": "Technology Stack",
-  "database-schema": "Database Schema",
-  "api-reference": "API Reference",
-  "authentication-arch": "Authentication",
-  "multi-tenancy-arch": "Multi-Tenancy",
-  "integrations-arch": "Integrations"
+  "index": "Overview"
 }

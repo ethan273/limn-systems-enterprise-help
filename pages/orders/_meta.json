@@ -1,10 +1,3 @@
 {
-  "index": "Overview",
-  "creation": "Order Creation",
-  "items": "Order Items",
-  "order-materials": "Order Materials",
-  "tracking": "Order Tracking",
-  "approval": "Order Approval",
-  "timeline": "Order Timeline",
-  "project-linking": "Project Linking"
+  "index": "Overview"
 }

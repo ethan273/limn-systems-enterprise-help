@@ -1,11 +1,3 @@
 {
-  "index": "Overview",
-  "workflows": "Workflows",
-  "workflow-templates": "Workflow Templates",
-  "task-automation": "Task Automation",
-  "triggers": "Triggers",
-  "monitoring": "Monitoring",
-  "alerts": "Alerts",
-  "real-time-events": "Real-Time Events",
-  "webhooks": "Webhooks"
+  "index": "Overview"
 }

@@ -1,16 +1,3 @@
 {
-  "index": "Overview",
-  "user-management": "User Management",
-  "role-management": "Role Management",
-  "approvals": "Approvals",
-  "portal-management": "Portal Management",
-  "api-management": "API Management",
-  "api-key-rotation": "API Key Rotation",
-  "api-health": "API Health",
-  "api-security": "API Security",
-  "security-events": "Security Events",
-  "activity-logs": "Activity Logs",
-  "system-settings": "System Settings",
-  "integration-status": "Integration Status",
-  "data-export": "Data Export"
+  "index": "Overview"
 }
