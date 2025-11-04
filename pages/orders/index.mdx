@@ -1,31 +1,683 @@
 # Order Management
 
-Create and manage customer orders from quote to delivery.
-
 ## Overview
 
-The order management system provides end-to-end tracking of customer orders, including items, materials, approvals, and timelines. Orders can be linked to projects and tracked through production and shipping.
+The Order Management system is the central hub for managing all customer orders from initial creation through delivery and completion. Built on a robust 11-stage workflow, the system provides comprehensive order tracking, automated status notifications, and deep integration with projects, production, invoicing, and shipping.
 
-## Key Modules
+Orders in the system follow a structured lifecycle from draft to completion, with built-in validation to ensure proper status transitions and data integrity. Every order must be associated with a project, with automatic project creation available for streamlined workflows. The system supports standard, custom, and rush order types, each with configurable priority levels to ensure urgent orders receive appropriate attention.
 
-- **Order Creation** - Create new customer orders
-- **Order Items** - Manage line items and products
-- **Order Materials** - Track materials for each order
-- **Order Tracking** - Monitor order progress
-- **Order Approval** - Approval workflows
-- **Order Timeline** - Timeline and milestone tracking
-- **Project Linking** - Link orders to projects
+With cursor-based pagination for scalable performance, advanced filtering capabilities, and comprehensive material specification tracking, the Order Management module serves as the operational backbone for order fulfillment.
 
-## Key Features
+### Key Benefits
 
-- Multi-item orders
-- Material tracking per order
-- Approval workflows
-- Timeline and milestones
-- Project integration
-- Production handoff
-- Shipping coordination
+- **Automated Order Numbering**: Sequential order numbers (ORD-XXXXXX) generated with PostgreSQL advisory locks to prevent race conditions
+- **11-Stage Status Workflow**: Structured order lifecycle with validation to prevent invalid status transitions
+- **Multi-Item Support**: Create orders with multiple line items, each with detailed material specifications
+- **Intelligent SKU Generation**: Automatic Project SKU (CLIENT-PROJECT-ORDER) and Full SKU (base + materials) generation
+- **Material Specifications**: Track 10+ material categories including fabric, wood, metal, stone, weaving, and carving options
+- **Project Integration**: Seamless project assignment with automatic project creation when needed
+- **Cursor-Based Pagination**: O(1) performance regardless of dataset size with 20-100 items per page
+- **Status Notifications**: Automatic email notifications to customers on status changes
+- **Payment Tracking**: Monitor payment status from pending through paid or refunded
+- **Production Integration**: Direct handoff to manufacturing with production order linkage
+- **Invoice Management**: Automatic invoice generation and payment tracking
+- **Shipment Tracking**: Integration with shipping module for tracking numbers and delivery confirmation
+- **Comprehensive Filtering**: Search by customer, project, status, priority, date range, and order number
 
-## Getting Started
+---
 
-Learn how to create, manage, and track customer orders through the entire lifecycle.
+## Order Dashboard
+
+Access the Order Dashboard by navigating to `/orders` from the main navigation menu. The dashboard provides a comprehensive overview of all orders with real-time statistics and quick access to filtering options.
+
+### Dashboard Features
+
+**Order Statistics Panel**
+- Total orders count across all statuses
+- Active orders currently in progress
+- Orders by status (pending, confirmed, in production, etc.)
+- Revenue metrics including total amount and average order value
+- Outstanding payment amounts
+
+**Status Distribution Chart**
+- Visual breakdown of orders by current status
+- Color-coded status indicators for quick identification
+- Percentage distribution across 11 status stages
+- Drill-down capability to view orders in specific status
+
+**Recent Orders List**
+- Latest 20 orders with key details
+- Order number, customer name, project, status, total amount
+- Quick actions: View details, Update status, Edit order
+- Sortable columns for flexible organization
+- One-click navigation to order details page
+
+**Quick Filters**
+- Filter by order status (all 11 stages available)
+- Filter by priority level (Low, Normal, High, Urgent)
+- Filter by order type (Standard, Custom, Rush)
+- Filter by payment status (Pending, Partial, Paid, Refunded)
+- Date range selection for created/updated dates
+- Customer and project quick filters
+- Combined filter support for advanced queries
+
+**Search Functionality**
+- Global search across order numbers, customer names, project names
+- Real-time search results as you type
+- Search highlights matching terms
+- Clear search button for quick reset
+
+---
+
+## Creating Orders
+
+### Manual Order Creation
+
+Creating a new order follows a structured process to ensure all required information is captured:
+
+**Step 1: Navigate to Order Creation**
+- Click "New Order" button on the Orders Dashboard
+- Or use the "+" icon in the top navigation and select "New Order"
+- The order creation form will open with all required fields
+
+**Step 2: Customer Selection**
+- Select an existing customer from the dropdown
+- Search customers by name or email
+- Customer selection is required before proceeding
+- Selecting a customer pre-fills billing and shipping information
+
+**Step 3: Project Assignment**
+- Choose an existing project from the customer's project list
+- Or leave blank to auto-create a default project
+- Project is required - either selected or auto-created
+- Auto-created projects use format: "{Customer Name} - Order {Date}"
+
+**Step 4: Order Type Selection**
+- **Standard**: Regular orders with normal processing timeline
+- **Custom**: Orders requiring customization or special handling
+- **Rush**: Expedited orders with priority processing
+- Default: Standard
+
+**Step 5: Priority Level**
+- **Low**: Non-urgent orders, processed in standard queue
+- **Normal**: Default priority for most orders
+- **High**: Important orders requiring attention
+- **Urgent**: Critical orders requiring immediate processing
+- Default: Normal
+
+**Step 6: Order Details**
+- **Order Date**: Auto-filled with current date, editable
+- **Due Date**: Expected completion date (optional)
+- **Notes**: Internal notes about the order (optional)
+- **Customer Notes**: Notes visible to customer (optional)
+
+**Step 7: Initial Status**
+- New orders start in "draft" status by default
+- Can be changed to "pending" if ready for review
+- Cannot start in statuses beyond "pending"
+
+**Step 8: Save Order**
+- Click "Create Order" to save
+- Order number automatically generated (ORD-XXXXXX)
+- Redirects to order details page
+- Order is now ready for adding items
+
+### Order with Items
+
+The most common order creation workflow includes adding line items immediately. This streamlined process allows you to create complete orders in one session.
+
+**Creating Multi-Item Orders**
+
+Use the "Create Order with Items" form for complete order creation:
+
+1. **Fill out customer and order details** as described in Manual Order Creation
+2. **Click "Add Item" button** to create the first line item section
+3. **Enter item details**:
+   - Product name (required)
+   - Product description (optional, recommended)
+   - Quantity (required, minimum 1)
+   - Unit price (required, decimal format)
+   - SKU base (optional - auto-generated if blank)
+
+4. **Select material specifications** (see Material Specifications section)
+5. **Add more items** by clicking "Add Item" again
+6. **Remove items** using the trash icon next to each item
+7. **Review total amount** calculated automatically
+8. **Submit order** to save order with all items
+
+**Adding Line Items to Existing Orders**
+
+For orders already created:
+
+1. Navigate to the order details page
+2. Scroll to the "Order Items" section
+3. Click "Add Item" button
+4. Fill out item details in the modal
+5. Select material specifications
+6. Click "Save Item" to add to order
+7. Repeat for additional items
+
+**Item-Level Details**
+
+Each line item captures:
+- **Product Name**: Display name for the product (required)
+- **Description**: Detailed item description (recommended)
+- **Quantity**: Number of units (integer, minimum 1)
+- **Unit Price**: Price per unit (decimal, two places)
+- **Line Total**: Auto-calculated (quantity × unit price)
+- **SKU**: Generated automatically or manually entered
+- **Material Specifications**: Up to 10+ specification categories
+- **Custom Specifications**: JSON field for additional details
+
+### Material Selection
+
+Material specifications are optional but highly recommended for custom and standard orders. They provide detailed tracking of product configurations and are used in SKU generation.
+
+**Available Material Categories**:
+
+1. **Fabric Specifications**:
+   - Brand name (text field)
+   - Collection name (text field)
+   - Color/pattern (text field)
+   - Example: "Kravet, Luxe Linen, Navy Blue"
+
+2. **Wood Specifications**:
+   - Wood type (Oak, Walnut, Maple, Cherry, Mahogany, etc.)
+   - Finish type (Natural, Stained, Painted, Lacquered)
+   - Example: "Walnut, Natural finish"
+
+3. **Metal Specifications**:
+   - Metal type (Steel, Aluminum, Brass, Bronze, Iron)
+   - Finish (Polished, Brushed, Matte, Powder-coated)
+   - Color (for painted finishes)
+   - Example: "Brass, Brushed, Antique gold"
+
+4. **Stone Specifications**:
+   - Stone type (Marble, Granite, Quartz, Limestone)
+   - Finish (Polished, Honed, Leathered, Flamed)
+   - Example: "Carrara Marble, Honed"
+
+5. **Weaving Specifications**:
+   - Weaving material (Cane, Rush, Rope, Leather)
+   - Pattern type (Traditional, Danish, Modern)
+   - Color (Natural, Dyed)
+   - Example: "Danish cord, Traditional pattern, Natural"
+
+6. **Carving Specifications**:
+   - Carving style (Hand-carved, Machine-carved, Relief)
+   - Pattern name (Floral, Geometric, Custom)
+   - Example: "Hand-carved, Floral relief"
+
+7. **Hardware Specifications**:
+   - Hardware type (Hinges, Handles, Knobs, Pulls)
+   - Material (Brass, Steel, Bronze)
+   - Finish (Polished, Antique, Matte)
+
+8. **Upholstery Specifications**:
+   - Foam density (High, Medium, Low)
+   - Suspension type (Spring, Webbing, Elastic)
+   - Fill material (Down, Polyester, Foam)
+
+9. **Glass Specifications**:
+   - Glass type (Clear, Frosted, Tinted, Textured)
+   - Thickness (mm)
+   - Treatment (Tempered, Laminated, None)
+
+10. **Finish Specifications**:
+    - Finish type (Paint, Stain, Lacquer, Oil, Wax)
+    - Color/shade (specific color name)
+    - Sheen level (Matte, Satin, Semi-gloss, Gloss)
+
+**Custom Specifications**
+
+For materials or attributes not covered by the standard categories, use the "Custom Specifications" field. This accepts JSON format for flexible data entry:
+
+```json
+{
+  "customAttribute1": "value1",
+  "customAttribute2": "value2",
+  "specialInstructions": "Handle with care"
+}
+```
+
+### SKU Generation
+
+The system supports two levels of SKU generation:
+
+**Project SKU**
+
+Format: `CLIENT-PROJECT-ORDER`
+
+Example: `SMITHRES-LIVINGROOM-001`
+
+Components:
+- CLIENT: First 8 characters of customer name (uppercase, alphanumeric only)
+- PROJECT: First 10 characters of project name (uppercase, alphanumeric only)
+- ORDER: 3-digit order number within the project (001, 002, etc.)
+
+Auto-generated when:
+- Order is confirmed
+- Project and customer are assigned
+- SKU doesn't already exist
+
+**Full SKU**
+
+Format: `{BASE_SKU}-{MATERIAL_CODES}`
+
+Example: `SOFA-3SEAT-WAL-BRS-NAV`
+
+Components:
+- BASE_SKU: Product base SKU (from product catalog or custom)
+- MATERIAL_CODES: Abbreviations of selected materials
+  - WAL: Walnut wood
+  - BRS: Brushed brass hardware
+  - NAV: Navy fabric
+
+Material abbreviations are generated from material specifications:
+- First 3 characters of material type
+- Uppercase
+- Separated by hyphens
+
+Full SKU is generated when:
+- Item is saved with material specifications
+- Base SKU exists
+- At least one material specification is provided
+
+**Manual SKU Entry**
+
+Both Project SKU and Full SKU can be manually entered if automatic generation doesn't fit your workflow:
+
+1. Leave SKU field blank during item creation
+2. After order is saved, edit the item
+3. Enter custom SKU in the SKU field
+4. Save item with custom SKU
+
+Manual SKUs are not overwritten by automatic generation.
+
+### Auto Project Assignment
+
+If no project is selected during order creation, the system automatically creates a default project to ensure every order has a project association.
+
+**Auto-Creation Triggers**:
+- Order creation form submitted without project selection
+- Customer is selected (project needs customer association)
+- No existing "Default" project for the customer
+
+**Default Project Details**:
+- **Project Name**: "{Customer Name} - Order {Current Date}"
+  - Example: "Smith Residence - Order 2025-11-03"
+- **Project Status**: "active"
+- **Project Type**: "standard"
+- **Customer**: Same as order customer
+- **Created Date**: Current date/time
+
+**Auto-Created Project Behavior**:
+- Appears in customer's project list
+- Can be renamed after creation
+- Can have additional orders assigned to it
+- Follows all standard project workflows
+- Visible in Projects module
+
+**Best Practices**:
+- Create named projects before orders for better organization
+- Use auto-creation for one-off or small orders
+- Rename auto-created projects for clarity
+- Consolidate orders under existing projects when possible
+
+---
+
+## Order Lifecycle
+
+### Order Statuses (11 Stages)
+
+The order lifecycle follows a structured 11-stage workflow designed to track orders from initial creation through final delivery. Each status represents a distinct phase with specific actions and responsibilities.
+
+**1. Draft** - Initial state when order is created but not yet submitted for processing. Order details can be freely edited, items can be added/removed, customer not notified. Typical duration: Hours to days (user-controlled).
+
+**2. Pending** - Order submitted and awaiting review/confirmation. Basic edits still allowed, customer may be notified of order receipt. Typical duration: 1-2 business days.
+
+**3. Confirmed** - Order approved and ready for production. Order locked for editing, customer notified, payment required or established, production can begin. Typical duration: 1-3 business days.
+
+**4. In Production** - Order actively being manufactured. Production order created, materials allocated, manufacturing team assigned. Typical duration: Varies (days to weeks).
+
+**5. Quality Check** - Completed products undergoing QC inspection. Manufacturing complete, QC team assigned, inspection checklist being completed. Typical duration: 1-2 business days.
+
+**6. Ready to Ship** - Order passed QC and prepared for shipment. Items in shipping area, packing in progress, shipping labels can be created. Typical duration: 1-3 business days.
+
+**7. Shipped** - Order picked up by carrier and in transit. Tracking number active, customer notified with tracking. Typical duration: 1-10 business days (varies by shipping method).
+
+**8. Delivered** - Order confirmed delivered to customer location. Carrier confirms delivery, customer signature collected. Typical duration: 1-3 business days (confirmation period).
+
+**9. Completed** - Order successfully fulfilled and closed. Customer accepts delivery, payment complete, no outstanding issues. Permanent end state.
+
+**10. Cancelled** - Order cancelled before completion. Processing stopped, reason documented, refund processed if needed. Cannot be reactivated.
+
+**11. On Hold** - Temporary pause in order processing. Reason documented, expected resume date set, can resume to previous status.
+
+### Status Transitions
+
+Valid transition paths:
+
+```
+draft → pending → confirmed → in_production → quality_check → ready_to_ship → shipped → delivered → completed
+
+Exceptions:
+- Any status → cancelled (with authorization)
+- Any status → on_hold (with reason)
+- on_hold → previous status (resume)
+- quality_check → in_production (rework needed)
+```
+
+**Validation Rules**:
+- Cannot skip statuses (except cancellation/hold)
+- Cannot move backwards (except QC → production for rework)
+- Cancellation allowed from any status with proper authorization
+- Hold allowed from any active status
+
+**Status Change Actions**:
+When changing status, the system automatically:
+1. Updates order status in database
+2. Records status history in metadata
+3. Sends email notification to customer
+4. Triggers related updates (production, shipments, invoices)
+5. Updates dashboard metrics
+
+---
+
+## Order Types
+
+### Standard Orders
+
+Regular orders following the normal production and delivery timeline (4-8 weeks). Standard pricing, normal queue priority, flexible delivery scheduling.
+
+**Use Cases**: Catalog items, stock items, volume orders, repeat orders
+
+### Custom Orders
+
+Orders requiring customization, special materials, or unique specifications (8-16 weeks). Design consultation, custom quote, enhanced QC.
+
+**Use Cases**: Client-specific modifications, non-standard dimensions, special materials, prototypes
+
+**Additional Steps**: Design consultation, custom quote, design approval, material sourcing, production review, progress updates, enhanced QC
+
+### Rush Orders
+
+Expedited orders with priority processing and faster delivery (2-4 weeks). Includes 20-30% rush fee, express shipping.
+
+**Use Cases**: Urgent deadlines, last-minute replacements, event-driven deadlines, emergency situations
+
+**Rush Processing**: Priority queue, dedicated resources, extended hours, expedited materials, accelerated QC, express shipping
+
+---
+
+## Priority Levels
+
+### Low Priority
+Non-urgent orders with flexible deadlines, processed after other priorities.
+
+### Normal Priority (Default)
+Standard orders with typical timelines, recommended for 80-90% of orders.
+
+### High Priority
+Important orders requiring attention, elevated in queue, may receive earlier scheduling.
+
+### Urgent Priority
+Emergency orders requiring immediate attention, highest queue position, 24/7 monitoring, requires authorization.
+
+---
+
+## Order Items
+
+### Adding Line Items
+
+**During Order Creation**: Use "Create Order with Items" to add all items at once
+
+**To Existing Orders**: Navigate to order details, click "Add Item", fill out form, save
+
+**Editing Items**: Click Edit icon, modify fields, update material specs, save changes
+
+**Removing Items**: Click Delete icon, confirm deletion (cannot delete last item)
+
+### Material Specifications
+
+Detailed tracking of product configurations across 10+ categories:
+
+- **Fabric**: Brand, collection, color/pattern
+- **Wood**: Type (Oak, Walnut, Maple, etc.), finish (Natural, Stained, etc.)
+- **Metal**: Type (Steel, Brass, Bronze), finish (Polished, Brushed), color
+- **Stone**: Type (Marble, Granite, Quartz), finish (Polished, Honed)
+- **Weaving**: Material (Cane, Rush, Rope), pattern (Traditional, Danish), color
+- **Carving**: Style (Hand-carved, Machine-carved), pattern (Floral, Geometric)
+- **Hardware**: Type (Hinges, Handles, Knobs), material, finish
+- **Upholstery**: Foam density, suspension type, fill material
+- **Glass**: Type (Clear, Frosted, Tinted), thickness, treatment
+- **Finish**: Type (Paint, Stain, Lacquer), color/shade, sheen level
+
+### Custom Specifications
+
+Use JSON format for attributes not covered by standard fields:
+
+```json
+{
+  "stitchType": "Double-needle",
+  "certifications": ["FSC Certified", "Greenguard Gold"],
+  "assembly": "Ships assembled"
+}
+```
+
+---
+
+## Order Details Page
+
+Comprehensive order information with full edit and management capabilities.
+
+**Order Information**: Order number, dates, customer, project, financial summary, notes
+
+**Order Items Table**: All line items with expandable details showing material specifications
+
+**Related Records**: Production orders, invoices, payments, shipments, documents, activity log
+
+**Status Update Section**: Change status form with validation, reason field, notification checkbox
+
+**Quick Actions**: Print, download PDF, email customer, duplicate order, create production/invoice/shipment
+
+---
+
+## Order Management
+
+### Filtering Orders
+
+- Status filter (all 11 stages)
+- Priority filter (Low, Normal, High, Urgent)
+- Order type filter (Standard, Custom, Rush)
+- Payment status filter (Pending, Partial, Paid, Refunded)
+- Customer and project filters
+- Date range filters (order date, due date, updated date)
+- Amount range filter
+- Combining filters with AND logic
+
+### Search Functionality
+
+Global search across order numbers, customer names, emails, project names, item descriptions, notes. Real-time results with highlighting.
+
+### Pagination
+
+Cursor-based pagination for O(1) performance:
+- 20-100 items per page
+- Previous/Next navigation
+- Consistent results even when data changes
+- Scalable to millions of orders
+
+### Sorting
+
+Sort by order number, date, customer, project, status, priority, amount, due date, last updated.
+
+---
+
+## Integration
+
+### Customer Integration
+Order history, customer-level reporting, order-customer relationship, customer notifications
+
+### Project Integration
+Project-based orders, auto-project creation, project reporting, order grouping
+
+### Production Integration
+Order to production handoff, production order creation, status synchronization, production details
+
+### Invoicing Integration
+Invoice generation (deposit, balance, final), invoice-order relationship, payment tracking, payment status logic
+
+### Shipping Integration
+Shipment creation, tracking updates, multiple shipments, delivery confirmation
+
+---
+
+## Common Workflows
+
+### 1. Standard Order Workflow
+Order creation → Add items → Submit for review → Confirmation → Production order → Manufacturing → QC → Shipping prep → Shipped → Delivered → Completed (4-6 weeks)
+
+### 2. Rush Order Workflow
+Urgent creation → Immediate review → Expedited confirmation → Priority production → Accelerated manufacturing → Same-day QC → Express shipping → Expedited delivery → Rush completion (2-3 weeks)
+
+### 3. Custom Order Workflow
+Initial consultation → Design development → Customer review → Design approval → Confirmation → Material sourcing → Custom production → Enhanced QC → Custom packaging → Delivery and installation (8-16 weeks)
+
+### 4. Multi-Item Order Workflow
+Room design → Multi-item creation (sofa, chairs, tables) → Material coordination → Production coordination → Staged manufacturing → Consolidated QC → Combined shipment → Full room delivery (6-8 weeks)
+
+### 5. Order Modification Workflow
+Modification request → Assess feasibility by status → Easy if Draft/Pending → Manager approval if Confirmed → Difficult if In Production → Not possible after QC
+
+---
+
+## Best Practices
+
+1. Verify customer details before confirming
+2. Add detailed item specifications
+3. Use appropriate priority levels
+4. Track status changes promptly
+5. Add notes for context
+6. Link to correct project
+7. Verify material selections
+8. Monitor payment status
+9. Update shipping information
+10. Complete orders after delivery
+11. Use filters for efficiency
+12. Maintain clean data
+13. Communicate proactively
+14. Document quality issues
+15. Review before confirming
+
+---
+
+## Troubleshooting
+
+### Cannot Create Order
+**Causes**: Missing customer, no items, invalid pricing, missing required fields
+**Solutions**: Verify customer selected, add at least one item, check required fields, ensure positive pricing
+
+### Order Number Generation Fails
+**Causes**: Database connection issue, advisory lock timeout, race condition
+**Solutions**: Wait 30 seconds and retry, refresh page, check database connection, manually enter if needed
+
+### Invalid Status Transition
+**Causes**: Attempting invalid transition, skipping statuses, moving backwards
+**Solutions**: Follow valid transition paths, move sequentially, contact manager for authorization
+
+### Missing Order Items
+**Causes**: Items not saved, session timeout, network error, accidentally deleted
+**Solutions**: Verify correct order, refresh page, try adding again, contact support if deleted
+
+### SKU Generation Errors
+**Causes**: Order not confirmed, missing customer/project, missing materials
+**Solutions**: Verify customer and project assigned, update to confirmed status, add material specs, manually enter if needed
+
+### Project Linking Issues
+**Causes**: Customer not selected, project inactive, no projects exist
+**Solutions**: Select customer first, verify project active, create new project or allow auto-creation
+
+### Notification Not Sent
+**Causes**: Checkbox unchecked, invalid email, email bounced, service outage
+**Solutions**: Verify email correct, check "Notify Customer" box, check spam folder, resend manually
+
+### Cannot Edit Order Items
+**Causes**: Status doesn't allow edits, insufficient permissions, order locked
+**Solutions**: Check order status (edits restricted after ready_to_ship), contact manager for approval
+
+### Payment Status Not Updating
+**Causes**: Payment applied to invoice not order, partial payment, not saved properly
+**Solutions**: Verify payment recorded against invoice, check if full payment made, refresh page
+
+### Production Order Not Syncing
+**Causes**: Manual sync needed, created before automation, different workflows
+**Solutions**: Manually update statuses to match, re-link if necessary, verify actual status
+
+---
+
+## Tips & Tricks
+
+1. Use keyboard shortcuts (Ctrl+P print, Ctrl+E edit, Ctrl+S save, Esc close)
+2. Create quick filter sets for daily workflow (morning: pending, afternoon: QC)
+3. Search by order number (type "ORD-" to find orders)
+4. Duplicate orders for repeat customers
+5. Use custom specifications for special cases
+6. Batch similar orders together
+7. Export orders for reporting
+8. Monitor orders by project
+9. Use notes for customer communication
+10. Proactive status updates
+11. Validate before confirming
+12. Use priority strategically
+13. Track rush fees separately
+14. Material selection consistency
+15. Review QC photos before shipping
+
+---
+
+## FAQ
+
+**Q: What's the difference between order types?**
+A: Standard orders are regular catalog items (4-8 weeks). Custom orders require design work and special materials (8-16 weeks). Rush orders are expedited with priority processing (2-4 weeks) but include 20-30% rush fees.
+
+**Q: How are order numbers generated?**
+A: Auto-generated in format ORD-XXXXXX using PostgreSQL sequence with advisory locks to prevent race conditions.
+
+**Q: Can I modify an order after it's confirmed?**
+A: Draft/Pending orders can be freely modified. Confirmed orders require manager approval and may have fees. In Production orders are difficult to modify. Quality Check or later cannot be modified.
+
+**Q: Why must every order have a project?**
+A: Projects provide organizational structure, enable project-based reporting, and are required for Project SKU generation.
+
+**Q: What happens when an order moves to production?**
+A: When status changes to "in_production", a production order is created, materials are allocated, manufacturing team is assigned, and order is locked for most edits.
+
+**Q: How long does quality check take?**
+A: Standard QC takes 1-2 business days. Custom orders may require 2-3 days. Rush orders receive same-day QC.
+
+**Q: What is a Project SKU vs Full SKU?**
+A: Project SKU (CLIENT-PROJECT-ORDER) identifies an order within a project. Full SKU (BASE-MAT1-MAT2-MAT3) identifies a specific product configuration with materials.
+
+**Q: When are invoices generated?**
+A: Invoices can be created at multiple stages: deposit invoice on confirmation, balance invoice when production completes, or final invoice upon delivery.
+
+**Q: Why use cursor-based pagination?**
+A: Cursor-based pagination provides O(1) constant-time performance regardless of dataset size, ensuring fast loading even with thousands of orders.
+
+**Q: How are status transitions validated?**
+A: The system enforces a status transition matrix allowing only valid next statuses, with validation at the API level and authorization checks based on user role.
+
+---
+
+## Support
+
+For additional assistance with the Order Management system:
+
+**Documentation**: Refer to this help guide and other module documentation
+
+**Technical Support**: Contact the support team for system issues or technical questions
+
+**Training**: Schedule training sessions for new team members or advanced features
+
+**Emergency Support**: For urgent production issues, contact operations manager directly
