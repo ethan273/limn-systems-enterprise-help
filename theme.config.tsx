@@ -32,7 +32,7 @@ const config: DocsThemeConfig = {
   },
   docsRepositoryBase: 'https://github.com/limn-systems/help',
   footer: {
-    text: `© ${new Date().getFullYear()} Limn Systems. All rights reserved.`,
+    text: `© ${new Date().getFullYear()} Limn®. All rights reserved.`,
   },
   useNextSeoProps: () => ({
     titleTemplate: '%s – Limn Systems Help Center'
