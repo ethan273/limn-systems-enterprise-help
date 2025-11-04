@@ -5,17 +5,18 @@ import Image from 'next/image'
 const config: DocsThemeConfig = {
   logo: (
     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-      {/* CORRECT: Use Light_Mode.png for light theme, Dark_Mode.png for dark theme */}
+      {/* CORRECT: Use Light_Mode.png for dark theme, Dark_Mode.png for light theme */}
+      {/* Dark background needs light logo, light background needs dark logo */}
       {/* See /Users/eko3/limn-systems-enterprise/.claude/patterns/ui-patterns.md */}
       <Image
-        src="/images/Limn_Logo_Dark_Mode.png"
+        src="/images/Limn_Logo_Light_Mode.png"
         alt="Limn Systems"
         width={120}
         height={40}
         className="nx-hidden dark:nx-block"
       />
       <Image
-        src="/images/Limn_Logo_Light_Mode.png"
+        src="/images/Limn_Logo_Dark_Mode.png"
         alt="Limn Systems"
         width={120}
         height={40}
