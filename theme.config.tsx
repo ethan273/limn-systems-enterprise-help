@@ -52,7 +52,7 @@ const config: DocsThemeConfig = {
     toggleButton: true,
   },
   toc: {
-    backToTop: true,
+    float: false,
   },
   navigation: {
     prev: true,
