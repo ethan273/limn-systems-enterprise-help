@@ -1,29 +1,723 @@
 # Customer Relationship Management (CRM)
 
-Manage leads, contacts, customers, and deals throughout the sales lifecycle.
+Manage your entire sales funnel from initial contact through client conversion and ongoing relationship management.
 
 ## Overview
 
-The CRM system helps you track and manage customer relationships from initial lead capture through ongoing customer management. Track interactions, manage deals, and provide excellent customer service.
+The Limn Systems CRM helps you track and nurture customer relationships throughout the entire sales lifecycle. From capturing leads to converting prospects into paying clients, the CRM provides a complete view of your sales pipeline with powerful analytics and automation tools.
 
-## Key Modules
+**Key Benefits:**
+- Track all interactions with contacts, leads, and clients in one place
+- Visualize your sales pipeline with real-time analytics
+- Automate lead progression through customizable workflows
+- Monitor conversion rates and identify bottlenecks
+- Integrate with orders, projects, and production
 
-- **Leads** - Capture and qualify potential customers
-- **Contacts** - Manage individual contact information
-- **Customers** - Track customer accounts and history
-- **Deals** - Manage sales opportunities and pipeline
-- **Communication** - Email and messaging integration
-- **Customer Portal** - Self-service portal for customers
+---
 
-## Key Features
+## CRM Dashboard
 
-- Lead scoring and qualification
-- Deal pipeline management
-- Contact and account management
-- Communication tracking
-- Customer portal access
-- Integration with order management
+The CRM Dashboard (`/crm`) provides an at-a-glance view of your entire sales operation.
 
-## Getting Started
+### Dashboard Metrics
 
-Learn how to use each CRM module to effectively manage your customer relationships and drive sales growth.
+**Key Performance Indicators:**
+- **Total Contacts** - All contacts in your system
+- **Active Leads** - Leads currently in your pipeline
+- **Clients** - Converted customers with active accounts
+- **Conversion Rate** - Percentage of leads that convert to clients
+- **Pipeline Value** - Total potential revenue from active leads
+- **Total Activities** - Communication logs and interactions
+
+### Visual Analytics
+
+**Pipeline by Status Chart**
+- Bar chart showing lead distribution across pipeline stages
+- Stages: New → Contacted → Qualified → Proposal → Negotiation → Won/Lost
+- Click any bar to filter leads by that status
+
+**Activities by Type Chart**
+- Pie chart breaking down communication types
+- Types: Email, Call, Meeting, Note, Other
+- Helps identify which communication channels are most active
+
+**Recent Activity Feed**
+- Last 10 activities across all contacts/leads/clients
+- Shows: Activity type, description, related entity, timestamp
+- Status indicators: Completed, Pending
+
+**Recent Contacts**
+- Last 5 contacts added to the system
+- Quick access to contact detail pages
+
+---
+
+## Contacts
+
+Contacts are individuals in your database who may become leads or clients.
+
+### Managing Contacts
+
+**Access:** Navigate to `/crm/contacts`
+
+**Creating a New Contact:**
+1. Click "New Contact" button
+2. Fill in required fields:
+   - **First Name** (required)
+   - **Last Name**
+   - **Email**
+   - **Phone**
+   - **Company**
+   - **Position** - Job title
+   - **Notes** - Additional context
+3. Click "Create Contact"
+
+**Contact Fields:**
+- Name (first/last)
+- Email (unique - cannot duplicate)
+- Phone number
+- Company affiliation
+- Job position/title
+- Tags (for categorization)
+- Notes (free-form text)
+- Source (how they were acquired)
+- Score (0-100 engagement score)
+- Last contacted date
+- Created date
+
+### Contact List Features
+
+**Search & Filter:**
+- Search by name, email, or company
+- Filter by company presence (With Company / No Company / All)
+- Sort by any column (name, email, created date, etc.)
+
+**Bulk Actions:**
+- Export contacts to CSV
+- Tag multiple contacts
+- Assign contacts to team members
+
+**Contact Detail Page:**
+Access by clicking any contact row to see:
+- Full contact information
+- All addresses (if any)
+- Activity timeline (emails, calls, meetings)
+- Engagement analytics:
+  - Total activities
+  - Completed activities
+  - Pending activities
+  - Last contact date
+  - Engagement score
+
+### Converting Contacts to Leads
+
+When a contact shows buying interest, convert them to a lead:
+
+1. Open contact detail page
+2. Click "Convert to Lead" button
+3. Optionally add lead-specific data:
+   - Lead source (website, referral, social, ads)
+   - Interest level (low, medium, high)
+   - Pipeline stage (defaults to "initial")
+   - Assigned sales rep
+4. Click "Convert"
+
+**What Happens:**
+- New lead record created with inherited contact data
+- Contact linked bidirectionally to lead
+- All addresses copied to lead
+- Contact's lifecycle stage updated to "lead"
+
+---
+
+## Leads (Sales Pipeline)
+
+Leads are qualified prospects actively moving through your sales pipeline.
+
+### Lead Pipeline Stages
+
+**Standard Pipeline Progression:**
+
+1. **New** - Just captured, not yet contacted
+2. **Contacted** - Initial outreach made
+3. **Qualified** - Verified as legitimate opportunity
+4. **Proposal** - Proposal/quote sent
+5. **Negotiation** - Terms being discussed
+6. **Won** - Successfully converted to client
+7. **Lost** - Did not convert (closed-lost)
+
+### Managing Leads
+
+**Access:** Navigate to `/crm/leads`
+
+**Creating a New Lead:**
+1. Click "New Lead" button
+2. Fill in required fields:
+   - **First Name** (required)
+   - **Last Name**
+   - **Company** (required)
+   - **Email** (required)
+   - **Phone**
+   - **Lead Value** - Estimated deal size
+   - **Notes**
+3. Click "Create Lead"
+
+**Lead Fields:**
+- Name (first/last)
+- Company (required)
+- Email, Phone
+- Status (pipeline stage)
+- Prospect Status (cold/warm/hot - see below)
+- Lead Source (manual, website, referral, social, ads)
+- Interest Level
+- Lead Value (estimated revenue)
+- Assigned To (sales rep)
+- Pipeline Stage
+- Follow-up Date
+- Notes
+- Tags
+- Created/Updated dates
+
+### Prospect Status (Temperature)
+
+Leads can be classified by "temperature" to prioritize outreach:
+
+**Prospect Statuses:**
+- **Not Yet** - Default state, prospect status not determined
+- **Cold** - Low engagement, needs warming up
+- **Warm** - Showing interest, actively considering
+- **Hot** - High intent, ready to buy soon
+
+**Setting Prospect Status:**
+- Use dropdown in lead table (instant update)
+- Edit lead form and select status
+- Status visible at a glance with color badges
+
+### Pipeline Statistics
+
+View real-time pipeline analytics:
+
+**Metrics:**
+- Total Leads - All leads regardless of status
+- Pipeline Value - Sum of all lead values
+- Hot Prospects - Count of "hot" temperature leads
+- Won This Month - Leads marked "won" this month
+
+**Conversion Tracking:**
+- Contact → Lead conversion rate
+- Lead → Prospect conversion rate
+- Prospect → Client conversion rate
+
+### Lead Actions
+
+**View Details:**
+- Click any lead to see complete detail page
+- Includes:
+  - Full lead information
+  - All addresses
+  - Activity timeline
+  - Analytics (days in pipeline, progress percentage, lead value)
+
+**Edit Lead:**
+- Update any field
+- Change pipeline stage
+- Adjust prospect temperature
+- Reassign to different sales rep
+
+**Convert to Client:**
+- Mark lead as "won"
+- Automatically create client record
+- Inherit all lead data
+- Create initial project (required)
+- Optionally create first order
+
+---
+
+## Clients (Customers)
+
+Clients are converted leads who have made a purchase or signed a contract.
+
+### Managing Clients
+
+**Access:** Navigate to `/crm/customers`
+
+**Client Fields:**
+- Name (first/last)
+- Email (unique)
+- Phone
+- Company
+- Address (primary)
+- Billing Address
+- Shipping Address
+- Type (business, individual)
+- Status (active, inactive)
+- Portal Access (enabled/disabled)
+- Credit Limit
+- Payment Terms
+- Tax ID
+- Assigned Sales Rep
+- Notes
+- Tags
+
+### Client Statistics
+
+**Key Metrics:**
+- Total Clients - All active clients
+- With Active Projects - Clients currently engaged
+- Total Revenue - Lifetime value across all clients
+
+**Per-Client Analytics:**
+- Total Orders
+- Total Projects
+- Total Production Orders
+- Total Order Value
+- Total Paid
+- Outstanding Balance
+- Lifetime Value
+- Average Order Value
+- Total Activities
+- Days as Customer
+- Last Activity Date
+
+### Client Detail Page
+
+Click any client to see comprehensive information:
+
+**Overview:**
+- Client profile with full contact details
+- All addresses (primary, billing, shipping)
+- Portal access status
+- Credit and payment info
+
+**Related Records:**
+- **Projects** - Last 10 projects with this client
+- **Orders** - Last 10 orders placed
+- **Production Orders** - Last 10 production runs
+- **Activities** - Communication history (last 50)
+- **Payments** - Payment history (last 10)
+
+**Financial Summary:**
+- Total order value
+- Total paid
+- Outstanding balance
+- Lifetime value
+- Average order value
+
+**Activity Summary:**
+- Total activities
+- Completed activities
+- Days as customer
+- Last activity date
+
+---
+
+## CRM Lifecycle (Funnel Progression)
+
+The CRM supports automatic funnel progression with data inheritance.
+
+### Complete Funnel Flow
+
+```
+Contact → Lead → Prospect → Client
+```
+
+### Stage 1: Contact → Lead
+
+**When:** Contact shows buying intent
+
+**How:**
+1. Open contact detail page
+2. Click "Convert to Lead"
+3. Add lead-specific data (source, value, stage)
+4. Click "Convert"
+
+**System Actions:**
+- Creates lead record
+- Links contact ↔ lead bidirectionally
+- Copies all addresses to lead
+- Updates contact lifecycle stage to "lead"
+
+### Stage 2: Lead → Prospect
+
+**When:** Lead is qualified and shows strong interest
+
+**How:**
+- Set Prospect Status to "cold", "warm", or "hot"
+- Lead remains in leads table but now filterable as prospect
+
+**System Actions:**
+- Updates lead status to "prospect"
+- Updates lifecycle stage
+- Prospect is a *filtered view* of leads (not separate table)
+
+### Stage 3: Lead/Prospect → Client
+
+**When:** Deal is won and contract is signed
+
+**How:**
+1. Click "Convert to Client" on lead
+2. Fill in client details (pre-filled from lead)
+3. Enter required project information:
+   - Project name (required)
+   - Description
+   - Budget
+   - Start date
+   - Target date
+4. Optionally create first order
+5. Click "Convert to Client"
+
+**System Actions:**
+- Creates customer record with inherited lead data
+- Copies all addresses to customer
+- Creates project (required for conversion)
+- Creates order (if requested)
+- Links lead → customer for tracking
+- Updates lead status to "won"
+- Sets conversion timestamp
+
+### Funnel Analytics
+
+**Access:** View funnel statistics on CRM Dashboard
+
+**Metrics Tracked:**
+- Total at each stage (contacts, leads, prospects, clients)
+- Conversion counts:
+  - Contacts converted to leads
+  - Contacts converted to prospects
+  - Contacts converted to clients
+  - Leads as prospects
+  - Leads converted to customers
+- Conversion rates (percentages)
+
+---
+
+## Activities (Communication Tracking)
+
+Activities log all interactions with contacts, leads, and clients.
+
+### Activity Types
+
+**Communication Types:**
+- **Email** - Email sent or received
+- **Call** - Phone call (inbound or outbound)
+- **Meeting** - In-person or video meeting
+- **Note** - General note or observation
+- **Other** - Miscellaneous interaction
+
+### Activity Fields
+
+- **Type** - Communication method
+- **Title** - Brief summary
+- **Description** - Detailed notes
+- **Related Entity** - Contact, Lead, or Customer
+- **Created By** - User who logged the activity
+- **Scheduled At** - When activity is planned
+- **Completed At** - When activity was completed
+- **Status** - Pending, Completed
+- **Metadata** - Additional structured data (JSON)
+
+### Logging Activities
+
+**Automatic Logging:**
+- Some activities auto-created by system (e.g., email sends)
+
+**Manual Logging:**
+1. Navigate to contact/lead/client detail page
+2. Click "Log Activity"
+3. Select activity type
+4. Fill in title and description
+5. Set status (pending or completed)
+6. Click "Save"
+
+### Activity Timeline
+
+**View on Detail Pages:**
+- Contact, lead, and client detail pages show activity timeline
+- Most recent 50 activities displayed
+- Sorted by creation date (newest first)
+- Filterable by type and status
+
+---
+
+## Addresses
+
+Contacts, leads, and customers can have multiple addresses.
+
+### Address Types
+
+- **Business** - Commercial address
+- **Residential** - Home address
+
+### Address Fields
+
+- Address Line 1 (required)
+- Address Line 2
+- City (required)
+- State/Province
+- Postal Code
+- Country (defaults to USA)
+- Address Type (Business/Residential)
+- Is Primary (boolean)
+
+### Managing Addresses
+
+**Add Address:**
+1. Navigate to entity detail page (contact/lead/customer)
+2. Click "Add Address"
+3. Fill in address fields
+4. Select type and mark as primary if needed
+5. Click "Save"
+
+**Primary Address:**
+- One address can be marked as "primary"
+- Primary address used for billing/shipping by default
+- Displayed first in address list
+
+---
+
+## Search and Filtering
+
+### Global Search
+
+**Search Fields:**
+- Contacts: name, first name, last name, email, company
+- Leads: name, first name, last name, company, email
+- Customers: name, email, company, company name
+
+**Search Behavior:**
+- Case-insensitive
+- Partial match (contains)
+- Real-time results as you type (300ms debounce)
+
+### Filters
+
+**Contact Filters:**
+- Company presence (All / With Company / No Company)
+- Date range (created date)
+
+**Lead Filters:**
+- Status (New, Contacted, Qualified, Proposal, Negotiation, Won, Lost)
+- Prospect Status (All, Cold, Warm, Hot, Not Yet)
+- Lead Source (Manual, Website, Referral, Social Media, Advertising)
+
+**Customer Filters:**
+- Status (All, Active, Inactive)
+
+### Sorting
+
+**Sortable Columns:**
+- Name (first/last)
+- Email
+- Company
+- Created Date
+- Lead Value (leads only)
+
+**Sort Direction:**
+- Ascending (A-Z, 0-9, oldest first)
+- Descending (Z-A, 9-0, newest first)
+
+---
+
+## Best Practices
+
+### Lead Qualification
+
+1. **Capture quickly** - Add leads as soon as you have contact info
+2. **Qualify early** - Move unqualified leads to "lost" to keep pipeline clean
+3. **Set prospect temperature** - Use cold/warm/hot to prioritize outreach
+4. **Estimate value** - Add lead value for accurate pipeline forecasting
+5. **Assign ownership** - Assign each lead to a specific sales rep
+
+### Pipeline Management
+
+1. **Move leads promptly** - Update status as soon as stage changes
+2. **Follow up consistently** - Set follow-up dates and stick to them
+3. **Log all activities** - Record every call, email, and meeting
+4. **Monitor conversion rates** - Use funnel stats to identify bottlenecks
+5. **Clean up stale leads** - Mark old leads as "lost" after 90 days inactive
+
+### Contact Hygiene
+
+1. **Avoid duplicates** - Search before creating new contacts
+2. **Keep emails unique** - System prevents duplicate emails
+3. **Add context in notes** - Use notes field for important details
+4. **Tag for segmentation** - Use tags to group contacts by category
+5. **Update regularly** - Keep contact info current and accurate
+
+---
+
+## Common Workflows
+
+### Workflow 1: Cold Lead to Client Conversion
+
+1. **Create lead** - Add new lead from website form
+2. **First contact** - Call lead, log activity, update status to "Contacted"
+3. **Qualify lead** - Verify budget/authority/need, mark as "Qualified"
+4. **Set temperature** - Mark as "Warm" prospect
+5. **Send proposal** - Update status to "Proposal", log email activity
+6. **Negotiate** - Update to "Negotiation" status
+7. **Close deal** - Mark as "Won"
+8. **Convert to client** - Create customer + project + first order
+9. **Result** - Lead is now client with active project
+
+### Workflow 2: Contact Nurturing
+
+1. **Add contact** - Create contact from networking event
+2. **Log initial meeting** - Add "Meeting" activity with notes
+3. **Follow-up email** - Log email activity, mark as sent
+4. **Wait for response** - Monitor engagement score
+5. **Convert when ready** - When contact shows interest, convert to lead
+6. **Enter sales pipeline** - Follow standard lead progression
+
+### Workflow 3: Bulk Lead Import
+
+1. **Prepare CSV** - Format with columns: first_name, last_name, email, company, phone
+2. **Import leads** - Use bulk import tool (if available) or create manually
+3. **Initial status** - All leads start as "New"
+4. **Assign owners** - Distribute leads among sales team
+5. **Begin outreach** - Sales reps contact assigned leads
+6. **Update pipeline** - Leads move through stages based on responses
+
+---
+
+## Integration with Other Modules
+
+### Orders Module
+
+**Client → Order Flow:**
+- When lead converts to client, can optionally create first order
+- Clients list shows order count and total order value
+- Client detail page displays last 10 orders
+
+**Order Detail:**
+- Each order links back to client record
+- Order value contributes to client lifetime value
+- Order status tracked separately in Orders module
+
+### Projects Module
+
+**Required for Conversion:**
+- Converting lead to client *requires* creating a project
+- Projects represent client engagements or jobs
+- Each project links to client record
+
+**Project Tracking:**
+- Client detail page shows all projects
+- Project count visible in client statistics
+- Projects integrate with production and orders
+
+### Production Module
+
+**Production Orders:**
+- Client detail page shows production orders
+- Links through orders → projects → clients
+- Production value contributes to client analytics
+
+### Documents Module
+
+**Shared Documents:**
+- Attach documents to contacts, leads, or clients
+- Proposals, contracts, and correspondence
+- Documents visible on detail pages
+
+---
+
+## Troubleshooting
+
+### Cannot Create Duplicate Email
+
+**Problem:** "Email already exists" error when creating contact/lead
+
+**Solution:**
+- Email addresses must be unique across contacts and customers
+- Search for existing contact with that email
+- If found, update existing record or use different email
+
+### Lead Not Converting
+
+**Problem:** "Convert to Client" button disabled or fails
+
+**Solution:**
+- Verify lead has required fields: name, email, company
+- Ensure you've entered project name (required for conversion)
+- Check that lead isn't already converted (status = "won")
+
+### Missing Activities
+
+**Problem:** Activity timeline is empty despite logging activities
+
+**Solution:**
+- Verify activity has correct entity ID (contact_id, lead_id, or customer_id)
+- Check that activity status is not filtered out
+- Refresh page to reload activities
+
+### Pipeline Stats Not Updating
+
+**Problem:** Dashboard metrics don't reflect recent changes
+
+**Solution:**
+- Metrics update in real-time but may cache for 60 seconds
+- Refresh browser to force reload
+- Check that lead status is saved correctly
+
+---
+
+## Tips & Tricks
+
+### Speed Up Data Entry
+
+- Use keyboard shortcuts: Tab to next field, Enter to submit
+- Create contact templates with common fields pre-filled
+- Use bulk import for large contact lists
+
+### Improve Conversion Rates
+
+- Respond to new leads within 5 minutes (80% higher conversion)
+- Set prospect temperature based on engagement level
+- Follow up 6-8 times before marking as "lost"
+- Log all activities for complete context
+
+### Pipeline Forecasting
+
+- Add lead value to every qualified lead
+- Multiply pipeline value by historical conversion rate
+- Focus on "hot" prospects for end-of-quarter pushes
+
+### Team Collaboration
+
+- Assign leads to specific sales reps for accountability
+- Use notes to share context with team members
+- Tag leads by campaign or source for attribution
+
+---
+
+## FAQ
+
+**Q: What's the difference between a contact and a lead?**
+
+A: A contact is anyone in your database. A lead is a contact who has shown buying intent and is actively being pursued through the sales pipeline.
+
+**Q: Can I convert a lead back to a contact?**
+
+A: No, the CRM lifecycle is one-way. However, you can mark a lead as "lost" if they're no longer being pursued, and the lead record will remain linked to the original contact.
+
+**Q: What happens to activities when I convert a lead to a client?**
+
+A: Activities remain linked to the original lead record and are accessible from both the lead and client detail pages through the bidirectional link.
+
+**Q: Can a client have multiple projects?**
+
+A: Yes! Clients can have unlimited projects. Each project represents a separate engagement or job.
+
+**Q: How do I delete a lead?**
+
+A: Click the three-dot menu on any lead row and select "Delete". Note: This cannot be undone, but all associated activities will be preserved (unlinked).
+
+---
+
+## Support
+
+**Need Help?**
+- Internal Employees: #support Slack channel
+- External Users: support@limn.us.com
+- Documentation: help.limn.us.com
