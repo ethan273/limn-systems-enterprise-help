@@ -1,33 +1,1056 @@
 # Automation System
 
-Workflows, task automation, monitoring, alerts, and real-time events.
-
 ## Overview
 
-The automation system provides powerful tools for automating business processes, creating workflows, monitoring performance, and receiving real-time alerts.
+The Automation System provides powerful tools for automating business processes, creating workflows, monitoring performance, and receiving real-time alerts. Built on a robust event-driven architecture with multi-channel notifications, this system reduces manual work, ensures consistency, and provides visibility into automated operations.
 
-## Key Modules
+**Key Benefits:**
 
-- **Workflows** - Automated business processes
-- **Workflow Templates** - Reusable workflow patterns
-- **Task Automation** - Automatic task creation
-- **Triggers** - Event-based automation triggers
-- **Monitoring** - Performance monitoring and metrics
-- **Alerts** - Threshold-based alerting
-- **Real-Time Events** - Live event streaming
-- **Webhooks** - Integration with external systems
+- **Workflow Automation** - Visual workflow builder with state management (idle, running, paused, completed, failed)
+- **Workflow Templates** - Pre-built templates for common patterns (approval, notification, task creation, status updates)
+- **Task Automation Rules** - Event-based automatic task creation (7 trigger types)
+- **Performance Monitoring** - Real-time metrics with P95/P99 percentiles (execution time, failure rate, queue size)
+- **Threshold-Based Alerts** - Configurable alerts with cooldown periods to prevent spam
+- **Multi-Channel Notifications** - Email (Resend), in-app, Google Chat with rich formatting
+- **Real-Time Event Streaming** - SSE (Server-Sent Events) with heartbeat and automatic reconnection
+- **Execution Logs** - Complete audit trail for compliance and troubleshooting
+- **React Hooks** - `useRealtimeEvents`, `useMyEvents`, `useSSE`, `usePublishEvent` for seamless integration
+- **Cron Jobs** - Scheduled alert evaluation (every 5 minutes via Vercel Cron)
 
-## Key Features
+---
 
-- Visual workflow builder
-- Pre-built workflow templates
-- Event-based triggers
-- Task automation rules
-- Performance monitoring
-- Multi-channel alerts (email, in-app, Google Chat)
-- Real-time event streaming
-- Webhook integrations
+## Automation Dashboard
 
-## Getting Started
+Navigate to `/automation` to view the Automation Dashboard.
 
-Learn how to automate repetitive tasks, create workflows, and monitor system performance.
+**Dashboard Features:**
+
+- **Active Workflows** - Total active workflows with status breakdown
+- **Execution Metrics** - Total executions, success rate, average execution time
+- **Alert Overview** - Active alerts, triggered alerts (last 24 hours)
+- **Queue Status** - Pending workflows, running workflows
+- **Performance Charts** - Execution time trend, failure rate trend, queue size over time
+- **Recent Activity** - Last 20 workflow executions with status and duration
+- **Failed Workflows** - Recent failures requiring attention
+
+**Key Metrics:**
+
+- Total Active Workflows
+- Success Rate (percentage)
+- Average Execution Time (ms)
+- P95 Execution Time (ms)
+- P99 Execution Time (ms)
+- Failure Rate (percentage)
+- Queue Size (pending + running)
+- Active Alerts
+
+---
+
+## Workflow Management
+
+### Workflow States
+
+**1. Idle**
+- Workflow created but not yet started
+- Awaiting trigger or manual start
+- No executions in progress
+
+**2. Running**
+- Workflow actively executing
+- Steps processing in sequence
+- Execution log entries being created
+
+**3. Paused**
+- Workflow temporarily stopped
+- Can be resumed from current step
+- Useful for debugging or external dependencies
+
+**4. Completed**
+- Workflow finished successfully
+- All steps executed without errors
+- Ready for archival or rerun
+
+**5. Failed**
+- Workflow encountered error
+- Execution stopped at failed step
+- Error details logged for troubleshooting
+
+### Creating Workflows
+
+**To create workflow:**
+
+1. Navigate to Automation > Workflows
+2. Click **"New Workflow"**
+3. Enter workflow details:
+   - Name (required)
+   - Description (optional)
+   - Workflow Type (approval, notification, task_creation, custom)
+   - Entity Type (shop_drawing, production_order, project, task)
+   - Entity ID (optional, links workflow to specific entity)
+4. Configure nodes (workflow steps):
+   - Node ID (unique identifier)
+   - Node Type (start, action, decision, end)
+   - Node Config (step-specific settings)
+5. Define edges (connections between nodes):
+   - Source Node ID
+   - Target Node ID
+   - Condition (optional, for decision nodes)
+6. Set workflow config (global settings)
+7. Click **"Create Workflow"**
+
+**Workflow Types:**
+
+- **Approval** - Multi-stage approval workflows for shop drawings, documents, production orders
+- **Notification** - Automated email/in-app notifications for status changes
+- **Task Creation** - Automatically create tasks based on triggers
+- **Custom** - Custom workflow logic for specific business processes
+
+### Managing Workflows
+
+**View All Workflows:**
+- Navigate to Automation > Workflows
+- Filter by status (draft, active, paused, archived)
+- Filter by workflow type
+- Search by name
+- Sort by created date, last executed, success rate
+
+**Edit Workflow:**
+1. Click workflow name
+2. Click **"Edit Workflow"**
+3. Modify name, description, nodes, edges, config
+4. Click **"Save Changes"**
+
+**Pause Workflow:**
+1. Select workflow
+2. Click **"Pause"**
+3. Running executions complete, new executions blocked
+
+**Resume Workflow:**
+1. Select paused workflow
+2. Click **"Resume"**
+3. New executions allowed
+
+**Archive Workflow:**
+1. Select workflow
+2. Click **"Archive"**
+3. Workflow marked as inactive, hidden from active list
+4. Execution history preserved
+
+**Delete Workflow:**
+1. Select workflow
+2. Click **"Delete"**
+3. Confirm deletion
+4. Workflow and all execution logs permanently deleted
+
+### Execution Logs
+
+**Viewing Execution Logs:**
+
+1. Navigate to workflow detail page
+2. Scroll to **"Execution History"** section
+3. View list of executions with:
+   - Execution ID
+   - Started At
+   - Completed At (if finished)
+   - Duration (ms)
+   - Status (success, error, running)
+   - Error Message (if failed)
+
+**Execution Details:**
+
+Click execution to view:
+- Complete step-by-step execution trace
+- Input data for each step
+- Output data for each step
+- Error stack trace (if failed)
+- Timestamps for each step
+
+---
+
+## Workflow Templates
+
+### Template Library
+
+Navigate to `/automation/templates` to view available workflow templates.
+
+**Template Categories:**
+
+**1. Approval Workflows**
+- Shop Drawing Approval (3-stage: Design Review → Technical Review → Final Approval)
+- Production Order Approval (2-stage: Manager → Operations Director)
+- Document Approval (multi-stakeholder with parallel reviews)
+- Purchase Order Approval (tiered based on amount)
+
+**2. Notification Workflows**
+- Order Status Change Notifications (customer + internal team)
+- Production Milestone Notifications (factory + project manager)
+- QC Failed Notifications (factory + quality team + customer)
+- Payment Received Notifications (accounting + sales)
+- Shipment Delivered Notifications (customer + fulfillment team)
+
+**3. Task Creation Workflows**
+- Order Created → Create Design Task
+- Production Order Started → Create QC Inspection Task
+- Payment Received → Create Invoice Generation Task
+- Shipment Delayed → Create Customer Outreach Task
+
+**4. Status Update Workflows**
+- Production Milestone Reached → Update Order Status
+- QC Inspection Complete → Update Production Order Status
+- Shipment Delivered → Update Order Status to Fulfilled
+
+**5. Custom Workflows**
+- Complex multi-step business processes
+- Integration with external systems
+- Custom logic requiring conditional branching
+
+### Using Templates
+
+**To create workflow from template:**
+
+1. Navigate to Automation > Templates
+2. Browse template library
+3. Click template card
+4. Click **"Use Template"**
+5. Template automatically creates workflow with pre-configured nodes/edges
+6. Customize workflow as needed
+7. Assign entity (if applicable)
+8. Activate workflow
+
+**Template Configuration:**
+
+Templates include:
+- Pre-defined nodes (start, actions, decisions, end)
+- Pre-configured edges with conditions
+- Recommended config settings
+- Example entity mappings
+- Trigger setup instructions
+
+### Creating Templates
+
+**To create custom template:**
+
+1. Navigate to Automation > Templates
+2. Click **"New Template"**
+3. Enter template details:
+   - Name (required)
+   - Description (optional)
+   - Category (approval, notification, task_creation, status_update, custom)
+   - Trigger Type (manual, scheduled, event)
+   - Config (template-specific settings)
+4. Mark as active to make available in template library
+5. Click **"Create Template"**
+
+**Template Best Practices:**
+
+- Use descriptive names (e.g., "Shop Drawing 3-Stage Approval")
+- Include detailed descriptions explaining use case
+- Set appropriate category for easy discovery
+- Use generic node names for reusability
+- Document required config fields
+- Test template by creating workflow from it
+
+---
+
+## Task Automation Rules
+
+### Automation Rules
+
+Navigate to `/automation/rules` to manage task automation rules.
+
+**Trigger Events:**
+
+**1. order_created**
+- Fires when new order created
+- Useful for: Creating design tasks, notifying sales team, scheduling production
+
+**2. order_status_changed**
+- Fires when order status changes (pending → confirmed → in_production → completed → shipped)
+- Useful for: Status-specific tasks, customer notifications, internal alerts
+
+**3. project_started**
+- Fires when project status changes to "in_progress"
+- Useful for: Creating project kickoff tasks, notifying team members, scheduling milestones
+
+**4. production_milestone**
+- Fires when production order reaches milestone (cutting, sewing, finishing, packing)
+- Useful for: QC inspection tasks, progress updates, resource allocation
+
+**5. qc_failed**
+- Fires when QC inspection fails
+- Useful for: Creating corrective action tasks, notifying factory, escalating to management
+
+**6. payment_received**
+- Fires when payment processed
+- Useful for: Invoice generation tasks, accounting notifications, releasing production orders
+
+**7. custom**
+- Fires for custom business events
+- Useful for: Specialized automation needs, integration with external systems
+
+### Creating Automation Rules
+
+**To create automation rule:**
+
+1. Navigate to Automation > Rules
+2. Click **"New Rule"**
+3. Enter rule details:
+   - Name (required)
+   - Description (optional)
+   - Trigger Event (select from 7 options)
+   - Conditions (optional, JSON object for filtering events)
+4. Configure task template:
+   - Title (required, supports variables like `{{order_number}}`)
+   - Description (optional, supports variables)
+   - Priority (low, medium, high, urgent)
+   - Due Date Offset Days (e.g., 3 for 3 days from trigger)
+   - Assign To Role (optional, e.g., "designer", "qc_inspector")
+   - Assign To User ID (optional, specific user)
+5. Mark as active
+6. Click **"Create Rule"**
+
+**Variable Interpolation:**
+
+Task templates support variables:
+- `{{order_number}}` - Order number
+- `{{project_name}}` - Project name
+- `{{customer_name}}` - Customer name
+- `{{production_order_number}}` - Production order number
+- `{{qc_inspection_id}}` - QC inspection ID
+
+Example:
+```
+Title: "QC Inspection for Order {{order_number}}"
+Description: "Perform quality inspection for {{customer_name}} - {{project_name}}"
+```
+
+### Managing Rules
+
+**View All Rules:**
+- Navigate to Automation > Rules
+- Filter by trigger event
+- Filter by active/inactive status
+- Search by name
+- Sort by created date, last triggered
+
+**Edit Rule:**
+1. Click rule name
+2. Click **"Edit Rule"**
+3. Modify details, conditions, or task template
+4. Click **"Save Changes"**
+
+**Deactivate Rule:**
+1. Select rule
+2. Click **"Deactivate"**
+3. Rule stops creating tasks for future triggers
+4. Existing tasks unaffected
+
+**Reactivate Rule:**
+1. Select inactive rule
+2. Click **"Activate"**
+3. Rule resumes creating tasks
+
+**Delete Rule:**
+1. Select rule
+2. Click **"Delete"**
+3. Confirm deletion
+4. Rule and execution logs permanently deleted
+
+### Rule Execution Logs
+
+**Viewing Rule Logs:**
+
+1. Navigate to rule detail page
+2. Scroll to **"Execution History"** section
+3. View list of executions with:
+   - Triggered At
+   - Event Data (JSON)
+   - Task Created ID
+   - Status (success, error, skipped)
+   - Error Message (if failed)
+
+**Skipped Executions:**
+
+Rules skip execution when:
+- Conditions not met
+- User assignment failed
+- Task template invalid
+- System error
+
+---
+
+## Performance Monitoring
+
+### Monitoring Dashboard
+
+Navigate to `/automation/monitoring` to view performance metrics.
+
+**Metrics Available:**
+
+**1. Execution Time**
+- **Average** - Mean execution time across all workflows
+- **P95** - 95th percentile (95% of workflows complete faster)
+- **P99** - 99th percentile (99% of workflows complete faster)
+- **Max** - Longest execution time in period
+- **Time Range** - 1h, 24h, 7d, 30d
+
+**2. Failure Rate**
+- **Percentage** - Failed executions / total executions
+- **Count** - Total failed executions
+- **By Workflow** - Failure rate per workflow
+- **Trending** - Failure rate over time
+
+**3. Queue Size**
+- **Pending** - Workflows awaiting execution
+- **Running** - Workflows currently executing
+- **Total Queue** - Pending + running
+- **Max Queue** - Highest queue size in period
+
+**4. Resource Usage** (placeholder for future)
+- **Memory** - Memory consumption per workflow
+- **CPU** - CPU usage per workflow
+- **Network** - Network requests per workflow
+
+### Failed Workflows
+
+**Viewing Failed Workflows:**
+
+1. Navigate to Automation > Monitoring
+2. Scroll to **"Failed Workflows"** section
+3. Filter by:
+   - Workflow ID (optional)
+   - Time range (1h, 24h, 7d, 30d)
+   - Limit (default 20)
+
+**Failure Details:**
+
+Each failed workflow shows:
+- Workflow Name
+- Execution ID
+- Failed At (timestamp)
+- Error Message
+- Failed Step (node ID)
+- Retry Count
+- Action Buttons (Retry, View Details, Archive)
+
+**Retrying Failed Workflows:**
+
+1. Select failed workflow
+2. Click **"Retry"**
+3. Workflow re-executes from beginning
+4. New execution log created
+5. Original failure preserved for audit
+
+---
+
+## Alert System
+
+### Alert Rules
+
+Navigate to `/automation/alerts` to manage alert rules.
+
+**Alert Metrics:**
+
+**1. execution_time**
+- Trigger when average/P95/P99 execution time exceeds threshold
+- Threshold Type: above, below, equals
+- Threshold Value: milliseconds
+- Example: Alert if P95 > 5000ms (5 seconds)
+
+**2. failure_rate**
+- Trigger when failure rate exceeds threshold
+- Threshold Type: above, below, equals
+- Threshold Value: percentage (0-100)
+- Example: Alert if failure rate > 10%
+
+**3. queue_size**
+- Trigger when pending + running workflows exceed threshold
+- Threshold Type: above, below, equals
+- Threshold Value: count
+- Example: Alert if queue size > 50
+
+**4. resource_usage** (placeholder for future)
+- Trigger when memory/CPU exceeds threshold
+- Threshold Type: above, below, equals
+- Threshold Value: percentage or absolute
+
+**5. custom**
+- Trigger for custom metrics
+- Requires custom metric collection
+- Flexible threshold configuration
+
+### Alert Channels
+
+**1. Email (Resend)**
+- HTML email with severity indicators
+- Color-coded based on severity (info, warning, critical)
+- Includes metric details, threshold, current value
+- Action buttons (View Dashboard, View Workflow, Acknowledge)
+- Sent to recipient_user_ids email addresses
+
+**2. In-App**
+- Creates `real_time_events` entry
+- Appears in notification bell dropdown
+- Rich formatting with icons and colors
+- Clickable to view alert details
+- Marks as delivered when viewed
+
+**3. Google Chat**
+- Rich card format with header, body, buttons
+- Color-coded based on severity
+- Includes metric charts (if available)
+- Action buttons (View Dashboard, Acknowledge)
+- Posted to configured webhook URL
+
+**4. SMS** (placeholder for future Twilio integration)
+- Plain text alert
+- Critical severity only
+- Includes metric name and current value
+- Link to dashboard
+
+### Creating Alert Rules
+
+**To create alert rule:**
+
+1. Navigate to Automation > Alerts
+2. Click **"New Alert Rule"**
+3. Enter alert details:
+   - Name (required)
+   - Description (optional)
+   - Metric (execution_time, failure_rate, queue_size, resource_usage, custom)
+   - Threshold Type (above, below, equals)
+   - Threshold Value (number)
+   - Alert Channels (email, in_app, google_chat)
+   - Recipient User IDs (optional, for email channel)
+4. Mark as active
+5. Click **"Create Alert Rule"**
+
+**Alert Configuration Example:**
+
+```json
+{
+  "name": "High Failure Rate Alert",
+  "description": "Alert when workflow failure rate exceeds 10%",
+  "metric": "failure_rate",
+  "threshold_type": "above",
+  "threshold_value": 10,
+  "alert_channels": ["email", "in_app", "google_chat"],
+  "recipient_user_ids": ["user-id-1", "user-id-2"],
+  "is_active": true
+}
+```
+
+### Alert Cooldown
+
+**Cooldown Period:**
+
+- Prevents alert spam
+- Default: 15 minutes between alerts for same rule
+- Cooldown applies per alert rule, not globally
+- Subsequent threshold breaches during cooldown ignored
+- Cooldown resets after period expires
+
+**Example:**
+
+1. Failure rate exceeds 10% at 10:00 AM → Alert sent
+2. Failure rate still 12% at 10:05 AM → No alert (cooldown active)
+3. Failure rate drops to 8% at 10:10 AM → Cooldown continues
+4. Failure rate rises to 15% at 10:20 AM → New alert sent (cooldown expired)
+
+### Managing Alerts
+
+**View All Alert Rules:**
+- Navigate to Automation > Alerts
+- Filter by metric
+- Filter by active/inactive status
+- Search by name
+- Sort by created date, last triggered
+
+**View Triggered Alerts:**
+1. Scroll to **"Triggered Alerts"** section
+2. Filter by:
+   - Time range (1h, 24h, 7d, 30d)
+   - Alert rule ID (optional)
+   - Limit (default 50)
+3. View alert details:
+   - Alert Rule Name
+   - Triggered At
+   - Metric Value
+   - Threshold Value
+   - Severity (info, warning, critical)
+   - Channels Notified
+   - Acknowledged (yes/no)
+
+**Acknowledge Alert:**
+1. Select triggered alert
+2. Click **"Acknowledge"**
+3. Alert marked as acknowledged
+4. Alert removed from active alerts dashboard
+5. Audit log entry created
+
+**Edit Alert Rule:**
+1. Click alert rule name
+2. Click **"Edit Rule"**
+3. Modify metric, threshold, or channels
+4. Click **"Save Changes"**
+
+**Deactivate Alert Rule:**
+1. Select alert rule
+2. Click **"Deactivate"**
+3. Rule stops evaluating threshold
+4. No new alerts triggered
+
+**Delete Alert Rule:**
+1. Select alert rule
+2. Click **"Delete"**
+3. Confirm deletion
+4. Rule and triggered alert history permanently deleted
+
+---
+
+## Real-Time Events
+
+### Event Streaming
+
+Real-time events use SSE (Server-Sent Events) for push notifications from server to client.
+
+**Event Types:**
+
+- **workflow_started** - Workflow execution started
+- **workflow_completed** - Workflow execution completed
+- **workflow_failed** - Workflow execution failed
+- **alert_triggered** - Alert rule threshold breached
+- **task_created** - Automation rule created task
+- **notification_sent** - Notification sent via workflow
+
+**SSE Endpoint:**
+
+```
+GET /api/events
+```
+
+**Connection Features:**
+
+- Automatic reconnection on disconnect
+- Heartbeat every 30 seconds to keep connection alive
+- Event buffering during disconnect (up to 100 events)
+- Delivery acknowledgment to prevent duplicate events
+
+### React Hooks
+
+**1. useRealtimeEvents (Entity-Specific Events)**
+
+```typescript
+import { useRealtimeEvents } from '@/lib/realtime/client';
+
+const { events, refetch } = useRealtimeEvents({
+  entityType: 'workflow',
+  entityId: workflowId,
+});
+```
+
+**Returns:**
+- `events` - Array of events for entity
+- `refetch` - Function to manually refetch events
+
+**2. useMyEvents (User's Undelivered Events)**
+
+```typescript
+import { useMyEvents } from '@/lib/realtime/client';
+
+const { events, markAsDelivered } = useMyEvents();
+```
+
+**Returns:**
+- `events` - Array of undelivered events for current user
+- `markAsDelivered` - Function to mark event as delivered
+
+**3. useSSE (SSE Connection)**
+
+```typescript
+import { useSSE } from '@/lib/realtime/client';
+
+const { connected, events, reconnect } = useSSE({
+  endpoint: '/api/events',
+});
+```
+
+**Returns:**
+- `connected` - Boolean indicating connection status
+- `events` - Array of events received via SSE
+- `reconnect` - Function to manually reconnect
+
+**4. usePublishEvent (Event Publishing)**
+
+```typescript
+import { usePublishEvent } from '@/lib/realtime/client';
+
+const { publishEvent } = usePublishEvent();
+
+await publishEvent({
+  eventType: 'workflow_started',
+  entityType: 'workflow',
+  entityId: workflowId,
+  payload: { workflowName: 'Approval Workflow' },
+});
+```
+
+**Returns:**
+- `publishEvent` - Function to publish event to server
+
+### Event Persistence
+
+**Database Storage:**
+
+Events stored in `real_time_events` table:
+- `id` - UUID
+- `event_type` - Event type (workflow_started, alert_triggered, etc.)
+- `entity_type` - Entity type (workflow, alert_rule, etc.)
+- `entity_id` - Entity UUID
+- `user_id` - User UUID (nullable, for user-specific events)
+- `payload` - JSON data
+- `delivered` - Boolean (false until client acknowledges)
+- `created_at` - Timestamp
+
+**Delivery Tracking:**
+
+1. Event created with `delivered = false`
+2. SSE pushes event to connected clients
+3. Client acknowledges receipt
+4. Event marked `delivered = true`
+5. Undelivered events re-sent on reconnection
+
+**Cleanup:**
+
+- Delivered events older than 7 days auto-deleted
+- Undelivered events retained indefinitely
+- Manual cleanup available via admin interface
+
+---
+
+## Cron Jobs
+
+### Alert Evaluation Cron
+
+**Endpoint:** `/api/cron/evaluate-alerts`
+
+**Schedule:** Every 5 minutes (`*/5 * * * *`)
+
+**Purpose:** Evaluate all active alert rules and trigger alerts if thresholds breached
+
+**Process:**
+
+1. Fetch all active alert rules from `alert_rules` table
+2. For each rule:
+   - Calculate metric value (execution_time, failure_rate, queue_size)
+   - Compare to threshold (above, below, equals)
+   - Check if cooldown active (last triggered < 15 minutes ago)
+   - If threshold breached and cooldown expired:
+     - Create `alert_triggers` entry
+     - Send notifications to configured channels (email, in-app, google_chat)
+     - Log alert in audit trail
+3. Return summary (rules evaluated, alerts triggered)
+
+**Security:**
+
+- Requires `CRON_SECRET` in Authorization header
+- Returns 401 if secret invalid
+- Logs all evaluations for audit
+
+**Manual Trigger:**
+
+```bash
+curl -X GET http://localhost:3000/api/cron/evaluate-alerts \
+  -H "Authorization: Bearer YOUR_CRON_SECRET"
+```
+
+**Configuration (vercel.json):**
+
+```json
+{
+  "crons": [
+    {
+      "path": "/api/cron/evaluate-alerts",
+      "schedule": "*/5 * * * *"
+    }
+  ]
+}
+```
+
+---
+
+## Integration
+
+### tRPC API
+
+**Routers:**
+
+- `workflows` - Workflow CRUD operations (13 endpoints)
+- `workflowTemplates` - Template management (8 endpoints)
+- `taskAutomation` - Automation rules (9 endpoints)
+- `workflowMonitoring` - Performance metrics (6 endpoints)
+- `realtimeEvents` - Event streaming (5 endpoints)
+
+**Example Usage:**
+
+```typescript
+import { api } from '@/utils/api';
+
+// Create workflow
+const createWorkflow = api.workflows.create.useMutation();
+await createWorkflow.mutateAsync({
+  name: 'Approval Workflow',
+  workflowType: 'approval',
+  entityType: 'shop_drawing',
+  entityId: shopDrawingId,
+  nodes: [...],
+  edges: [...],
+});
+
+// Get execution metrics
+const { data: metrics } = api.workflowMonitoring.getExecutionMetrics.useQuery({
+  workflowId: workflowId,
+  timeRange: '24h',
+});
+
+// Create automation rule
+const createRule = api.taskAutomation.createRule.useMutation();
+await createRule.mutateAsync({
+  name: 'Order Created Task',
+  triggerEvent: 'order_created',
+  taskTemplate: {
+    title: 'New Order {{order_number}}',
+    priority: 'high',
+  },
+});
+```
+
+### Environment Variables
+
+**Required Environment Variables:**
+
+```bash
+# Cron Jobs (Vercel)
+CRON_SECRET=your-secure-random-string-here
+
+# Email Notifications (Resend)
+RESEND_API_KEY=re_xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+
+# Google Chat Notifications
+GOOGLE_CHAT_WEBHOOK_URL=https://chat.googleapis.com/v1/spaces/xxx/messages?key=xxx&token=xxx
+
+# Rate Limiting (Upstash Redis)
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=xxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+```
+
+**Setup:**
+
+```bash
+# Add to .env
+nano .env
+# Add all variables above
+
+# Add to Vercel
+vercel env add CRON_SECRET
+vercel env add RESEND_API_KEY
+vercel env add GOOGLE_CHAT_WEBHOOK_URL
+vercel env add UPSTASH_REDIS_REST_URL
+vercel env add UPSTASH_REDIS_REST_TOKEN
+```
+
+---
+
+## Common Workflows
+
+### Workflow 1: Shop Drawing Approval
+
+**Scenario:** Shop drawing uploaded, requires 3-stage approval (Design → Technical → Final)
+
+**Setup:**
+
+1. Create workflow from "Shop Drawing 3-Stage Approval" template
+2. Assign to shop drawing entity
+3. Configure approvers:
+   - Design Review → Design team role
+   - Technical Review → Engineering team role
+   - Final Approval → Project manager role
+4. Activate workflow
+
+**Execution:**
+
+1. Shop drawing uploaded → Workflow triggered
+2. Design Review stage:
+   - Task created for design team
+   - Email notification sent to designers
+   - Designer reviews and approves/rejects
+3. If approved → Technical Review stage:
+   - Task created for engineering team
+   - Email notification sent to engineers
+   - Engineer reviews and approves/rejects
+4. If approved → Final Approval stage:
+   - Task created for project manager
+   - Email notification sent to PM
+   - PM reviews and approves/rejects
+5. If all approved → Shop drawing status: Approved
+6. If any rejected → Shop drawing status: Needs Revision
+
+**Timeline:** 2-5 days depending on approver availability
+
+### Workflow 2: QC Failed Automation
+
+**Scenario:** QC inspection fails, need to create corrective action tasks and notify stakeholders
+
+**Setup:**
+
+1. Create automation rule:
+   - Name: "QC Failed Corrective Action"
+   - Trigger Event: qc_failed
+   - Conditions: `{ "severity": "major" }` (only major failures)
+   - Task Template:
+     - Title: "Corrective Action for QC Inspection {{qc_inspection_id}}"
+     - Description: "QC inspection failed for Production Order {{production_order_number}}. Investigate and resolve issue."
+     - Priority: urgent
+     - Assign To Role: factory_manager
+     - Due Date Offset Days: 1
+2. Activate rule
+
+**Execution:**
+
+1. QC inspection marked as failed with severity "major" → Rule triggered
+2. Task created for factory manager with 1-day due date
+3. Email notification sent to factory manager
+4. In-app notification created
+5. Google Chat message posted to quality channel
+6. Factory manager investigates and resolves issue
+7. QC re-inspection scheduled
+
+**Timeline:** 1-2 days for corrective action completion
+
+### Workflow 3: Performance Alert for High Failure Rate
+
+**Scenario:** Monitor workflow failure rate, alert if exceeds 10%
+
+**Setup:**
+
+1. Create alert rule:
+   - Name: "High Failure Rate Alert"
+   - Metric: failure_rate
+   - Threshold Type: above
+   - Threshold Value: 10
+   - Alert Channels: email, in_app, google_chat
+   - Recipient User IDs: [operations-manager-id, engineering-lead-id]
+2. Activate rule
+
+**Execution:**
+
+1. Cron job evaluates alert rule every 5 minutes
+2. Calculates failure rate over last 24 hours
+3. If failure rate > 10% and cooldown expired:
+   - Email sent to operations manager and engineering lead
+   - In-app notification created for both users
+   - Google Chat message posted to ops channel
+   - Alert triggers entry created
+4. Team investigates failed workflows
+5. Root cause identified (e.g., API integration timeout)
+6. Fix deployed
+7. Failure rate drops below 10%
+8. Alert resolves automatically
+
+**Timeline:** Alert triggered within 5 minutes of threshold breach, resolution depends on root cause
+
+---
+
+## Best Practices
+
+1. **Use Templates for Common Patterns** - Start with pre-built templates rather than building workflows from scratch
+2. **Set Realistic Due Dates** - Use due_date_offset_days to account for business hours, holidays, team capacity
+3. **Monitor Execution Time** - Set P95 execution time alerts to catch performance degradation early
+4. **Configure Cooldown Periods** - Use default 15-minute cooldown to prevent alert fatigue
+5. **Test Workflows in Draft Mode** - Create workflows in draft status, test with sample data before activating
+6. **Use Descriptive Names** - Name workflows, rules, and alerts descriptively for easy identification
+7. **Document Custom Workflows** - Add detailed descriptions explaining purpose, steps, and expected outcomes
+8. **Archive Completed Workflows** - Archive workflows after project completion to reduce clutter
+9. **Review Failed Workflows Weekly** - Weekly review of failed workflows to identify systemic issues
+10. **Use Role-Based Assignment** - Assign tasks to roles rather than specific users for flexibility
+
+---
+
+## Troubleshooting
+
+**Workflow stuck in "Running" state** - Check execution logs for last completed step; if step hung, pause workflow and resume from next step; if node error, fix node config and retry.
+
+**Task automation rule not triggering** - Verify trigger event name matches exactly (case-sensitive); check conditions JSON syntax; ensure rule is active; verify event being fired (check automation_logs table).
+
+**Alert not sending email** - Verify RESEND_API_KEY configured in environment; check recipient_user_ids valid UUIDs; ensure email channel enabled in alert_channels; check Resend dashboard for delivery status.
+
+**Google Chat webhook failing** - Verify GOOGLE_CHAT_WEBHOOK_URL configured and correct; test webhook URL with curl; ensure webhook has permission to post to chat space; check for expired webhook token.
+
+**SSE connection dropping** - Check browser console for errors; verify firewall not blocking SSE; ensure heartbeat frequency (30s) sufficient for network; use useSSE hook which handles reconnection automatically.
+
+**High execution time (P95 > 10s)** - Review workflow nodes for inefficient operations; check database queries for missing indexes; consider breaking workflow into smaller workflows; use async operations where possible; add caching for repeated operations.
+
+**Queue size growing** - Check for failed workflows blocking queue; review workflow execution time; consider increasing concurrent execution limit; pause low-priority workflows during peak; investigate root cause of delays.
+
+**Real-time events not appearing** - Verify user_id matches current user; check delivered=false in real_time_events table; ensure SSE connection active; use useMyEvents hook to fetch undelivered events; mark events as delivered after viewing.
+
+---
+
+## Tips & Tricks
+
+- **Batch Task Creation** - Use automation rules with conditions to create multiple tasks from single trigger
+- **Workflow Versioning** - Archive workflows when making major changes, create new version
+- **Custom Metrics** - Track custom metrics by creating workflow that logs metric values to database
+- **Conditional Notifications** - Use decision nodes in workflows to send notifications only when specific conditions met
+- **Parallel Execution** - Design workflows with parallel nodes for independent steps to reduce execution time
+- **Error Handling** - Add error handling nodes to workflows to gracefully handle failures
+- **Retry Logic** - Configure automatic retries for transient failures (e.g., API timeouts)
+- **Workflow Composition** - Trigger child workflows from parent workflows for complex processes
+- **Alert Aggregation** - Group similar alerts (e.g., multiple workflows failing) to reduce noise
+- **Dashboard Bookmarking** - Bookmark monitoring dashboard with specific time range for daily review
+
+---
+
+## FAQ
+
+**Q: Can I create workflows without coding?**
+A: Yes, use workflow templates which provide pre-built workflows for common patterns. Customize as needed through UI.
+
+**Q: How many workflows can run concurrently?**
+A: No hard limit, but monitor queue size. If queue size > 50, consider optimizing workflows or increasing resources.
+
+**Q: Can I schedule workflows to run at specific times?**
+A: Yes, create workflow with trigger_type "scheduled" and set cron expression in config.
+
+**Q: What happens if cron job fails?**
+A: Vercel automatically retries failed cron jobs up to 3 times. Check Vercel logs for failure details.
+
+**Q: Can I send alerts to Slack instead of Google Chat?**
+A: Not currently supported. Roadmap includes Slack integration. Use Google Chat or email for now.
+
+**Q: How do I export workflow execution data?**
+A: Use tRPC API to fetch automation_logs, export to CSV using JavaScript or download via admin interface.
+
+**Q: Can automation rules create multiple tasks per trigger?**
+A: Currently one task per trigger. Workaround: Create multiple rules for same trigger with different conditions.
+
+**Q: What is P95 execution time?**
+A: 95th percentile - 95% of workflows complete faster than this time. Useful for identifying outliers.
+
+**Q: Can I test workflows without triggering real actions?**
+A: Yes, create workflow in "draft" status. Draft workflows log executions but don't perform actions.
+
+**Q: How long are execution logs retained?**
+A: Indefinitely. Archive old workflows to hide from active list. Manual deletion available via admin interface.
+
+---
+
+## Support
+
+**Technical Support**: support@limnsystems.com | 1-800-XXX-XXXX | Monday-Friday 9 AM-6 PM EST
+
+**Automation Team**: automation@limnsystems.com for workflow design assistance and rule configuration
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests and improvement suggestions
