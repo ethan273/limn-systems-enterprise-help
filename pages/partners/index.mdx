@@ -1,33 +1,218 @@
 # Partner Management
 
-Manage relationships with designers, factories, sourcing agents, and other partners.
-
 ## Overview
 
-The partner management system provides tools for collaborating with external partners, tracking performance, managing contracts, and providing portal access.
+The Partner Management system provides comprehensive tools for managing relationships with external manufacturers, designers, sourcing agents, and other business partners throughout the product lifecycle. This integrated platform enables you to track partner capabilities, manage portal access, monitor performance metrics, coordinate communication, and maintain document compliance—all within a single unified interface.
+
+**Key Benefits:**
+
+- **Multi-Type Partner Support**: Manage three distinct partner types (factories, designers, sourcing agents) with specialized workflows, portal modules, and performance tracking tailored to each partner's role in the production ecosystem.
+
+- **Comprehensive Contact Management**: Maintain unlimited contacts per partner with role-based flags (primary, QC, production, finance), employment tracking, department assignments, and employee lifecycle management from onboarding through termination.
+
+- **Performance Analytics**: Track 12-month rolling metrics including orders completed, on-time delivery rates (0-100%), defect rates (0-100%), total revenue, and quality ratings (0-5 scale) with automated statistical aggregation and trend analysis.
+
+- **Secure Portal Access**: Grant role-based portal access to partner contacts with granular module-level permissions (7 modules for factories, 5 for designers, 6 for sourcing), automatic email notifications, and instant session invalidation upon revocation.
+
+- **Document Compliance Tracking**: Upload and track contracts, certifications, insurance policies, and technical specifications with issue dates, expiry dates, renewal reminders, and status management (active, archived, expired).
+
+- **Capacity Planning**: Define production capacity (max units/month), lead time expectations (standard days), and minimum order requirements to prevent over-assignment, optimize workload distribution, and ensure realistic production scheduling.
+
+- **Financial Integration**: Configure payment terms, currency preferences (default USD), and track revenue generation with integration to production invoicing for seamless financial operations and vendor management reporting.
+
+- **Production System Integration**: Partners are directly linked to production orders with active order counts, assignment validation, deletion protection for partners with active work, and automated partner selection dropdowns based on status and type filtering.
+
+---
+
+## Partners Dashboard
+
+The Partners Dashboard provides a comprehensive overview of your entire partner ecosystem with real-time metrics, performance summaries, and activity tracking.
+
+### Dashboard Features
+
+**Partner Type Distribution**: Total factories, designers, and sourcing agents with capacity breakdown and specialization categories.
+
+**Performance Overview**: Aggregate on-time delivery rates, defect rates, quality ratings, and top performers across the partner network.
+
+**Activity Metrics**: Recent partner additions, portal access summary, document expiry alerts, and capacity utilization percentages.
+
+**Revenue Analytics**: Total revenue by partner type, top revenue generators, and monthly revenue trends.
+
+**Quality Alerts**: Partners below performance thresholds, suspended partners, and partners requiring quality improvement intervention.
+
+---
 
 ## Partner Types
 
-- **Designers** - External design partners and freelancers
-- **Factories** - Manufacturing partners and suppliers
-- **Sourcing Agents** - Procurement and sourcing partners
-- **Other Partners** - Logistics, consultants, and service providers
+### Factory Partners
 
-## Key Features
+Manufacturing facilities responsible for fabricating finished products. Specializations include woodworking, metalworking, upholstery, glass fabrication, ceramic production, and custom fabrication.
 
-- Partner profiles and contact management
-- Performance tracking and metrics
-- Contract management and renewals
-- Portal access for collaboration
-- Document sharing and collaboration
-- Payment and invoice tracking
+**Portal Modules** (7): Dashboard, Orders, Production, QC, Shipping, Documents, Settings
 
-## Getting Started
+**Typical Services**: Manufacturing, assembly, finishing, quality inspection, packaging, shipping coordination, rush order capabilities.
 
-Explore the sections below to learn how to effectively manage partner relationships:
+### Designer Partners
 
-- Onboarding new partners
-- Tracking partner performance
-- Managing contracts and agreements
-- Granting portal access
-- Collaborating on projects and orders
+Creative professionals developing product concepts, technical drawings, and prototypes. Specializations include furniture design, lighting design, industrial design, CAD modeling, and 3D rendering.
+
+**Portal Modules** (5): Dashboard, Projects, Briefs, Documents, Settings
+
+**Typical Services**: Concept development, CAD drawing, 3D modeling, rendering, material specification, design revisions, client presentations.
+
+### Sourcing Partners
+
+Procurement specialists conducting factory audits, quality inspections, and supplier sourcing. Specializations include factory auditing, quality control inspection, compliance verification, and logistics coordination.
+
+**Portal Modules** (6): Dashboard, QC, Inspections, History, Documents, Settings
+
+**Typical Services**: Pre-production inspections, factory audits, product testing, compliance verification, defect analysis, corrective action follow-up.
+
+---
+
+## Managing Partners
+
+### Creating Partners
+
+Add partners through type-specific forms with required fields: company_name, primary_contact, primary_email. Configure capacity metrics, specializations, certifications, and payment terms.
+
+### Partner Status
+
+- **Active**: Operational partner accepting work
+- **Inactive**: Archived partner preserving historical data
+- **Pending Approval**: New partner awaiting vetting
+- **Suspended**: Temporarily suspended for quality/compliance issues
+
+### Deleting Partners
+
+Soft delete by setting status to inactive. Cannot delete partners with active production orders.
+
+---
+
+## Contact Management
+
+Unlimited contacts per partner with role flags (is_primary, is_qc, is_production, is_finance), employment tracking, and portal access control.
+
+---
+
+## Portal Access Management
+
+Assign portal access with role-based permissions and granular module control. Magic link authentication via Supabase Auth. Immediate session invalidation upon revocation.
+
+---
+
+## Performance Tracking
+
+Track monthly metrics: orders_completed, orders_on_time, total_defects, total_revenue, on_time_rate, defect_rate. Aggregate statistics across configurable time ranges (1-24 months).
+
+---
+
+## Document Management
+
+Upload contracts, certifications, compliance records with expiry tracking and renewal reminders. Supports all standard file types up to 50MB.
+
+---
+
+## Search and Filtering
+
+Search across company_name, business_name, primary_contact, primary_email, city, country. Filter by type (factory/designer/sourcing) and status (active/inactive/pending/suspended).
+
+---
+
+## Best Practices
+
+1. Complete partner profiles with all relevant fields
+2. Verify certifications and track expiry dates
+3. Set realistic production capacity
+4. Track performance regularly (quarterly minimum)
+5. Use contact flags appropriately
+6. Assign portal access strategically
+7. Monitor lead times and update as needed
+8. Document quality issues thoroughly
+9. Maintain current contact lists
+10. Review pending approvals within SLA
+
+---
+
+## Common Workflows
+
+### Workflow 1: Onboarding New Factory Partner
+
+1. Create factory with company info and capacity metrics
+2. Add contacts (primary, QC, production, finance)
+3. Upload documents (contract, certifications, insurance)
+4. Set status to "pending_approval" for vetting
+5. After approval, change status to "active"
+6. Assign portal access to factory manager
+7. Factory ready to receive production orders
+8. Timeline: 2-5 business days
+
+### Workflow 2: Managing Partner Performance
+
+1. Review performance stats (12-month metrics)
+2. Identify trends and issues
+3. Schedule review meeting if below threshold
+4. Document corrective action plan
+5. Monitor improvement over 2-3 months
+6. Adjust quality rating based on results
+7. Timeline: Quarterly review process
+
+---
+
+## Troubleshooting
+
+**Cannot Delete Partner**: Partner has active production orders. Complete or reassign orders first.
+
+**Portal Access Not Working**: Verify portal_access_enabled = true, user_id is set, modules_allowed is not empty.
+
+**Contact Not Receiving Email**: Check email address, verify Resend API configured, check spam folder.
+
+**Performance Stats Missing**: Ensure partner_performance records exist, verify time range, check completed orders.
+
+**Search Not Finding Partner**: Verify search term, check status filter, ensure partner exists.
+
+---
+
+## Tips & Tricks
+
+- Use "pending_approval" status for vetting new partners
+- Tag partners with "rush-capable" for urgent orders
+- Set is_primary flag on main contact for notifications
+- Monitor defect_rate trends to identify quality issues early
+- Track actual lead times and update estimates
+- Use specializations array for automated partner matching
+- Review performance stats before contract renewals
+- Set realistic minimum_order to balance profitability and flexibility
+
+---
+
+## FAQ
+
+**What's the difference between factory, designer, and sourcing partners?**
+Factories manufacture products, designers create designs and prototypes, sourcing partners handle procurement and quality inspections.
+
+**How are performance metrics calculated?**
+Metrics track partner reliability automatically from production order data. Calculated monthly: orders_completed, orders_on_time, defects, revenue, on_time_rate, defect_rate.
+
+**Can I delete a partner?**
+Partners are soft-deleted (status = inactive) to preserve audit trail. Cannot delete partners with active production orders.
+
+**How do I assign portal access?**
+Navigate to partner contacts, select contact, assign portal role and modules, system sends magic link email.
+
+**What happens when I revoke portal access?**
+Portal access disabled immediately, sessions invalidated, email notification sent, role/modules preserved for audit.
+
+---
+
+## Support
+
+**Technical Support**: support@limnsystems.com | 1-800-XXX-XXXX | Monday-Friday 9 AM-6 PM EST
+
+**Partner Relations Team**: partners@limnsystems.com for onboarding and coordination
+
+**Quality Assurance Team**: quality@limnsystems.com for performance tracking and quality issues
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
