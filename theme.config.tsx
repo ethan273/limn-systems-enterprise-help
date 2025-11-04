@@ -62,100 +62,78 @@ const config: DocsThemeConfig = {
       <script dangerouslySetInnerHTML={{__html: `
         (function() {
           var headerOffset = 80;
-          var scrolling = false;
+          var lastHash = '';
+          var correcting = false;
 
-          function scrollToElement(targetElement) {
-            if (!targetElement) return;
+          function correctScroll() {
+            if (correcting) return;
 
-            scrolling = true;
-            var elementPosition = targetElement.getBoundingClientRect().top;
-            var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
-
-            window.scrollTo({
-              top: offsetPosition,
-              behavior: 'smooth'
-            });
-
-            setTimeout(function() { scrolling = false; }, 1000);
-          }
-
-          function handleAnchorClick(e) {
-            var target = e.target;
-            while (target && target.tagName !== 'A') {
-              target = target.parentElement;
-            }
-
-            if (!target || !target.href) return;
-
-            var href = target.getAttribute('href');
-            if (!href || !href.startsWith('#')) return;
-
-            e.preventDefault();
-            e.stopPropagation();
-            e.stopImmediatePropagation();
-
-            var targetId = href.substring(1);
-            var targetElement = document.getElementById(targetId);
-
-            if (targetElement) {
-              scrollToElement(targetElement);
-              history.pushState(null, '', href);
-            }
-
-            return false;
-          }
-
-          function handleHashOnLoad() {
             var hash = window.location.hash;
-            if (!hash) return;
+            if (!hash || hash === lastHash) return;
 
+            lastHash = hash;
             var targetElement = document.getElementById(hash.substring(1));
             if (!targetElement) return;
 
+            correcting = true;
+
+            // Force scroll with offset
             setTimeout(function() {
-              scrollToElement(targetElement);
-            }, 100);
-          }
-
-          // Watch for any scrolling and correct it if needed
-          var lastScrollCheck = 0;
-          function checkScroll() {
-            if (scrolling) return;
-
-            var now = Date.now();
-            if (now - lastScrollCheck < 500) return;
-            lastScrollCheck = now;
-
-            var hash = window.location.hash;
-            if (!hash) return;
-
-            var targetElement = document.getElementById(hash.substring(1));
-            if (!targetElement) return;
-
-            var elementPosition = targetElement.getBoundingClientRect().top;
-
-            // If element is hidden behind header (within 100px of top), adjust
-            if (elementPosition >= 0 && elementPosition < 100) {
+              var elementPosition = targetElement.getBoundingClientRect().top;
               var offsetPosition = window.pageYOffset + elementPosition - headerOffset;
+
               window.scrollTo({
                 top: offsetPosition,
                 behavior: 'instant'
               });
-            }
+
+              setTimeout(function() { correcting = false; }, 100);
+            }, 50);
           }
 
-          if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', function() {
-              document.addEventListener('click', handleAnchorClick, true);
-              window.addEventListener('hashchange', handleHashOnLoad);
-              window.addEventListener('scroll', checkScroll, { passive: true });
-              handleHashOnLoad();
-            });
-          } else {
-            document.addEventListener('click', handleAnchorClick, true);
-            window.addEventListener('hashchange', handleHashOnLoad);
-            window.addEventListener('scroll', checkScroll, { passive: true });
-            handleHashOnLoad();
+          // Watch for hash changes constantly
+          setInterval(function() {
+            if (window.location.hash !== lastHash) {
+              correctScroll();
+            }
+          }, 100);
+
+          // Also watch on hashchange event
+          window.addEventListener('hashchange', correctScroll);
+
+          // Watch for scroll events and re-correct if needed
+          var scrollTimer;
+          window.addEventListener('scroll', function() {
+            if (correcting) return;
+
+            clearTimeout(scrollTimer);
+            scrollTimer = setTimeout(function() {
+              var hash = window.location.hash;
+              if (!hash) return;
+
+              var targetElement = document.getElementById(hash.substring(1));
+              if (!targetElement) return;
+
+              var elementPosition = targetElement.getBoundingClientRect().top;
+
+              // If element is at the very top (0-5px), it means we need to adjust
+              if (elementPosition >= 0 && elementPosition < 5) {
+                correcting = true;
+                var offsetPosition = window.pageYOffset + elementPosition - headerOffset;
+                window.scrollTo({
+                  top: offsetPosition,
+                  behavior: 'instant'
+                });
+                setTimeout(function() { correcting = false; }, 100);
+              }
+            }, 100);
+          }, { passive: true });
+
+          // Initial correction on load
+          if (window.location.hash) {
+            setTimeout(correctScroll, 100);
+            setTimeout(correctScroll, 500);
+            setTimeout(correctScroll, 1000);
           }
         })();
       `}} />
