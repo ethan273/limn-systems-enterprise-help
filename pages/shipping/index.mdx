@@ -1,30 +1,525 @@
 # Shipping Management
 
-Manage shipments, tracking, carriers, and deliveries.
-
 ## Overview
 
-The shipping management system provides tools for creating shipments, tracking deliveries, managing carriers, and coordinating pickups. Integrates with SEKO Logistics for real-time tracking.
+The Shipping Management module provides comprehensive tools for managing shipments, tracking deliveries, coordinating with carriers, and integrating with production workflows. Key features include:
 
-## Key Modules
+- **Shipment Creation** - Create shipments from production orders with origin, destination, and package details
+- **Real-Time Tracking** - Track shipments with carrier tracking numbers and status updates
+- **SEKO Logistics Integration** - Direct integration with SEKO Logistics for international shipping
+- **Multi-Carrier Support** - Support for multiple carriers (SEKO, UPS, FedEx, DHL, etc.)
+- **Package Management** - Define packages with dimensions, weight, and quantity
+- **Address Validation** - Validate shipping addresses before creating shipments
+- **Shipment Status Workflow** - Track shipments through pending, in transit, delivered, exception states
+- **Production Integration** - Automatically link shipments to production orders
+- **Delivery Confirmation** - Proof of delivery (POD) with signature capture
+- **Customer Notifications** - Automated shipping notifications via email
+- **Shipping Dashboard** - View all shipments with filtering and search
 
-- **Shipments** - Create and manage shipments
-- **Tracking Dashboard** - Real-time shipment tracking
-- **Carriers** - Carrier management and selection
-- **SEKO Integration** - SEKO Logistics integration
-- **Pickup Requests** - Schedule carrier pickups
-- **Delivery** - Delivery coordination and confirmation
+## Shipment Dashboard
 
-## Key Features
+Navigate to `/shipping` to view the Shipping Dashboard.
 
-- Multi-carrier support
-- Real-time tracking
-- SEKO Logistics integration
-- Pickup scheduling
-- Delivery notifications
-- POD (Proof of Delivery)
-- Integration with production
+**Dashboard Features:**
+- **Shipment Overview** - Total shipments, in transit, delivered, exceptions
+- **Status Breakdown** - Chart showing shipments by status
+- **Recent Shipments** - Last 10 shipments with tracking info
+- **Quick Search** - Search by tracking number, production order, or destination
+- **Status Filters** - Filter by pending, in transit, delivered, exception
+- **Date Range** - Filter shipments by ship date or delivery date
 
-## Getting Started
+**Key Metrics:**
+- Total Shipments (all time)
+- In Transit (current)
+- Delivered This Week
+- Delivery Exception Count
+- Average Transit Time
+- On-Time Delivery Rate
 
-Learn how to create shipments, track deliveries, and manage logistics operations.
+## Creating Shipments
+
+### From Production Orders
+
+**To create a shipment from production order:**
+
+1. Navigate to Production > Orders
+2. Click production order ready for shipping
+3. Click **"Create Shipment"**
+4. System pre-fills:
+   - Production order ID
+   - Origin address (factory address)
+   - Package details from production
+5. Enter destination address:
+   - Name, Company
+   - Address Line 1, Address Line 2
+   - City, State, Postal Code, Country
+   - Phone, Email
+6. Define packages:
+   - Length, Width, Height (inches)
+   - Weight (pounds)
+   - Quantity
+7. Select ship date
+8. Choose carrier (SEKO, UPS, FedEx, DHL, Other)
+9. Click **"Create Shipment"**
+
+**Auto-Population:**
+- Production order details pre-fill origin
+- Customer address pre-fills destination
+- Package dimensions from production order
+
+### Manual Shipment Creation
+
+**For shipments not linked to production:**
+
+1. Navigate to Shipping > New Shipment
+2. Enter origin address manually
+3. Enter destination address
+4. Define package details
+5. Select carrier and ship date
+6. Click **"Create Shipment"**
+
+**Use Cases:**
+- Sample shipments
+- Material shipments
+- Return shipments
+- Document shipments
+
+## Package Details
+
+### Package Information
+
+**Required Fields:**
+- **Dimensions** - Length x Width x Height (inches)
+- **Weight** - Weight in pounds
+- **Quantity** - Number of packages (default 1)
+
+**Optional Fields:**
+- **Package Type** - Box, Pallet, Envelope, Tube
+- **Insurance Value** - Declared value for insurance
+- **Fragile** - Mark as fragile (checkbox)
+- **Special Handling** - Additional handling instructions
+
+**Dimensional Weight:**
+- Calculated automatically: (L x W x H) / 166
+- Carrier may use dimensional weight if higher than actual weight
+- System displays both actual and dimensional weight
+
+### Multi-Package Shipments
+
+**For shipments with multiple packages:**
+
+1. Click **"Add Package"** on shipment form
+2. Enter dimensions and weight for each package
+3. System calculates total weight
+4. Each package can have different dimensions
+5. All packages share same tracking number
+6. Carrier may assign separate tracking per package
+
+**Package Numbering:**
+- Package 1 of 3
+- Package 2 of 3
+- Package 3 of 3
+
+## Carrier Integration
+
+### SEKO Logistics
+
+**SEKO Integration Features:**
+- Direct API integration for shipment creation
+- Real-time tracking updates
+- International shipping support
+- Customs documentation generation
+- Door-to-door service
+- Air and ocean freight options
+
+**To create SEKO shipment:**
+
+1. Select "SEKO Logistics" as carrier
+2. Enter origin and destination
+3. Define packages
+4. System validates addresses via SEKO API
+5. System generates SEKO shipping label
+6. Tracking number assigned automatically
+7. Real-time status updates via webhook
+
+**SEKO Tracking Events:**
+- Shipment Created
+- Picked Up
+- In Transit
+- Customs Clearance
+- Out for Delivery
+- Delivered
+
+### Other Carriers
+
+**Supported Carriers:**
+- **UPS** - UPS Ground, UPS Air, UPS International
+- **FedEx** - FedEx Ground, FedEx Express, FedEx International
+- **DHL** - DHL Express, DHL eCommerce
+- **USPS** - Priority Mail, Priority Mail Express
+- **Other** - Manual entry for regional carriers
+
+**Manual Carrier Setup:**
+1. Select carrier from dropdown
+2. Enter tracking number manually
+3. Update status manually
+4. No automatic tracking updates
+5. Manual delivery confirmation
+
+## Shipment Tracking
+
+### Tracking Numbers
+
+**Tracking Number Format:**
+- **SEKO** - 10-digit numeric (e.g., 1234567890)
+- **UPS** - 18-character alphanumeric (1Z999AA10123456784)
+- **FedEx** - 12-digit numeric (123456789012)
+- **DHL** - 10-digit numeric (1234567890)
+- **USPS** - 20-22 digit numeric
+
+**Viewing Tracking:**
+1. Navigate to Shipping > Tracking
+2. Enter tracking number
+3. View tracking history timeline
+4. See current status and location
+5. View estimated delivery date
+
+### Tracking Status
+
+**Status Workflow:**
+
+**1. Pending**
+- Shipment created but not yet picked up
+- Awaiting carrier pickup
+- No tracking events yet
+
+**2. Picked Up**
+- Carrier has collected package
+- First tracking event logged
+- In carrier's possession
+
+**3. In Transit**
+- Package moving through carrier network
+- May include multiple scan events
+- Location updates as package moves
+
+**4. Out for Delivery**
+- Package on delivery vehicle
+- Delivery expected today
+- Final destination reached
+
+**5. Delivered**
+- Package successfully delivered
+- Delivery date and time logged
+- POD (Proof of Delivery) available
+
+**6. Exception**
+- Delivery issue encountered
+- Requires action to resolve
+- Examples: Address unknown, recipient unavailable, customs hold
+
+**Status Updates:**
+- Automatic via carrier webhooks (SEKO)
+- Manual updates for other carriers
+- Customer notifications on status changes
+
+## Address Management
+
+### Address Validation
+
+**Validation Rules:**
+- Address Line 1 required (max 100 characters)
+- City required (max 50 characters)
+- State/Province required (2-letter code)
+- Postal Code required (format validated by country)
+- Country required (2-letter ISO code)
+- Phone optional but recommended
+- Email optional (used for tracking notifications)
+
+**Address Verification:**
+- SEKO API validates addresses for SEKO shipments
+- Alerts if address cannot be verified
+- Suggests corrections for invalid addresses
+- Blocks shipment creation if address fails validation
+
+### Saved Addresses
+
+**Common Addresses:**
+- Factory addresses saved in system
+- Customer addresses from CRM
+- Warehouse addresses pre-configured
+- Quick selection from dropdown
+
+**Address Book:**
+1. Navigate to Shipping > Address Book
+2. View saved addresses
+3. Add new address
+4. Edit existing address
+5. Set default addresses for factories
+
+## Shipment Status Updates
+
+### Automatic Updates (SEKO)
+
+**SEKO Webhook Integration:**
+- Real-time status updates via SEKO webhook
+- Tracking events pushed to system automatically
+- No manual updates needed
+- Customer notifications triggered automatically
+
+**Webhook Events:**
+- Shipment picked up
+- In transit scan
+- Out for delivery
+- Delivered
+- Exception (with reason)
+
+### Manual Updates (Other Carriers)
+
+**To manually update shipment status:**
+
+1. Navigate to shipment detail page
+2. Click **"Update Status"**
+3. Select new status from dropdown
+4. Optionally add notes
+5. Optionally upload POD document
+6. Click **"Save Update"**
+
+**Manual Tracking:**
+- Check carrier website for updates
+- Enter tracking events manually
+- Update delivery date when confirmed
+- Upload POD after delivery
+
+## Delivery Confirmation
+
+### Proof of Delivery (POD)
+
+**POD Components:**
+- Delivery date and time
+- Recipient name (who signed)
+- Signature image (if available)
+- Delivery location (front door, office, etc.)
+- POD document/photo
+
+**Viewing POD:**
+1. Navigate to delivered shipment
+2. Scroll to "Delivery Confirmation" section
+3. View delivery details
+4. Download POD document
+5. View signature image (if available)
+
+**Uploading POD:**
+1. Navigate to shipment detail
+2. Click **"Upload POD"**
+3. Select file (PDF, JPG, PNG)
+4. Add delivery notes
+5. Click **"Upload"**
+6. File stored in Supabase Storage
+
+## Customer Notifications
+
+**Automated Notifications:**
+
+**1. Shipment Created**
+- Sent when shipment created
+- Includes tracking number
+- Includes estimated delivery date
+- Includes tracking URL
+
+**2. Shipped**
+- Sent when carrier picks up package
+- Confirms shipment in transit
+- Reminder of tracking number
+
+**3. Out for Delivery**
+- Sent on delivery day
+- Alerts recipient to expect package
+- Provides delivery time window (if available)
+
+**4. Delivered**
+- Sent after delivery confirmation
+- Includes delivery date/time
+- Includes POD link
+
+**5. Exception**
+- Sent if delivery issue occurs
+- Explains exception reason
+- Provides next steps to resolve
+
+**Notification Preferences:**
+- Customers can opt out of notifications
+- Email notifications via Resend
+- SMS notifications (future enhancement)
+- In-app notifications
+
+## Integration
+
+### Production Integration
+
+**Production to Shipping Flow:**
+
+1. Production order status: Packed
+2. Click "Create Shipment" from production order
+3. Shipment pre-filled with production details
+4. Shipment created and linked to production order
+5. Production order status: Shipped
+6. Production order shows shipment tracking
+
+**Bidirectional Link:**
+- Shipment links to production order
+- Production order links to shipment
+- View production details from shipment
+- View shipment details from production
+
+### CRM Integration
+
+**Customer Address Integration:**
+- Customer shipping addresses from CRM
+- Auto-populate destination from customer record
+- Update customer address from shipment if changed
+
+**Order Integration:**
+- Shipments link to CRM orders
+- Track shipments by customer
+- Customer portal shows shipment tracking
+
+## Common Workflows
+
+### Workflow 1: Standard Production Shipment
+
+1. Production order status: Packed
+2. Navigate to production order detail
+3. Click "Create Shipment"
+4. Verify origin address (factory)
+5. Verify destination address (customer)
+6. Review package details (pre-filled)
+7. Select ship date (today or future)
+8. Choose carrier (SEKO for international)
+9. Click "Create Shipment"
+10. System generates tracking number
+11. Customer receives shipment notification
+12. Track shipment progress via dashboard
+13. Customer receives delivered notification
+14. Verify POD in system
+15. Production order marked as delivered
+
+### Workflow 2: Multi-Package International Shipment
+
+1. Create shipment from production order
+2. Click "Add Package" for each additional box
+3. Enter dimensions and weight for each package
+4. Select SEKO Logistics as carrier
+5. System validates international addresses
+6. System generates customs documentation
+7. System creates SEKO shipment via API
+8. SEKO assigns tracking number
+9. Factory receives pickup notification
+10. SEKO picks up packages
+11. Customs clearance tracked via SEKO
+12. Delivery confirmed with POD
+13. Customer receives delivery notification
+
+### Workflow 3: Exception Resolution
+
+1. Receive exception notification (e.g., "Address Unknown")
+2. Navigate to shipment detail page
+3. View exception reason and details
+4. Contact customer to verify address
+5. Update destination address in system
+6. Contact carrier to redirect shipment
+7. Update shipment status with resolution notes
+8. Monitor shipment for successful delivery
+9. Confirm delivery and update status
+10. Upload POD document
+11. Notify customer of successful delivery
+
+## Best Practices
+
+1. **Validate Addresses** - Always verify addresses before creating shipments to avoid exceptions
+2. **Use SEKO for International** - SEKO provides best international shipping and tracking
+3. **Accurate Package Details** - Enter correct dimensions and weight to avoid carrier adjustments
+4. **Ship Date Planning** - Set realistic ship dates accounting for production completion
+5. **Track Daily** - Check shipment dashboard daily for exceptions requiring action
+6. **Upload PODs** - Always upload POD documents for delivery verification
+7. **Customer Communication** - Proactively notify customers of delays or exceptions
+8. **Multi-Package Labeling** - Label each package clearly (1 of 3, 2 of 3, etc.)
+9. **Insurance for High Value** - Add insurance for shipments over $1,000
+10. **Carrier Selection** - Choose appropriate carrier based on destination and urgency
+
+## Troubleshooting
+
+**Shipment creation fails with "Invalid address"** - Verify all required fields; check postal code format; use address validation
+
+**Tracking number not working** - Verify correct carrier selected; allow 24 hours for carrier to activate tracking; check number entered correctly
+
+**SEKO API error** - Check SEKO API credentials in settings; verify SEKO account active; contact SEKO support if persistent
+
+**Shipment stuck in "Pending"** - Verify carrier pickup scheduled; contact carrier to confirm pickup; manually update status if picked up
+
+**Customer not receiving notifications** - Verify email address correct; check spam folder; verify customer opted in to notifications
+
+**POD upload failing** - Check file size under 10MB; verify file type (PDF, JPG, PNG); ensure file not corrupted
+
+**Exception "Recipient Unavailable"** - Contact customer to arrange re-delivery; provide carrier with delivery instructions; update address if incorrect
+
+**Multi-package tracking showing only one package** - Some carriers use single tracking for all packages; contact carrier for individual package tracking
+
+## Tips & Tricks
+
+- **Batch Shipment Creation** - Create multiple shipments at once from production list view
+- **Saved Address Templates** - Create address templates for frequent destinations
+- **Carrier Comparison** - Compare carrier rates and transit times before selecting
+- **Tracking Dashboard Filters** - Use status filters to focus on shipments needing action
+- **Export Shipment Reports** - Export shipment data to CSV for analysis
+- **SEKO Customs Forms** - System auto-generates customs forms for international SEKO shipments
+- **Shipment History** - View complete shipment history for each customer
+- **Delivery Time Windows** - Set expected delivery windows for customer planning
+- **Signature Requirements** - Enable signature requirement for high-value shipments
+- **Insurance Claims** - Keep PODs and photos for insurance claims if damage occurs
+
+## FAQ
+
+**Q: Can I edit a shipment after creation?**
+A: Yes, edit origin, destination, and package details before carrier pickup. After pickup, contact carrier for changes.
+
+**Q: How do I track SEKO shipments?**
+A: SEKO shipments auto-update via webhook. View tracking timeline on shipment detail page.
+
+**Q: Can I cancel a shipment?**
+A: Yes, before carrier pickup. After pickup, contact carrier to request shipment return.
+
+**Q: How are shipping costs calculated?**
+A: Based on package weight, dimensions, destination, and carrier. Dimensional weight may apply if higher than actual weight.
+
+**Q: Can I schedule future shipments?**
+A: Yes, set ship date to future date. Carrier will be notified on ship date.
+
+**Q: What happens if address is wrong?**
+A: Shipment may be returned or delivery delayed. Contact carrier immediately to redirect shipment.
+
+**Q: How do I handle international shipments?**
+A: Use SEKO Logistics for international. System generates customs documentation automatically.
+
+**Q: Can customers track shipments?**
+A: Yes, via customer portal or email tracking link sent in notifications.
+
+**Q: What is dimensional weight?**
+A: Weight calculated from package size: (L x W x H) / 166. Carriers charge based on higher of actual or dimensional weight.
+
+**Q: How do I upload POD?**
+A: Navigate to delivered shipment, click "Upload POD", select file, save.
+
+## Support
+
+For additional assistance with Shipping Management:
+
+**Technical Support**: Email support@limnsystems.com | Phone 1-800-XXX-XXXX | Hours Monday-Friday 9 AM-6 PM EST
+
+**Shipping Team**: shipping@limnsystems.com for carrier coordination and delivery issues
+
+**SEKO Support**: seko@limnsystems.com for SEKO Logistics integration questions
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
