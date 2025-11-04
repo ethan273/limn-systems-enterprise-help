@@ -1,28 +1,1350 @@
 # Dashboards
 
-Limn Systems Enterprise provides 10 specialized dashboards for different roles and use cases.
+Real-time business intelligence across all operational areas with AI-powered insights and customizable visualizations.
 
-## Available Dashboards
+## Overview
 
-- **Main Dashboard** - Overview of key metrics and system status
-- **Analytics Dashboard** - Data visualization and business insights
-- **Executive Dashboard** - C-level KPIs and strategic metrics
-- **Financial Dashboard** - Revenue, expenses, and profitability
-- **Projects Dashboard** - Project health and progress tracking
-- **Manufacturing Dashboard** - Production metrics and capacity
-- **Design Dashboard** - Design team performance and deliverables
-- **Shipping Dashboard** - Logistics tracking and delivery metrics
-- **Quality Dashboard** - QC metrics and quality trends
-- **Partners Dashboard** - Partner performance and collaboration
+The Limn Systems Dashboard suite provides comprehensive analytics and performance monitoring across your entire business. With 10 specialized dashboards, you can track everything from executive KPIs to granular operational metrics, all updated in real-time.
 
-## Getting Started
-
-Select a dashboard from the navigation menu to learn more about each dashboard's features and capabilities.
-
-## Key Features
-
-- Real-time data updates
-- Customizable widgets and layouts
+**Key Benefits:**
+- Real-time data updates every 60 seconds
+- AI-powered insights and recommendations
+- Multiple visualization types (charts, graphs, stat cards)
+- Customizable date range filtering (7d, 30d, 90d, 1y, all)
+- One-click PDF export for reporting
 - Role-based access control
-- Export and reporting capabilities
 - Mobile-responsive design
+
+**Dashboard Types:**
+- **Executive Dashboard** - C-level strategic KPIs
+- **Analytics Dashboard** - Comprehensive business metrics
+- **Financial Dashboard** - Revenue, expenses, cash flow
+- **Projects Dashboard** - Project health and timelines
+- **Manufacturing Dashboard** - Production metrics
+- **Design Dashboard** - Design files and revisions
+- **Shipping Dashboard** - Logistics tracking
+- **Quality Dashboard** - QC metrics and defect analysis
+- **Partners Dashboard** - Partner performance (if enabled)
+
+---
+
+## Common Features
+
+All dashboards share these powerful capabilities:
+
+### Auto-Refresh
+
+**How It Works:**
+- Data automatically refreshes every 60 seconds
+- No need to reload the page
+- Real-time metrics without manual intervention
+
+**Manual Refresh:**
+- Click the **Refresh** button (circular arrow icon) in the dashboard header
+- Forces immediate data reload
+- Useful after making changes in other parts of the system
+
+### Date Range Filtering
+
+**Available Ranges:**
+- **7d** - Last 7 days
+- **30d** - Last 30 days (default)
+- **90d** - Last 90 days
+- **1y** - Last 12 months
+- **All** - All historical data
+
+**How to Change:**
+1. Locate the date range selector in the dashboard header
+2. Click the current range (e.g., "30d")
+3. Select your desired time period
+4. Dashboard updates automatically
+
+**Important Notes:**
+- Some metrics (like revenue trends) always show 12 months of data
+- Date ranges apply to summary metrics and filters
+- Changing ranges does not affect historical trend charts
+
+### PDF Export
+
+**Export Your Dashboard:**
+1. Click the **Export PDF** button in the dashboard header
+2. System generates a PDF snapshot of the current view
+3. PDF includes:
+   - Current date range
+   - All visible metrics and charts
+   - Dashboard title and metadata
+4. Download begins automatically
+
+**Best Practices:**
+- Export at month/quarter end for records
+- Include in executive reports
+- Share with stakeholders who don't have system access
+
+### AI-Powered Insights
+
+**What Are Insights?**
+- AI-generated recommendations based on your data
+- Actionable suggestions to improve performance
+- Alerts for anomalies or areas requiring attention
+
+**Insight Types:**
+- 🎯 **Success** - Positive trends and achievements (green)
+- ⚠️ **Warning** - Areas requiring attention (yellow)
+- 🚨 **Error** - Critical issues needing immediate action (red)
+- 💡 **Info** - General observations and tips (blue)
+
+**How to Use Insights:**
+1. Scroll to "Insights & Recommendations" section
+2. Review each insight card
+3. Click the action button to navigate to relevant page
+4. Address issues or capitalize on opportunities
+
+**Example Insights:**
+- "3 projects overdue - Review and update timelines"
+- "Revenue up 15% vs last month - Great performance!"
+- "5 pending invoices overdue - Follow up with customers"
+
+---
+
+## Executive Dashboard
+
+**Access:** `/dashboards/executive`
+
+High-level strategic KPIs for C-suite executives and business owners.
+
+### Key Metrics
+
+**Business Performance:**
+- **Total Revenue** - Current period revenue with growth percentage
+- **Total Orders** - Order count with period-over-period growth
+- **Avg Order Value** - Average revenue per order
+- **Active Customers** - Customer count with new customer indicator
+
+**Financial Health:**
+- **Total Invoiced** - Amount billed this period
+- **Total Paid** - Cash collected
+- **Outstanding A/R** - Accounts receivable pending
+- **Overdue Invoices** - Count of past-due invoices
+
+**Operational Performance:**
+- **Active Projects** - Projects in progress
+- **Project On-Time Rate** - Delivery performance percentage
+- **Overdue Tasks** - Tasks past due date
+- **Active Production** - Production orders in progress
+- **Shipments In Transit** - Orders being delivered
+- **Delivery On-Time Rate** - Shipping performance
+
+### Visualizations
+
+**Revenue Trend Chart:**
+- Area chart showing revenue over last 12 months
+- Gradient fill for easy visualization
+- Hover to see exact amounts
+- Identifies seasonal patterns
+
+**Department Performance Chart:**
+- Bar chart comparing actual vs target revenue
+- By department: Sales, Production, Design, etc.
+- Quickly identifies underperforming areas
+
+### Quick Actions
+
+- View Analytics Dashboard
+- View Projects Dashboard
+- View Invoices
+- View Customers
+- View Production
+- View Shipments
+
+### Best Practices
+
+**Daily Review:**
+- Check overdue invoices and tasks first thing
+- Monitor on-time delivery rates
+- Review revenue trends weekly
+
+**Weekly Deep Dive:**
+- Analyze department performance
+- Address overdue projects
+- Review customer acquisition
+
+**Monthly Strategy:**
+- Compare actual vs target performance
+- Identify growth opportunities
+- Plan resource allocation
+
+---
+
+## Analytics Dashboard
+
+**Access:** `/dashboards/analytics`
+
+Comprehensive business performance metrics across all operational areas.
+
+### Summary Metrics
+
+**High-Level KPIs:**
+- **Total Revenue** - With growth percentage vs previous period
+- **Total Orders** - With average order value
+- **Total Customers** - With customer growth rate
+- **Active Projects** - Currently in progress
+
+### Visualizations
+
+**Revenue Trend (12 Months):**
+- Line chart with area fill
+- Monthly revenue and order volume
+- Identify seasonal patterns
+- Plan for peak periods
+
+**Order Status Distribution:**
+- Pie chart showing order breakdown
+- Status categories: Pending, Processing, Shipped, Delivered, Cancelled
+- Percentage labels on each slice
+- Color-coded for quick recognition
+
+**Top Products by Revenue:**
+- Ranked list (1-5)
+- Shows product name, SKU
+- Revenue and quantity sold
+- Progress bars for visual comparison
+
+**Performance Metrics:**
+- **Task Completion Rate** - Percentage of tasks completed on time
+- **Production Completion** - Manufacturing completion rate
+- **On-Time Delivery** - Shipping performance
+
+**Inventory Overview:**
+- Total products count
+- Top sellers identification
+- Low stock alerts (coming soon)
+
+### Use Cases
+
+**Sales Analysis:**
+- Track which products drive revenue
+- Identify best-selling items
+- Plan inventory based on demand
+
+**Operations Monitoring:**
+- Monitor order fulfillment rates
+- Track production efficiency
+- Ensure on-time deliveries
+
+**Strategic Planning:**
+- Analyze seasonal trends
+- Plan marketing campaigns
+- Allocate resources effectively
+
+---
+
+## Financial Dashboard
+
+**Access:** `/dashboards/financial`
+
+Revenue, expenses, cash flow, and comprehensive financial metrics.
+
+### Financial Overview
+
+**Revenue Metrics:**
+- **Total Revenue** - Cash collected this period
+- **Total Invoiced** - Amount billed (may not be collected yet)
+- **Total Expenses** - Period expenses
+- **Net Profit** - Revenue minus expenses with profit margin %
+
+### Accounts Receivable
+
+**A/R Metrics:**
+- **Total A/R** - Outstanding receivables
+- **Paid Invoices** - Count and total amount
+- **Pending Invoices** - Awaiting payment
+- **Overdue Invoices** - Past due date (requires action)
+- **Avg Invoice Value** - Mean invoice amount
+
+### Visualizations
+
+**Cash Flow Trend (30 Days):**
+- Dual area chart: Revenue vs Expenses
+- Green area = Revenue
+- Red area = Expenses
+- Gap between shows profit/loss
+- Daily granularity for precision
+
+**Invoice Status Distribution:**
+- Pie chart: Paid, Pending, Overdue, Cancelled
+- Shows count AND dollar amounts
+- Hover for detailed breakdown
+
+**Payment Methods:**
+- Bar chart showing payment types
+- Methods: Credit Card, ACH, Wire, Check, Cash
+- Helps identify preferred payment channels
+
+**Top Expense Categories:**
+- Horizontal bar chart
+- Categories sorted by amount
+- Identify major cost drivers
+- Plan cost reduction strategies
+
+**Top Customers by Revenue:**
+- Ranked list with customer names
+- Total revenue contribution
+- Identifies most valuable clients
+- Focus retention efforts
+
+### Financial Insights
+
+**Common Insights:**
+- High A/R balance requiring collection follow-up
+- Overdue invoices needing immediate attention
+- Unusual expense spikes
+- Profit margin trends
+- Cash flow concerns
+
+### Quick Actions
+
+- View All Invoices
+- View Payments
+- View Expenses
+- View Customers
+- View Analytics
+- View Executive Dashboard
+
+### Best Practices
+
+**Daily Tasks:**
+- Review overdue invoices (follow up immediately)
+- Monitor daily cash position
+- Check for payment processing errors
+
+**Weekly Reviews:**
+- Analyze cash flow trends
+- Review expense categories
+- Follow up on pending invoices
+
+**Monthly Close:**
+- Reconcile all accounts
+- Review profit margins
+- Generate financial reports
+- Plan next month's budget
+
+---
+
+## Projects Dashboard
+
+**Access:** `/dashboards/projects`
+
+Project portfolio health, timelines, and resource allocation.
+
+### Project Summary
+
+**Overview Metrics:**
+- **Total Projects** - All projects across statuses
+- **Active Projects** - In progress (active + in_progress status)
+- **Overdue Projects** - Past deadline (requires attention)
+- **Completed** - Successfully finished
+
+### Budget Overview
+
+**Financial Metrics:**
+- **Total Allocated** - Total project budgets
+- **Average Per Project** - Mean budget amount
+- **Projects with Budget** - Count of budgeted projects
+- **Budget Coverage** - Percentage of projects with budgets
+
+### Visualizations
+
+**Status Distribution:**
+- Pie chart showing project breakdown
+- Statuses: Active, Planning, In Progress, On Hold, Completed, Cancelled
+- Color-coded for quick identification
+
+**Priority Distribution:**
+- Bar chart: High, Medium, Low priority
+- Shows project count by priority level
+- Helps resource allocation
+
+**Overdue Projects Alert:**
+- Red-bordered card for urgent attention
+- Lists overdue projects with:
+  - Project name
+  - Customer name
+  - Days overdue
+- Click "View All" to see complete list
+
+**Top Customers by Project Count:**
+- Ranked list (1-10)
+- Customer name with progress bar
+- Project count badge
+- Identifies most active clients
+
+**Project Health Score:**
+- Three status categories:
+  - **On Time** - Projects on track (green)
+  - **At Risk** - Approaching deadline (yellow)
+  - **Total Active** - All active projects
+
+### Project Insights
+
+**Common Insights:**
+- Overdue projects requiring timeline updates
+- Projects on hold (consider reactivation/cancellation)
+- High customer concentration risk
+- Budget allocation recommendations
+- Completion rate trends
+
+### Quick Actions
+
+- View Active Projects
+- Review Overdue
+- On Hold Projects
+- Completed Projects
+
+### Best Practices
+
+**Project Managers:**
+- Check overdue projects daily
+- Update timelines weekly
+- Monitor health scores continuously
+
+**Resource Planning:**
+- Review priority distribution
+- Allocate based on customer importance
+- Balance workload across team
+
+**Client Management:**
+- Identify high-volume customers
+- Ensure adequate support
+- Diversify customer base if needed
+
+---
+
+## Manufacturing Dashboard
+
+**Access:** `/dashboards/manufacturing`
+
+Production metrics, quality control, and capacity management.
+
+### Production Orders
+
+**Order Metrics:**
+- **Total Production Orders** - All orders with completed count
+- **Active Orders** - Currently in production
+- **Pending Orders** - Awaiting production start
+- **Total Items** - Item count with in-production indicator
+
+### Quality & Performance
+
+**Quality Metrics:**
+- **Quality Pass Rate** - Percentage passing QC (target: >95%)
+- **On-Time Delivery Rate** - Meeting promised dates
+- **Capacity Utilization** - Current production capacity usage
+- **Avg Production Time** - Days from start to completion
+
+### Visualizations
+
+**Production Status Distribution:**
+- Pie chart: Pending, In Progress, Completed, On Hold, Cancelled
+- Real-time production pipeline view
+
+**Quality Checks Summary:**
+- Visual breakdown:
+  - ✅ Passed checks (green)
+  - ❌ Failed checks (red)
+  - 📊 Total checks
+- Large icons for quick scanning
+
+**Production Trend:**
+- Dual area chart: Completed vs Started
+- Green = Completed orders
+- Blue = Started orders
+- Gap shows work in progress
+
+**Top Products by Volume:**
+- Table view with rank, product name, SKU
+- Quantity produced this period
+- Identify high-volume items
+
+### Manufacturing Insights
+
+**Common Insights:**
+- Quality pass rate below target (investigate defects)
+- Capacity utilization issues (too high/low)
+- Production delays requiring attention
+- Top products needing resource allocation
+
+### Quick Actions
+
+- View All Production
+- View Pending Orders
+- View Active Production
+- View Analytics
+
+### Best Practices
+
+**Production Managers:**
+- Monitor quality pass rate (should be >95%)
+- Balance capacity utilization (70-85% optimal)
+- Address failed QC checks immediately
+
+**Planning:**
+- Forecast based on top products
+- Schedule maintenance during low-capacity periods
+- Plan workforce allocation
+
+**Quality Control:**
+- Investigate quality trends
+- Implement corrective actions
+- Track improvement over time
+
+---
+
+## Design Dashboard
+
+**Access:** `/dashboards/design`
+
+Design files, revisions, shop drawings, and creative team performance.
+
+### Design Files
+
+**File Metrics:**
+- **Total Files** - All design files with new files count
+- **Active Files** - Currently in progress
+- **Approved Files** - Completed and approved
+- **Avg Revisions** - Mean revision count per file
+
+### Design Revisions
+
+**Revision Metrics:**
+- **Total Revisions** - All revisions with recent count
+- **Pending Reviews** - Awaiting approval
+- **Approved Revisions** - Completed
+
+### Shop Drawings
+
+**Drawing Metrics:**
+- **Total Drawings** - All shop drawings with new count
+- **Pending** - Awaiting approval
+- **Approved** - Ready for production
+- **Approval Rate** - Percentage approved with rejection count
+
+### Project Coverage
+
+**Coverage Metrics:**
+- **Total Projects** - Active projects
+- **Projects with Design** - Have design files attached
+- **Design Coverage** - Percentage of projects with design work
+
+### Visualizations
+
+**Design Activity Trend:**
+- Line chart with three metrics:
+  - Design Files (blue)
+  - Revisions (purple)
+  - Shop Drawings (orange)
+- Track creative workload over time
+
+**File Status Distribution:**
+- Pie chart: Draft, In Progress, Under Review, Approved, Rejected
+- Monitor file progression
+
+**Revision Status Distribution:**
+- Bar chart showing revision statuses
+- Identify bottlenecks in review process
+
+### Design Insights
+
+**Common Insights:**
+- High pending review count (speed up approvals)
+- Low approval rate (investigate quality issues)
+- Revision count too high (improve initial quality)
+- Projects missing design files
+
+### Quick Actions
+
+- View Design Projects
+- View Shop Drawings
+- View Design Briefs
+- View All Projects
+
+### Best Practices
+
+**Design Teams:**
+- Minimize revisions through better briefs
+- Respond to reviews within 24 hours
+- Track approval rates for quality
+
+**Project Managers:**
+- Ensure all projects have design files
+- Monitor design bottlenecks
+- Coordinate with production
+
+**Quality:**
+- Maintain >80% shop drawing approval rate
+- Reduce revision cycles
+- Improve first-pass approval
+
+---
+
+## Shipping Dashboard
+
+**Access:** `/dashboards/shipping`
+
+Shipment tracking, delivery performance, and logistics metrics.
+
+### Shipment Overview
+
+**Shipment Metrics:**
+- **Total Shipments** - All shipments with new count
+- **In Transit** - Active deliveries
+- **Delivered** - Successfully delivered
+- **Pending** - Awaiting pickup
+
+### Delivery Performance
+
+**Performance Metrics:**
+- **On-Time Rate** - Percentage delivered on/before promised date
+- **Late Deliveries** - Past expected delivery date
+- **Avg Delivery Time** - Days from ship to delivery
+
+### Visualizations
+
+**Shipping Activity Trend:**
+- Line chart: Shipped vs Delivered
+- Blue = Shipped
+- Purple = Delivered
+- Gap shows in-transit time
+
+**Shipment Status Distribution:**
+- Pie chart: Pending, In Transit, Delivered, Cancelled
+- Real-time logistics pipeline
+
+**Top Delivery Zones:**
+- Bar chart showing destinations
+- By state/region
+- Plan logistics routes
+
+**Carrier Performance Table:**
+- Ranked carrier list
+- Metrics: Total shipments, On-time rate
+- Color-coded performance:
+  - Green: ≥90% on-time
+  - Gray: 70-89% on-time
+  - Red: <70% on-time
+
+### Shipping Insights
+
+**Common Insights:**
+- High late delivery rate (investigate carriers)
+- Specific carrier underperforming
+- Zone-specific delays
+- Seasonal shipping patterns
+
+### Quick Actions
+
+- View All Shipments
+- Track In-Transit
+- View Pending
+- View All Shipments (carrier-specific)
+
+### Best Practices
+
+**Logistics Teams:**
+- Target >95% on-time delivery
+- Monitor carrier performance weekly
+- Address delays proactively
+
+**Customer Service:**
+- Proactively communicate delays
+- Track high-value shipments
+- Respond to delivery inquiries
+
+**Planning:**
+- Use zone data for route optimization
+- Select best carriers by performance
+- Plan shipping schedules
+
+---
+
+## Quality Dashboard
+
+**Access:** `/dashboards/quality`
+
+Quality inspections, pass rates, and defect analysis.
+
+### Inspection Overview
+
+**Inspection Metrics:**
+- **Total Inspections** - All quality checks with new count
+- **Passed** - Quality approved
+- **Failed** - Requires rework
+- **Pending** - Awaiting inspection
+
+### Quality Performance
+
+**Performance Metrics:**
+- **Pass Rate** - Percentage passing QC
+  - Target: ≥90% (green indicator)
+  - Below target: <90% (yellow/red indicator)
+- **Fail Rate** - Percentage failing QC
+  - Target: ≤10%
+  - Above target requires action
+
+### Visualizations
+
+**Inspection Trend:**
+- Line chart with three lines:
+  - Passed inspections (green solid)
+  - Failed inspections (red solid)
+  - Total inspections (gray dashed)
+- Track quality trends over time
+
+**Inspection Status Distribution:**
+- Pie chart: Passed, Failed, Pending
+- Current quality state
+
+**Top Defect Categories:**
+- Bar chart (if defects exist)
+- Categories: Dimensional, Finish, Material, Assembly, etc.
+- Red bars indicate problem areas
+- Empty state if no defects recorded (good!)
+
+### Quality Insights
+
+**Common Insights:**
+- Pass rate below target (investigate root causes)
+- Specific defect category recurring
+- Quality trends improving/declining
+- Pending inspections requiring attention
+
+### Quick Actions
+
+- View All Inspections
+- View Passed
+- View Failed
+- View Pending
+
+### Best Practices
+
+**QC Teams:**
+- Maintain ≥95% pass rate
+- Document all failures thoroughly
+- Track corrective actions
+
+**Production:**
+- Address failed inspections immediately
+- Implement preventive measures
+- Train on common defects
+
+**Management:**
+- Monitor quality trends weekly
+- Investigate recurring defects
+- Celebrate quality improvements
+
+---
+
+## Reading Visualizations
+
+Understanding different chart types used across dashboards:
+
+### Stat Cards
+
+**Components:**
+- **Title** - Metric name
+- **Value** - Large number or percentage
+- **Description** - Context or comparison
+- **Icon** - Visual indicator (color-coded)
+
+**Icon Colors:**
+- 🟢 **Success** (Green) - Positive metrics, completed items
+- 🔵 **Primary** (Blue) - Neutral counts, totals
+- 🟡 **Warning** (Yellow) - Requires attention, pending items
+- 🔴 **Destructive** (Red) - Critical issues, failed items
+- ⚪ **Info** (Gray) - Informational metrics
+
+### Area Charts
+
+**How to Read:**
+- **X-Axis** - Time periods (days, weeks, months)
+- **Y-Axis** - Value (revenue, count, etc.)
+- **Area Fill** - Visual representation of volume
+- **Line** - Exact values (hover to see)
+- **Gradient** - Adds visual depth
+
+**Best For:**
+- Revenue trends
+- Volume over time
+- Growth patterns
+
+### Bar Charts
+
+**How to Read:**
+- **X-Axis** - Categories (departments, products, etc.)
+- **Y-Axis** - Values (amounts, counts)
+- **Bar Height** - Magnitude
+- **Bar Color** - Category or status
+
+**Best For:**
+- Comparing categories
+- Ranking items
+- Showing distributions
+
+### Pie Charts
+
+**How to Read:**
+- **Slices** - Percentage of whole
+- **Labels** - Category name and value
+- **Colors** - Different categories
+
+**Best For:**
+- Status distributions
+- Percentage breakdowns
+- Part-to-whole relationships
+
+**Tips:**
+- Hover over slices for details
+- Click legend to highlight slice
+- Look for unusual distributions
+
+### Line Charts
+
+**How to Read:**
+- **X-Axis** - Time or sequence
+- **Y-Axis** - Values
+- **Lines** - Trends for each metric
+- **Legend** - Identifies each line
+
+**Best For:**
+- Multiple metric comparison
+- Trend analysis over time
+- Identifying patterns
+
+---
+
+## Common Workflows
+
+### Daily Executive Review
+
+**Morning Routine (10 minutes):**
+
+1. **Executive Dashboard** (`/dashboards/executive`)
+   - Check revenue vs target
+   - Review overdue invoices
+   - Monitor on-time delivery rates
+
+2. **Financial Dashboard** (`/dashboards/financial`)
+   - Review cash position
+   - Follow up on overdue invoices
+   - Check expense anomalies
+
+3. **Projects Dashboard** (`/dashboards/projects`)
+   - Review overdue projects
+   - Check health scores
+   - Address at-risk projects
+
+4. **Review AI Insights**
+   - Read all warning/error insights
+   - Take immediate action on critical items
+   - Delegate follow-ups to team
+
+### Weekly Operations Review
+
+**Monday Morning (30 minutes):**
+
+1. **Analytics Dashboard**
+   - Review previous week's performance
+   - Compare to previous periods
+   - Set weekly goals
+
+2. **Manufacturing Dashboard**
+   - Check capacity utilization
+   - Review quality pass rates
+   - Plan production schedule
+
+3. **Shipping Dashboard**
+   - Review carrier performance
+   - Address delivery issues
+   - Optimize shipping routes
+
+4. **Design Dashboard**
+   - Clear pending reviews
+   - Check project coverage
+   - Address revision bottlenecks
+
+### Monthly Business Review
+
+**Month-End Process (1-2 hours):**
+
+1. **Export All Dashboards to PDF**
+   - Set date range to previous month
+   - Export each relevant dashboard
+   - Save to reports folder
+
+2. **Executive Dashboard**
+   - Compare actual vs target by department
+   - Analyze revenue trends
+   - Review customer acquisition
+
+3. **Financial Dashboard**
+   - Reconcile revenue and expenses
+   - Review profit margins
+   - Plan next month's budget
+   - Generate financial statements
+
+4. **Projects Dashboard**
+   - Review completed projects
+   - Analyze overdue patterns
+   - Plan resource allocation
+
+5. **Quality Dashboard**
+   - Calculate monthly pass rate
+   - Review defect trends
+   - Plan quality improvements
+
+6. **Compile Insights**
+   - Document key findings
+   - Create action items
+   - Share with stakeholders
+
+### Quick Performance Check
+
+**Anytime (2 minutes):**
+
+1. Open **Analytics Dashboard**
+2. Review "AI Insights" section
+3. Check critical metrics in stat cards
+4. Take action on urgent items
+5. Done!
+
+---
+
+## Troubleshooting
+
+### Dashboard Not Loading
+
+**Symptoms:**
+- Spinning loader indefinitely
+- Error message displayed
+- Blank screen
+
+**Solutions:**
+
+1. **Check Internet Connection**
+   - Ensure you're online
+   - Test other pages
+   - Refresh browser
+
+2. **Clear Browser Cache**
+   - Press Ctrl+Shift+R (Windows) or Cmd+Shift+R (Mac)
+   - Clear cache in browser settings
+   - Try incognito/private mode
+
+3. **Verify Permissions**
+   - Ensure you have dashboard access
+   - Contact admin if permission denied
+   - Check your role permissions
+
+4. **Try Different Browser**
+   - Test in Chrome, Firefox, Safari, or Edge
+   - Update browser to latest version
+   - Disable browser extensions temporarily
+
+5. **Contact Support**
+   - If issue persists, report to IT
+   - Include: Dashboard name, error message, browser version
+   - Provide screenshot if possible
+
+### Data Looks Incorrect
+
+**Symptoms:**
+- Numbers seem wrong
+- Missing data points
+- Outdated information
+
+**Solutions:**
+
+1. **Check Date Range**
+   - Verify selected date range is correct
+   - Try changing to different range
+   - Ensure you're comparing correct periods
+
+2. **Force Refresh**
+   - Click refresh button in dashboard header
+   - Wait for data to reload
+   - Check if numbers update
+
+3. **Verify Source Data**
+   - Navigate to detail pages (Orders, Invoices, etc.)
+   - Manually verify counts
+   - Ensure data entry is complete
+
+4. **Check Filters**
+   - Some dashboards may have additional filters
+   - Reset filters to default
+   - Try "All" date range
+
+5. **Report Issue**
+   - If data is genuinely incorrect, report to support
+   - Include: Dashboard name, metric name, expected vs actual
+   - Provide date range used
+
+### Charts Not Displaying
+
+**Symptoms:**
+- Empty chart areas
+- "No data available" message
+- Chart rendering issues
+
+**Solutions:**
+
+1. **Expand Date Range**
+   - Try "All" date range
+   - May not have data for selected period
+   - New accounts may have limited data
+
+2. **Check Browser Compatibility**
+   - Update to latest browser version
+   - Try different browser
+   - Ensure JavaScript is enabled
+
+3. **Zoom Out/In**
+   - Browser zoom may affect chart rendering
+   - Reset zoom to 100%
+   - Refresh page
+
+4. **Wait for Data**
+   - New installations may not have historical data
+   - Charts populate as data accumulates
+   - Some metrics require minimum data points
+
+### PDF Export Failing
+
+**Symptoms:**
+- Download doesn't start
+- Incomplete PDF
+- Export button not working
+
+**Solutions:**
+
+1. **Check Popup Blocker**
+   - Allow popups from your domain
+   - Temporarily disable blocker
+   - Try export again
+
+2. **Scroll to Top**
+   - Ensure dashboard is scrolled to top
+   - Export captures visible content
+   - All sections should be loaded
+
+3. **Reduce Date Range**
+   - Very large datasets may cause timeout
+   - Try shorter date range
+   - Export multiple PDFs if needed
+
+4. **Try Different Browser**
+   - Some browsers handle PDF better
+   - Chrome generally most reliable
+   - Update browser to latest version
+
+### Performance Issues
+
+**Symptoms:**
+- Dashboard loads slowly
+- Charts lag when interacting
+- Browser freezes
+
+**Solutions:**
+
+1. **Reduce Date Range**
+   - Shorter ranges load faster
+   - Start with 7d or 30d
+   - Increase gradually if needed
+
+2. **Close Other Tabs**
+   - Dashboards are data-intensive
+   - Free up browser memory
+   - Restart browser if needed
+
+3. **Check Internet Speed**
+   - Run speed test
+   - Use wired connection if possible
+   - Contact ISP if consistently slow
+
+4. **Optimize Computer**
+   - Close unnecessary applications
+   - Ensure adequate RAM
+   - Update operating system
+
+---
+
+## Tips & Tricks
+
+### Bookmark Your Favorites
+
+**Create Quick Access:**
+1. Open your most-used dashboard
+2. Bookmark the page (Ctrl+D or Cmd+D)
+3. Rename bookmark (e.g., "Daily Executive")
+4. Add to bookmarks bar for one-click access
+
+### Set Up Dashboard Routine
+
+**Morning Dashboard Sequence:**
+1. Executive Dashboard (high-level check)
+2. Financial Dashboard (cash position)
+3. Projects Dashboard (overdue check)
+4. Quality Dashboard (QC issues)
+
+**Bookmark a Tab Set:**
+- Open all four dashboards in separate tabs
+- Bookmark all tabs as a folder
+- One-click opens entire routine
+
+### Use Multiple Monitors
+
+**Optimal Setup:**
+- **Monitor 1:** Main work (data entry, tasks)
+- **Monitor 2:** Dashboard (continuous monitoring)
+- Set dashboard to auto-refresh
+- Glance periodically for real-time updates
+
+### Create Custom Reports
+
+**Monthly Report Process:**
+1. Last day of month, export all dashboards
+2. Combine PDFs into single document
+3. Add cover page with summary
+4. Share with stakeholders via email
+5. Archive in shared drive
+
+### Compare Time Periods
+
+**Side-by-Side Comparison:**
+1. Open dashboard in two browser windows
+2. Set different date ranges in each
+3. Place windows side-by-side
+4. Compare metrics visually
+5. Screenshot for documentation
+
+### Track Trends
+
+**Create Trend Log:**
+1. Weekly, screenshot key metrics
+2. Save with date in filename
+3. Store in chronological folder
+4. Review quarterly for patterns
+
+**Metrics to Track:**
+- Revenue growth rate
+- Quality pass rate
+- On-time delivery rate
+- Customer acquisition
+- Profit margin
+
+### Mobile Access
+
+**Viewing on Phone/Tablet:**
+- All dashboards are mobile-responsive
+- Rotate to landscape for best view
+- Pinch to zoom on charts
+- Swipe to scroll through sections
+
+**Mobile Best Practices:**
+- Check critical metrics on-the-go
+- Use for client meetings (show real-time data)
+- Quick status checks between meetings
+- Limit to summary metrics (details on desktop)
+
+### Share Dashboard Insights
+
+**With Team:**
+- Screenshot specific metrics
+- Paste into Slack/Teams with context
+- Tag relevant team members
+- Include date range for clarity
+
+**With Clients:**
+- Export to PDF for professional look
+- Remove internal metrics if needed
+- Add cover letter with explanation
+- Schedule recurring reports
+
+### Set Performance Targets
+
+**Define Success Metrics:**
+- **Revenue Growth:** Target +10% MoM
+- **Quality Pass Rate:** ≥95%
+- **On-Time Delivery:** ≥95%
+- **Invoice Collection:** ≤7 days overdue
+- **Project Completion:** ≥80% on-time
+
+**Track Against Goals:**
+1. Note current performance
+2. Set realistic improvement targets
+3. Review progress weekly
+4. Adjust strategies based on trends
+
+---
+
+## FAQ
+
+### General Questions
+
+**Q: How often do dashboards update?**
+
+A: Automatically every 60 seconds. You can also manually refresh by clicking the refresh button in the dashboard header.
+
+**Q: Can I customize which dashboards I see?**
+
+A: Dashboard visibility is based on your role permissions. Contact your administrator to request access to additional dashboards.
+
+**Q: Why don't I see all 10 dashboards?**
+
+A: Dashboard access is role-based. Executives see all dashboards, while team members see relevant ones for their function (e.g., designers see Design Dashboard, not Financial Dashboard).
+
+**Q: Can I create custom dashboards?**
+
+A: Currently, dashboards are pre-configured. Custom dashboard creation may be added in future releases. Use the Analytics Dashboard for comprehensive cross-functional metrics.
+
+**Q: Do dashboards work offline?**
+
+A: No, dashboards require an internet connection to load real-time data. However, you can export PDFs for offline viewing.
+
+### Data & Metrics
+
+**Q: What date range should I use?**
+
+A:
+- **Daily operations:** 7d or 30d
+- **Monthly reviews:** 30d or 90d
+- **Quarterly planning:** 90d or 1y
+- **Historical analysis:** All
+
+**Q: Why is my revenue different on different dashboards?**
+
+A: Different dashboards may show different revenue calculations:
+- **Executive:** Total revenue (all sources)
+- **Financial:** Collected revenue (cash basis)
+- **Analytics:** Order revenue (may include pending)
+
+Always check the date range and metric definition.
+
+**Q: How is "on-time" calculated?**
+
+A:
+- **Projects:** Completed by end_date
+- **Deliveries:** Delivered by/before promised_date
+- **Production:** Completed by scheduled_completion_date
+
+**Q: What's the difference between "invoiced" and "revenue"?**
+
+A:
+- **Invoiced:** Amount billed (may not be paid yet)
+- **Revenue:** Amount collected (cash received)
+- **A/R (Accounts Receivable):** Invoiced but not yet paid
+
+### Troubleshooting
+
+**Q: Dashboard shows "No data available" - why?**
+
+A: Possible reasons:
+- Date range has no activity (try expanding range)
+- New account with no historical data
+- Permissions prevent seeing data
+- Data filters excluding all results
+
+**Q: Charts are empty but metrics show numbers - what's wrong?**
+
+A: Usually a browser rendering issue:
+1. Try different browser
+2. Clear cache and refresh
+3. Disable browser extensions
+4. Update browser to latest version
+
+**Q: Export to PDF shows partial data - how to fix?**
+
+A:
+1. Scroll to top of dashboard before exporting
+2. Wait for all charts to fully load
+3. Try shorter date range (less data = faster export)
+4. Use Chrome for most reliable PDF generation
+
+**Q: Dashboard performance is slow - how to improve?**
+
+A:
+- Use shorter date ranges (7d or 30d instead of All)
+- Close other browser tabs
+- Check internet connection speed
+- Clear browser cache
+- Restart browser
+
+### Advanced Usage
+
+**Q: Can I schedule automated dashboard reports?**
+
+A: Automated reporting is planned for a future release. Currently, you can manually export PDFs and email them on your desired schedule.
+
+**Q: Can I embed dashboards in other tools?**
+
+A: Dashboard embedding is not currently supported. You can share screenshots or PDF exports.
+
+**Q: How do I compare my performance to industry benchmarks?**
+
+A: Benchmarking data is not built-in. You can export your metrics and compare manually to industry data from your sources.
+
+**Q: Can I export raw data for custom analysis?**
+
+A: Yes! Navigate to the detail pages (Orders, Projects, etc.) and use the export features to get CSV data for custom analysis in Excel or other tools.
+
+**Q: How far back does historical data go?**
+
+A: Historical data goes back to your account creation date or data migration date. There's no time limit on data retention.
+
+---
+
+## Related Documentation
+
+**Core Modules:**
+- [CRM](/crm) - Customer and lead management
+- [Orders](/orders) - Order processing and tracking
+- [Projects](/crm/projects) - Project management
+- [Financial](/finance) - Invoices, payments, expenses
+- [Production](/production) - Manufacturing operations
+- [Shipping](/shipping) - Logistics and delivery
+
+**Global Features:**
+- [Search](/global-features/search) - Global search functionality
+- [Notifications](/global-features/notifications) - System alerts
+- [Reports](/global-features/reports) - Custom reporting
+
+**Getting Started:**
+- [Quick Start Guide](/getting-started/quick-start)
+- [User Interface Overview](/getting-started/interface)
+- [Navigation](/getting-started/navigation)
+
+---
+
+## Need Help?
+
+**Support Resources:**
+- **Help Center:** Browse all documentation
+- **Video Tutorials:** Visual walkthroughs (coming soon)
+- **Contact Support:** help@limn.us.com
+- **Live Chat:** Available during business hours
+
+**Quick Tips:**
+- Use AI Insights for daily guidance
+- Bookmark your most-used dashboards
+- Export PDFs for offline access
+- Review dashboards at consistent times daily
+
+**Best Practices:**
+- Check Executive Dashboard every morning
+- Review Financial Dashboard at week start
+- Monitor Quality Dashboard after production runs
+- Use Analytics Dashboard for comprehensive reviews
+
+---
+
+*Last Updated: November 3, 2025*
+*Version: 1.0*
