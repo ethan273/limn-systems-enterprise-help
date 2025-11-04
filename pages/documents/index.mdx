@@ -1,33 +1,713 @@
 # Document Management
 
-Centralized document library with versioning, collaboration, and access control.
-
 ## Overview
 
-The document management system provides a centralized library for all company documents with powerful organization, versioning, collaboration, and access control features.
+The Document Management system provides a centralized, enterprise-grade repository for all company documents with powerful organization, versioning, collaboration, and access control features. Built on hybrid storage architecture, the system seamlessly handles files of any size while maintaining security, compliance, and ease of access.
 
-## Key Modules
+**Key Benefits:**
 
-- **Document Library** - Central document repository
-- **Folders** - Organize documents into folders
-- **Categories** - Categorize documents for easy discovery
-- **Versioning** - Track document versions and history
-- **Collaboration** - Share and collaborate on documents
-- **Document Templates** - Reusable document templates
-- **Access Control** - Permission-based access
-- **Portal Documents** - Documents shared via portals
+- **Hybrid Storage Architecture** - Supabase for files <50MB, Google Drive for files >50MB, automatic routing
+- **Multi-Entity Support** - Attach documents to collections, concepts, prototypes, catalog items, production orders, and more
+- **Hierarchical Folder Structure** - Unlimited nesting with parent-child relationships and full path tracking
+- **Version Control** - Complete revision history with rollback capabilities and version comparison
+- **Approval Workflows** - Multi-stage document approval with stakeholder sign-off and audit trails
+- **Collaboration Tools** - Threaded comments, @mentions, real-time collaboration, and activity feeds
+- **Access Control** - Granular user permissions (view, edit, delete, share) with role-based access
+- **Media Type Classification** - 7 media types (isometric, line drawing, rendering, photo, 3D model, technical drawing, other)
+- **Usage Flags** - Mark documents for packaging, labeling, marketing, or as primary images
+- **Document Categories** - Tag documents with categories for easy discovery and filtering
+- **Google Drive Integration** - Seamless sync with Google Drive for large files and team collaboration
+- **PandaDoc Integration** - Create professional proposals and contracts with e-signature workflows
+- **Access Logging** - Complete audit trail tracking who accessed which documents when
+- **Portal Integration** - Share documents securely with customers, designers, factories, and QC teams
 
-## Key Features
+---
 
-- File versioning and history
-- Folder organization
-- Category tagging
-- Collaboration tools
-- Access control and permissions
-- Document templates
-- Portal integration
-- Search and filtering
+## Document Dashboard
 
-## Getting Started
+Navigate to `/documents` to access the Document Library.
 
-Learn how to organize, share, and collaborate on documents across your organization.
+### Dashboard Features
+
+**Storage Overview**: Total documents stored, total storage used (GB), documents by storage type (Supabase vs Google Drive), storage quota remaining.
+
+**Document Metrics**: Documents uploaded this month, documents pending approval, documents with unread comments, recently accessed documents.
+
+**Folder Structure**: Tree view of folder hierarchy, quick navigation to frequently accessed folders, folder-level document counts.
+
+**Recent Activity**: Last 20 document activities (uploads, edits, approvals, comments), real-time activity feed, filter by activity type.
+
+**Quick Actions**: Upload document, create folder, request approval, search documents, bulk operations.
+
+---
+
+## Document Library
+
+### Creating Documents
+
+**Upload Document:**
+1. Navigate to Documents > Upload or click folder's "Upload" button
+2. Select file from computer or drag and drop
+3. System automatically routes to Supabase (<50MB) or Google Drive (>50MB)
+4. Enter document metadata:
+   - **Name** - Document display name
+   - **Description** - Detailed description
+   - **Category** - Select from predefined categories
+   - **Media Type** - isometric, line_drawing, rendering, photo, 3d_model, technical_drawing, other
+   - **Usage Flags** - Check: Use for Packaging, Use for Labeling, Use for Marketing
+   - **Primary Image** - Mark as primary image for entity
+   - **Display Order** - Set display order (0-999)
+5. Link to entity (collection, concept, prototype, catalog item, production order)
+6. Select folder location
+7. Click "Upload Document"
+8. Document processed and stored with metadata
+
+**Supported File Types:**
+- **Documents**: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, MD
+- **Images**: JPG, JPEG, PNG, GIF, SVG, WEBP, TIFF
+- **CAD/Design**: DWG, DXF, STEP, STL, OBJ, BLEND, 3DS, FBX
+- **Media**: MP4, MOV, AVI, MP3, WAV
+- **Archives**: ZIP, RAR, 7Z, TAR, GZ
+
+**File Size Limits:**
+- **Supabase Storage**: Up to 50MB per file (default for most documents)
+- **Google Drive**: 50MB+ (automatically routed, no size limit)
+
+### Document Metadata
+
+**Core Fields:**
+- **ID** - Unique document identifier (UUID)
+- **Name** - Display name
+- **Original Name** - Original filename uploaded
+- **Type** - File MIME type (application/pdf, image/png, etc.)
+- **Size** - File size in bytes
+- **Description** - Detailed description
+- **Created At** - Upload timestamp
+- **Updated At** - Last modification timestamp
+- **Uploaded By** - User who uploaded document
+
+**Storage Fields:**
+- **Storage Type** - supabase or google_drive
+- **Storage Bucket** - Supabase bucket name (e.g., "documents")
+- **URL** - Direct access URL
+- **Download URL** - Signed URL for downloads
+- **Google Drive ID** - Google Drive file ID (for >50MB files)
+- **Google Drive URL** - Google Drive file URL
+
+**Media Fields:**
+- **Media Type** - isometric, line_drawing, rendering, photo, 3d_model, technical_drawing, other
+- **Use For Packaging** - Boolean flag (use in packaging materials)
+- **Use For Labeling** - Boolean flag (use for product labels)
+- **Use For Marketing** - Boolean flag (use in marketing campaigns)
+- **Is Primary Image** - Boolean flag (primary image for entity)
+- **Display Order** - Integer (0-999) for sorting
+
+**Entity Linking:**
+- **Collection ID** - Link to collection
+- **Concept ID** - Link to concept
+- **Prototype ID** - Link to prototype
+- **Catalog Item ID** - Link to catalog item
+- **Production Order ID** - Link to production order
+- **Customer ID** - Link to customer
+- **Order ID** - Link to order
+- **Project ID** - Link to project
+
+---
+
+## Folder Organization
+
+### Folder Structure
+
+Documents are organized in a hierarchical folder system with unlimited nesting.
+
+**Folder Fields:**
+- **Folder Name** - Folder display name
+- **Parent Folder ID** - Reference to parent folder (null for root folders)
+- **Full Path** - Complete folder path (e.g., "/Customers/Acme Corp/Projects")
+- **Google Drive Folder ID** - Synced Google Drive folder
+- **Customer ID** - Link to customer (optional)
+- **Order ID** - Link to order (optional)
+- **Project Type** - Project categorization (optional)
+
+### Creating Folders
+
+**Manual Folder Creation:**
+1. Navigate to Documents > New Folder
+2. Enter folder name
+3. Select parent folder (or leave empty for root folder)
+4. Optionally link to customer, order, or project
+5. Click "Create Folder"
+6. Folder created and appears in hierarchy
+
+**Auto-Generated Folders:**
+Folders are automatically created for:
+- **New Customers** - /Customers/{Customer Name}
+- **New Orders** - /Orders/{Order Number}
+- **New Projects** - /Projects/{Project Name}
+- **Production Orders** - /Production/{PO Number}
+
+### Folder Navigation
+
+**Breadcrumb Navigation**: Full path displayed at top (e.g., Home > Customers > Acme Corp > Orders)
+
+**Tree View**: Expandable/collapsible folder tree in sidebar, click to navigate to folder, drag-and-drop to move documents.
+
+**Quick Access**: Recently accessed folders, favorite folders (star icon), search folders by name.
+
+---
+
+## Document Versioning
+
+### Version Control System
+
+Complete revision history tracking with rollback and comparison capabilities.
+
+### Creating New Versions
+
+**Upload New Version:**
+1. Navigate to document detail page
+2. Click "Upload New Version"
+3. Select updated file
+4. Enter version notes (what changed)
+5. Click "Upload"
+6. System creates new revision
+7. Previous version archived but accessible
+
+**Version Metadata:**
+- **Version Number** - Auto-incremented (v1, v2, v3, etc.)
+- **Created At** - Version timestamp
+- **Created By** - User who created version
+- **Version Notes** - Description of changes
+- **File Size** - Size of this version
+- **File URL** - Direct link to this version
+
+### Version History
+
+**Viewing Versions:**
+1. Navigate to document detail page
+2. Click "Version History" tab
+3. View list of all versions with metadata
+4. See who created each version and when
+5. Read version notes for each revision
+
+**Version Actions:**
+- **Download** - Download specific version
+- **Preview** - Preview version (images, PDFs)
+- **Restore** - Rollback to this version (creates new version)
+- **Compare** - Side-by-side comparison with current version
+- **Delete** - Remove version (admin only, requires confirmation)
+
+### Version Comparison
+
+**Compare Tool:**
+- Side-by-side view of two versions
+- Highlight changes (for supported file types)
+- Metadata diff (size, type, etc.)
+- Download both versions for offline comparison
+
+---
+
+## Document Approvals
+
+### Approval Workflows
+
+Multi-stage approval process ensures document quality and stakeholder alignment.
+
+### Approval Stages
+
+**1. Draft** - Document uploaded, not yet submitted for approval.
+
+**2. Pending Review** - Document submitted, awaiting reviewers.
+
+**3. In Review** - One or more reviewers actively reviewing.
+
+**4. Changes Requested** - Reviewer requested revisions, document returned to uploader.
+
+**5. Approved** - All reviewers approved, document finalized.
+
+**6. Rejected** - Document rejected, cannot be used (requires resubmission).
+
+### Creating Approval Workflows
+
+**Request Approval:**
+1. Navigate to document detail page
+2. Click "Request Approval"
+3. Select reviewers (multiple users)
+4. Set approval type:
+   - **All Must Approve** - Requires unanimous approval
+   - **Any Can Approve** - Requires one approval
+   - **Majority Must Approve** - Requires >50% approval
+5. Optionally set due date for approvals
+6. Add approval request message
+7. Click "Send for Approval"
+8. Reviewers notified via email and in-app
+
+**Approval Actions (Reviewers):**
+- **Approve** - Approve document, add optional comment
+- **Request Changes** - Reject with specific change requests
+- **Reject** - Reject document permanently
+- **Defer** - Defer to another reviewer
+
+**Approval Notifications:**
+- Reviewers notified when approval requested
+- Uploader notified when all approvals received
+- Uploader notified when changes requested
+- Reminder notifications sent at 24h, 48h before due date
+
+---
+
+## Document Collaboration
+
+### Comments and Discussions
+
+Threaded comment system enables team collaboration on documents.
+
+### Creating Comments
+
+**Add Comment:**
+1. Navigate to document detail page
+2. Scroll to "Comments" section
+3. Type comment in text box
+4. Optionally @mention team members (triggers notification)
+5. Optionally attach files to comment
+6. Click "Post Comment"
+7. Comment visible to all users with access
+
+**Comment Features:**
+- **Threading** - Reply to comments creating threaded discussions
+- **@Mentions** - Mention users with @username to notify them
+- **Rich Text** - Bold, italic, lists, links formatting
+- **File Attachments** - Attach files to comments (images, PDFs)
+- **Edit/Delete** - Edit or delete own comments
+- **Reactions** - React with emoji (👍, 👎, ❤️, etc.)
+
+### Activity Feed
+
+**Real-Time Activity:**
+- Document uploaded
+- New version created
+- Comment posted
+- Approval requested
+- Approval granted/rejected
+- Document moved to different folder
+- Permissions changed
+- Document downloaded
+
+**Activity Filters:**
+- Filter by activity type
+- Filter by user
+- Filter by date range
+- Export activity log to CSV
+
+---
+
+## Access Control
+
+### Permission Levels
+
+Granular permissions control who can access and modify documents.
+
+**Permission Types:**
+
+**1. View** - Can view document and metadata, can download document, cannot edit or delete.
+
+**2. Comment** - View permissions + can add comments, can @mention others, cannot edit document.
+
+**3. Edit** - Comment permissions + can edit metadata, can upload new versions, cannot delete document.
+
+**4. Delete** - Edit permissions + can delete document, can change permissions, full control.
+
+**5. Share** - Delete permissions + can share document externally, can modify access control.
+
+### User Permissions
+
+**Granting Permissions:**
+1. Navigate to document detail page
+2. Click "Manage Access"
+3. Click "Add User"
+4. Search for user by name or email
+5. Select permission level (View, Comment, Edit, Delete, Share)
+6. Optionally set expiration date
+7. Click "Grant Access"
+8. User receives notification
+
+**Permission Inheritance:**
+- Folder permissions inherited by documents
+- Parent folder permissions cascade to child folders
+- Explicit document permissions override folder permissions
+- Organization-wide permissions (admin, managers, etc.)
+
+### Access Logging
+
+**Audit Trail:**
+- Every document access logged with timestamp
+- Track who viewed, downloaded, edited, or deleted documents
+- IP address and device information recorded
+- Compliance reporting for security audits
+- Exportable access logs (CSV, PDF)
+
+**Access Reports:**
+- Most accessed documents
+- Users with most activity
+- Documents never accessed (cleanup candidates)
+- External access (shared links)
+- Failed access attempts
+
+---
+
+## Document Categories
+
+### Category System
+
+Tag documents with categories for easy discovery and filtering.
+
+**Pre-Defined Categories:**
+- **Contracts** - Customer contracts, vendor agreements, NDAs
+- **Proposals** - Sales proposals, project proposals, RFPs
+- **Invoices** - Customer invoices, supplier invoices
+- **Designs** - Product designs, CAD files, renderings
+- **Photos** - Product photos, factory photos, marketing images
+- **Technical** - Technical drawings, specifications, manuals
+- **Marketing** - Marketing materials, brochures, catalogs
+- **Legal** - Legal documents, compliance documents
+- **Financial** - Financial reports, budgets, forecasts
+- **Operations** - SOPs, process docs, training materials
+- **HR** - Employee documents, HR policies
+- **Other** - Miscellaneous documents
+
+**Category Management:**
+- Create custom categories
+- Edit category names and descriptions
+- Set category icons and colors
+- Archive unused categories
+- Bulk assign categories to documents
+
+---
+
+## Google Drive Integration
+
+### Integration Overview
+
+Seamless integration with Google Drive for files >50MB and team collaboration.
+
+### Setup
+
+**Connect Google Drive:**
+1. Navigate to Documents > Settings > Integrations
+2. Click "Connect Google Drive"
+3. Authenticate with Google account
+4. Grant Limn Systems permissions
+5. Select Google Drive folder for Limn documents
+6. Click "Save Settings"
+7. Integration active
+
+### Automatic Routing
+
+**File Size Routing:**
+- **<50MB** - Stored in Supabase Storage (faster access, better for small files)
+- **≥50MB** - Automatically routed to Google Drive (no size limit)
+- System handles routing transparently
+- Users see seamless experience regardless of storage backend
+
+**Sync Behavior:**
+- Documents uploaded to Limn Systems create Google Drive files
+- Google Drive files appear in Limn Systems with metadata
+- Folder structure synced bidirectionally
+- Changes in one system reflect in the other (5-minute sync interval)
+
+---
+
+## PandaDoc Integration
+
+### Integration Overview
+
+Create professional proposals, contracts, and invoices with e-signature capabilities.
+
+### Setup
+
+**Connect PandaDoc:**
+1. Navigate to Documents > Settings > Integrations
+2. Click "Connect PandaDoc"
+3. Authenticate with PandaDoc account
+4. Grant Limn Systems permissions
+5. Upload or select PandaDoc templates
+6. Map template fields to Limn data
+7. Click "Save Settings"
+
+### Creating PandaDoc Documents
+
+**From Document Library:**
+1. Navigate to document detail page
+2. Click "Generate PandaDoc"
+3. Select PandaDoc template
+4. Review pre-populated data
+5. Customize if needed
+6. Click "Generate"
+7. PandaDoc document created
+8. Link stored in document record
+
+**Sending for Signature:**
+1. Open PandaDoc document
+2. Add signers (customers, vendors, etc.)
+3. Configure signing order
+4. Set expiration date
+5. Click "Send for Signature"
+6. Signers receive email with document
+7. Signers review and sign electronically
+8. Completed document stored in Limn Systems
+
+---
+
+## Portal Integration
+
+### Portal Document Sharing
+
+Share documents securely with external users via customer, designer, factory, and QC portals.
+
+### Portal Access
+
+**Customer Portal:**
+- Order documents (invoices, packing lists, BOLs)
+- Product catalogs and specifications
+- Contracts and proposals
+- Shipment documents
+
+**Designer Portal:**
+- Design briefs and requirements
+- Mood boards and inspiration
+- Feedback on submitted designs
+- Final approved designs
+
+**Factory Portal:**
+- Production orders and shop drawings
+- Technical specifications and BOMs
+- QC inspection reports
+- Shipment documentation
+
+**QC Portal:**
+- Inspection checklists and templates
+- QC photos and reports
+- Non-conformance reports
+- Approval certificates
+
+### Portal Permissions
+
+**Access Control:**
+- Portal users see only documents assigned to them
+- Documents filtered by entity (customer, designer, factory)
+- Module-level permissions (which portal sections visible)
+- Document download/view tracking
+- Expiration dates for sensitive documents
+
+---
+
+## Common Workflows
+
+### Workflow 1: Product Design Document Lifecycle
+
+1. Designer uploads concept sketches to "Concepts" folder
+2. Designer requests approval from design lead
+3. Design lead reviews, requests changes (comments)
+4. Designer uploads revised version (v2)
+5. Design lead approves design
+6. Document automatically shared with factory portal
+7. Factory reviews for manufacturability
+8. Factory uploads technical drawings as new documents
+9. Technical drawings go through approval workflow
+10. Approved drawings shared with production team
+11. Production creates production order
+12. Shop drawings linked to production order
+13. QC accesses drawings during inspection
+14. Final as-built photos uploaded to production order
+15. All documents archived in customer folder
+**Timeline: 4-8 weeks from concept to production**
+
+### Workflow 2: Contract Approval Workflow
+
+1. Sales team creates proposal in PandaDoc
+2. Proposal document linked in Limn Systems
+3. Proposal shared with customer via customer portal
+4. Customer reviews and provides feedback (comments)
+5. Sales team revises proposal (v2)
+6. Revised proposal sent for internal approval (CFO, Legal)
+7. CFO and Legal review and approve
+8. Final proposal sent to customer for e-signature
+9. Customer signs electronically via PandaDoc
+10. Signed contract automatically stored in Limn Systems
+11. Contract linked to customer record and order
+12. Contract accessible via customer portal
+**Timeline: 1-3 weeks from draft to signed contract**
+
+### Workflow 3: Production Document Handoff
+
+1. Production order created
+2. System auto-creates "/Production/{PO-Number}" folder
+3. Design team uploads approved designs to folder
+4. Engineering uploads technical specifications
+5. Materials team uploads BOMs and material specs
+6. Folder shared with factory portal
+7. Factory reviews all documents
+8. Factory uploads progress photos during production
+9. QC inspector uploads inspection reports
+10. Factory uploads final as-built photos
+11. Shipping uploads packing list and BOL
+12. Customer receives shipment documents via customer portal
+13. All documents archived in order folder
+**Timeline: 6-12 weeks from order to delivery**
+
+---
+
+## Integration
+
+### CRM Integration
+
+**Customer Documents:**
+- Customer contracts and agreements
+- Proposals and quotes
+- Order confirmations
+- Invoices and receipts
+
+**Automatic Folder Creation:**
+- New customer → /Customers/{Customer Name} folder
+- New order → /Orders/{Order Number} folder
+- Documents linked to customer and order records
+
+### Production Integration
+
+**Production Order Documents:**
+- Shop drawings and technical specs
+- BOMs and material lists
+- QC inspection reports
+- Progress photos
+
+**Automatic Linking:**
+- Production order created → folder created
+- Shop drawings uploaded → linked to production order
+- QC reports uploaded → linked to production order
+
+### Projects Integration
+
+**Project Documents:**
+- Project proposals and contracts
+- Design deliverables
+- Progress reports
+- Final deliverables
+
+**Project Folder Structure:**
+- /Projects/{Project Name}/Designs
+- /Projects/{Project Name}/Contracts
+- /Projects/{Project Name}/Reports
+- /Projects/{Project Name}/Deliverables
+
+---
+
+## Best Practices
+
+1. **Use Descriptive Names** - Name documents clearly describing content (avoid "document1.pdf")
+2. **Organize with Folders** - Create logical folder structure matching business organization
+3. **Tag with Categories** - Always assign categories for easy filtering and discovery
+4. **Request Approvals** - Use approval workflows for important documents requiring sign-off
+5. **Version Liberally** - Create new versions rather than overwriting (preserves history)
+6. **Add Comments** - Use comments to provide context and discuss documents
+7. **Set Permissions** - Grant minimum permissions needed (principle of least privilege)
+8. **Link to Entities** - Always link documents to relevant entities (customers, orders, etc.)
+9. **Use Media Types** - Set media type and usage flags for product images
+10. **Upload High Quality** - Upload highest quality files available (system handles optimization)
+11. **Archive Old Documents** - Move outdated documents to archive folders (don't delete)
+12. **Review Access Logs** - Periodically review who accessed sensitive documents
+13. **Set Expiration Dates** - Set expiration dates for time-sensitive shared links
+14. **Use PandaDoc for Contracts** - Professional presentation with e-signature workflow
+15. **Backup Critical Documents** - Ensure critical documents backed up to Google Drive
+
+---
+
+## Troubleshooting
+
+**Document upload failing** - Check file size; verify supported file type; try different browser; check internet connection; ensure sufficient storage quota.
+
+**Cannot access document** - Verify you have permissions; check if document deleted; ask document owner for access; verify you're logged in.
+
+**Google Drive sync not working** - Re-authenticate Google Drive connection; check Google Drive permissions; verify folder structure; manually trigger sync; wait 5 minutes for automatic sync.
+
+**Version upload failed** - Ensure file size same or smaller than original; check file type matches original; verify you have edit permissions; try uploading as new document.
+
+**Approval workflow stuck** - Check if all reviewers notified; send reminder to pending reviewers; verify reviewers have access to document; check approval due date not expired.
+
+**Cannot find document** - Use search by name or category; check folder hierarchy; verify document not archived; check filters not hiding document; ask uploader for location.
+
+**Comments not posting** - Check internet connection; verify you have comment permissions; try refreshing page; check @mentions formatted correctly.
+
+**PandaDoc template not populating** - Verify template field mapping configured; check document data contains required fields; test with different template; re-map template fields.
+
+**Portal users cannot see documents** - Verify documents shared with portal; check module permissions; ensure documents linked to correct entity; verify portal access active.
+
+**Access log not showing activity** - Wait 5 minutes for log to update; verify activity occurred recently; check filters not excluding activity; ensure activity type logged (some exempt).
+
+---
+
+## Tips & Tricks
+
+- **Bulk Upload** - Select multiple files to upload simultaneously (up to 50 files)
+- **Drag-and-Drop** - Drag files directly into folder view for quick uploads
+- **Keyboard Shortcuts** - Press "?" to see all keyboard shortcuts
+- **Quick Search** - Press "/" to focus search box from anywhere
+- **Favorite Folders** - Star frequently accessed folders for quick access
+- **Document Templates** - Create document templates for recurring document types
+- **Batch Operations** - Select multiple documents for bulk move, delete, or permission changes
+- **Smart Folders** - Create saved searches as "smart folders" (auto-updating)
+- **Email Documents** - Email documents directly from Limn Systems as attachments
+- **QR Codes** - Generate QR codes linking to documents for labels and packaging
+- **Watermarks** - Apply watermarks to PDFs before sharing externally
+- **OCR Text Search** - System automatically OCRs PDFs for full-text search
+- **Version Diff** - Compare two versions side-by-side to see changes
+- **Auto-Categorize** - System suggests categories based on filename and content
+
+---
+
+## FAQ
+
+**Q: What file types are supported?**
+A: All major file types supported including documents (PDF, Office), images (JPG, PNG, SVG), CAD files (DWG, DXF, STEP, STL), and media (videos, audio).
+
+**Q: What's the file size limit?**
+A: Files <50MB stored in Supabase. Files ≥50MB automatically routed to Google Drive with no size limit.
+
+**Q: How does versioning work?**
+A: Each time you upload a new version, the system creates a new revision. All previous versions preserved and accessible.
+
+**Q: Can I restore an old version?**
+A: Yes. Navigate to Version History, select version, click "Restore". This creates a new version (doesn't overwrite current).
+
+**Q: How do I share documents externally?**
+A: Use portal integration to share with customers, designers, or factories. Or generate shareable link with expiration date and password.
+
+**Q: Can I edit documents directly in Limn Systems?**
+A: Not currently. Download document, edit locally, upload new version. Future enhancement: online editing for Office files.
+
+**Q: How do approval workflows work?**
+A: Request approval from one or more reviewers. Set approval type (all must approve, any can approve, or majority). Reviewers notified and can approve, request changes, or reject.
+
+**Q: What happens if I delete a document?**
+A: Document moved to "Trash" for 30 days. After 30 days permanently deleted. Admins can restore from trash within 30 days.
+
+**Q: Can I see who accessed a document?**
+A: Yes. Navigate to document detail page, click "Access Log" tab. View all access activity with timestamps and users.
+
+**Q: How does Google Drive integration work?**
+A: Files ≥50MB automatically uploaded to Google Drive. Folder structure synced. Changes reflected in both systems within 5 minutes.
+
+---
+
+## Support
+
+For additional assistance with Document Management:
+
+**Technical Support**: Email support@limnsystems.com | Phone 1-800-XXX-XXXX | Hours Monday-Friday 9 AM-6 PM EST
+
+**Document Team**: documents@limnsystems.com for organization and access questions
+
+**Integration Support**: integrations@limnsystems.com for Google Drive and PandaDoc issues
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
