@@ -1,31 +1,19 @@
 {
   "index": {
-    "title": "Introduction",
-    "type": "page"
+    "title": "Introduction"
   },
-  "authentication": {
-    "title": "Authentication",
-    "type": "menu",
-    "items": {
-      "authentication": {
-        "title": "Overview",
-        "href": "/getting-started/authentication"
-      },
-      "portal-access": {
-        "title": "Portal Access",
-        "href": "/getting-started/authentication#portal-access"
-      },
-      "employee-login": {
-        "title": "Employee Login",
-        "href": "/getting-started/authentication#employee-login-google-sso"
-      },
-      "external-user-login": {
-        "title": "External User Login",
-        "href": "/getting-started/authentication#external-user-login-magic-link"
-      }
-    }
+  "authentication": "Authentication",
+  "authentication-portal": {
+    "title": "→ Portal Access",
+    "href": "/getting-started/authentication#portal-access"
   },
-  "user-roles": "User Roles",
-  "navigation": "Navigation",
-  "first-steps": "First Steps"
+  "authentication-employee": {
+    "title": "→ Employee Login",
+    "href": "/getting-started/authentication#employee-login-google-sso"
+  },
+  "authentication-external": {
+    "title": "→ External User Login",
+    "href": "/getting-started/authentication#external-user-login-magic-link"
+  },
+  "user-roles": "User Roles"
 }
