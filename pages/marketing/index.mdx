@@ -51,7 +51,7 @@ Navigate to `/marketing` to access the Marketing Dashboard.
 
 **Campaign Details:**
 - **Campaign Name** - Internal name for campaign
-- **Subject Line** - Email subject (supports variables: `{{first_name}}`, `{{company_name}}`)
+- **Subject Line** - Email subject (supports variables: `\{\{first_name\}\}`, `\{\{company_name\}\}`)
 - **From Name** - Sender name (e.g., "Limn Systems Team")
 - **From Email** - Sender email (must be verified domain)
 - **Reply-To Email** - Where replies go
@@ -63,7 +63,7 @@ Navigate to `/marketing` to access the Marketing Dashboard.
 - **Plain Text** - Plain text version (auto-generated from HTML or custom)
 - **Preview Text** - Preview text shown in inbox (first line)
 - **Template Selection** - Start from template or blank
-- **Variable Insertion** - Insert merge tags: `{{first_name}}`, `{{company_name}}`, `{{custom_field}}`
+- **Variable Insertion** - Insert merge tags: `\{\{first_name\}\}`, `\{\{company_name\}\}`, `\{\{custom_field\}\}`
 - **Unsubscribe Link** - Automatically added to footer (CAN-SPAM requirement)
 
 **Recipient Selection:**
@@ -135,13 +135,13 @@ Reusable email templates with variable placeholders for consistent branding.
 - **Preview Image** - Template thumbnail
 
 **Merge Tags:**
-- `{{first_name}}` - Recipient first name
-- `{{last_name}}` - Recipient last name
-- `{{email}}` - Recipient email
-- `{{company_name}}` - Company name
-- `{{order_number}}` - Recent order number
-- `{{custom_field}}` - Any custom contact field
-- `{{unsubscribe_url}}` - Unsubscribe link (required)
+- `\{\{first_name\}\}` - Recipient first name
+- `\{\{last_name\}\}` - Recipient last name
+- `\{\{email\}\}` - Recipient email
+- `\{\{company_name\}\}` - Company name
+- `\{\{order_number\}\}` - Recent order number
+- `\{\{custom_field\}\}` - Any custom contact field
+- `\{\{unsubscribe_url\}\}` - Unsubscribe link (required)
 
 **Template Usage:**
 1. Create new campaign
@@ -235,7 +235,7 @@ Complete unsubscribe system ensuring compliance with U.S. CAN-SPAM Act.
 - Automatically added to all marketing emails
 - One-click unsubscribe (no login required)
 - Unique token per recipient per campaign
-- Links format: `{{unsubscribe_url}}`
+- Links format: `\{\{unsubscribe_url\}\}`
 
 **Unsubscribe Page:**
 1. Recipient clicks unsubscribe link
@@ -446,7 +446,7 @@ Send SMS campaigns to customers with delivery confirmation and opt-out managemen
 **Message Content:**
 - **Plain Text Only** - No HTML, emojis supported
 - **Character Count** - Real-time character counter
-- **Variable Insertion** - `{{first_name}}`, `{{order_number}}`
+- **Variable Insertion** - `\{\{first_name\}\}`, `\{\{order_number\}\}`
 - **Opt-Out Instructions** - Required "Reply STOP to unsubscribe" (auto-added)
 - **Link Shortening** - Long URLs automatically shortened
 
@@ -494,7 +494,7 @@ Send SMS campaigns to customers with delivery confirmation and opt-out managemen
 2. Select "Newsletter" campaign type
 3. Choose email template from library
 4. Customize content and subject line
-5. Insert merge tags (`{{first_name}}`)
+5. Insert merge tags (`\{\{first_name\}\}`)
 6. Add links to latest products/content
 7. Preview email (desktop and mobile)
 8. Select recipient segment (all active customers)
@@ -528,7 +528,7 @@ Send SMS campaigns to customers with delivery confirmation and opt-out managemen
 ### Workflow 3: Abandoned Cart SMS Reminder
 
 1. System detects abandoned cart (24 hours no checkout)
-2. Create SMS campaign: "Hi {{first_name}}, you left items in your cart! Complete your order: {{cart_url}} Reply STOP to unsubscribe."
+2. Create SMS campaign: "Hi \{\{first_name\}\}, you left items in your cart! Complete your order: \{\{cart_url\}\} Reply STOP to unsubscribe."
 3. Send immediately to customer's phone number
 4. Customer clicks link, completes order
 5. Conversion tracked to SMS campaign
@@ -602,7 +602,7 @@ Send SMS campaigns to customers with delivery confirmation and opt-out managemen
 10. **Track Conversions** - Link campaigns to orders to calculate ROI
 11. **Use Templates** - Consistent branding with reusable templates
 12. **Preview Before Send** - Always preview on desktop and mobile
-13. **Monitor Deliverability** - Keep bounce rate <2%, spam complaint rate <0.1%
+13. **Monitor Deliverability** - Keep bounce rate &lt;2%, spam complaint rate &lt;0.1%
 14. **Update Flipbooks** - Refresh flipbook content monthly for repeat visitors
 15. **SMS Sparingly** - SMS has high engagement but can annoy if overused
 
@@ -616,7 +616,7 @@ Send SMS campaigns to customers with delivery confirmation and opt-out managemen
 
 **Low open rate** - Test different subject lines; improve sender name recognition; optimize send time; clean inactive subscribers; check spam folder placement.
 
-**Unsubscribe link not working** - Verify `{{unsubscribe_url}}` in email template; check unsubscribe page accessibility; test with different browsers; ensure database connection.
+**Unsubscribe link not working** - Verify `\{\{unsubscribe_url\}\}` in email template; check unsubscribe page accessibility; test with different browsers; ensure database connection.
 
 **Flipbook not loading** - Check image uploads completed; verify flipbook published; test with different browsers; check internet connection; clear browser cache.
 
@@ -660,7 +660,7 @@ A: Marketing emails (newsletters, promotions) require opt-in and unsubscribe lin
 A: No. CAN-SPAM law prohibits sending marketing emails to unsubscribed users. Violation can result in $46,517 fine per email.
 
 **Q: How do I improve email deliverability?**
-A: Verify sender domain (SPF, DKIM), maintain low bounce rate (<2%), avoid spam keywords, use double opt-in, clean inactive subscribers.
+A: Verify sender domain (SPF, DKIM), maintain low bounce rate (&lt;2%), avoid spam keywords, use double opt-in, clean inactive subscribers.
 
 **Q: What's a good open rate?**
 A: Industry average is 15-25%. Above 30% is excellent. Below 10% indicates issues with subject lines, sender reputation, or list quality.

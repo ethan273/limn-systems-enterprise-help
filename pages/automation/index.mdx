@@ -300,7 +300,7 @@ Navigate to `/automation/rules` to manage task automation rules.
    - Trigger Event (select from 7 options)
    - Conditions (optional, JSON object for filtering events)
 4. Configure task template:
-   - Title (required, supports variables like `{{order_number}}`)
+   - Title (required, supports variables like `\{\{order_number\}\}`)
    - Description (optional, supports variables)
    - Priority (low, medium, high, urgent)
    - Due Date Offset Days (e.g., 3 for 3 days from trigger)
@@ -312,16 +312,16 @@ Navigate to `/automation/rules` to manage task automation rules.
 **Variable Interpolation:**
 
 Task templates support variables:
-- `{{order_number}}` - Order number
-- `{{project_name}}` - Project name
-- `{{customer_name}}` - Customer name
-- `{{production_order_number}}` - Production order number
-- `{{qc_inspection_id}}` - QC inspection ID
+- `\{\{order_number\}\}` - Order number
+- `\{\{project_name\}\}` - Project name
+- `\{\{customer_name\}\}` - Customer name
+- `\{\{production_order_number\}\}` - Production order number
+- `\{\{qc_inspection_id\}\}` - QC inspection ID
 
 Example:
 ```
-Title: "QC Inspection for Order {{order_number}}"
-Description: "Perform quality inspection for {{customer_name}} - {{project_name}}"
+Title: "QC Inspection for Order \{\{order_number\}\}"
+Description: "Perform quality inspection for \{\{customer_name\}\} - \{\{project_name\}\}"
 ```
 
 ### Managing Rules
@@ -819,7 +819,7 @@ await createRule.mutateAsync({
   name: 'Order Created Task',
   triggerEvent: 'order_created',
   taskTemplate: {
-    title: 'New Order {{order_number}}',
+    title: 'New Order \{\{order_number\}\}',
     priority: 'high',
   },
 });
@@ -908,8 +908,8 @@ vercel env add UPSTASH_REDIS_REST_TOKEN
    - Trigger Event: qc_failed
    - Conditions: `{ "severity": "major" }` (only major failures)
    - Task Template:
-     - Title: "Corrective Action for QC Inspection {{qc_inspection_id}}"
-     - Description: "QC inspection failed for Production Order {{production_order_number}}. Investigate and resolve issue."
+     - Title: "Corrective Action for QC Inspection \{\{qc_inspection_id\}\}"
+     - Description: "QC inspection failed for Production Order \{\{production_order_number\}\}. Investigate and resolve issue."
      - Priority: urgent
      - Assign To Role: factory_manager
      - Due Date Offset Days: 1

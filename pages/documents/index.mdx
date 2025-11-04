@@ -6,7 +6,7 @@ The Document Management system provides a centralized, enterprise-grade reposito
 
 **Key Benefits:**
 
-- **Hybrid Storage Architecture** - Supabase for files <50MB, Google Drive for files >50MB, automatic routing
+- **Hybrid Storage Architecture** - Supabase for files &lt;50MB, Google Drive for files &gt;50MB, automatic routing
 - **Multi-Entity Support** - Attach documents to collections, concepts, prototypes, catalog items, production orders, and more
 - **Hierarchical Folder Structure** - Unlimited nesting with parent-child relationships and full path tracking
 - **Version Control** - Complete revision history with rollback capabilities and version comparison
@@ -48,7 +48,7 @@ Navigate to `/documents` to access the Document Library.
 **Upload Document:**
 1. Navigate to Documents > Upload or click folder's "Upload" button
 2. Select file from computer or drag and drop
-3. System automatically routes to Supabase (<50MB) or Google Drive (>50MB)
+3. System automatically routes to Supabase (&lt;50MB) or Google Drive (&gt;50MB)
 4. Enter document metadata:
    - **Name** - Document display name
    - **Description** - Detailed description
@@ -91,7 +91,7 @@ Navigate to `/documents` to access the Document Library.
 - **Storage Bucket** - Supabase bucket name (e.g., "documents")
 - **URL** - Direct access URL
 - **Download URL** - Signed URL for downloads
-- **Google Drive ID** - Google Drive file ID (for >50MB files)
+- **Google Drive ID** - Google Drive file ID (for &gt;50MB files)
 - **Google Drive URL** - Google Drive file URL
 
 **Media Fields:**
@@ -141,10 +141,10 @@ Documents are organized in a hierarchical folder system with unlimited nesting.
 
 **Auto-Generated Folders:**
 Folders are automatically created for:
-- **New Customers** - /Customers/{Customer Name}
-- **New Orders** - /Orders/{Order Number}
-- **New Projects** - /Projects/{Project Name}
-- **Production Orders** - /Production/{PO Number}
+- **New Customers** - /Customers/\{Customer Name\}
+- **New Orders** - /Orders/\{Order Number\}
+- **New Projects** - /Projects/\{Project Name\}
+- **Production Orders** - /Production/\{PO Number\}
 
 ### Folder Navigation
 
@@ -236,7 +236,7 @@ Multi-stage approval process ensures document quality and stakeholder alignment.
 4. Set approval type:
    - **All Must Approve** - Requires unanimous approval
    - **Any Can Approve** - Requires one approval
-   - **Majority Must Approve** - Requires >50% approval
+   - **Majority Must Approve** - Requires &gt;50% approval
 5. Optionally set due date for approvals
 6. Add approval request message
 7. Click "Send for Approval"
@@ -388,7 +388,7 @@ Tag documents with categories for easy discovery and filtering.
 
 ### Integration Overview
 
-Seamless integration with Google Drive for files >50MB and team collaboration.
+Seamless integration with Google Drive for files &gt;50MB and team collaboration.
 
 ### Setup
 
@@ -404,8 +404,8 @@ Seamless integration with Google Drive for files >50MB and team collaboration.
 ### Automatic Routing
 
 **File Size Routing:**
-- **<50MB** - Stored in Supabase Storage (faster access, better for small files)
-- **≥50MB** - Automatically routed to Google Drive (no size limit)
+- **&lt;50MB** - Stored in Supabase Storage (faster access, better for small files)
+- **&gt;=50MB** - Automatically routed to Google Drive (no size limit)
 - System handles routing transparently
 - Users see seamless experience regardless of storage backend
 
@@ -541,7 +541,7 @@ Share documents securely with external users via customer, designer, factory, an
 ### Workflow 3: Production Document Handoff
 
 1. Production order created
-2. System auto-creates "/Production/{PO-Number}" folder
+2. System auto-creates "/Production/\{PO-Number\}" folder
 3. Design team uploads approved designs to folder
 4. Engineering uploads technical specifications
 5. Materials team uploads BOMs and material specs
@@ -568,8 +568,8 @@ Share documents securely with external users via customer, designer, factory, an
 - Invoices and receipts
 
 **Automatic Folder Creation:**
-- New customer → /Customers/{Customer Name} folder
-- New order → /Orders/{Order Number} folder
+- New customer → /Customers/\{Customer Name\} folder
+- New order → /Orders/\{Order Number\} folder
 - Documents linked to customer and order records
 
 ### Production Integration
@@ -594,10 +594,10 @@ Share documents securely with external users via customer, designer, factory, an
 - Final deliverables
 
 **Project Folder Structure:**
-- /Projects/{Project Name}/Designs
-- /Projects/{Project Name}/Contracts
-- /Projects/{Project Name}/Reports
-- /Projects/{Project Name}/Deliverables
+- /Projects/\{Project Name\}/Designs
+- /Projects/\{Project Name\}/Contracts
+- /Projects/\{Project Name\}/Reports
+- /Projects/\{Project Name\}/Deliverables
 
 ---
 
@@ -670,7 +670,7 @@ Share documents securely with external users via customer, designer, factory, an
 A: All major file types supported including documents (PDF, Office), images (JPG, PNG, SVG), CAD files (DWG, DXF, STEP, STL), and media (videos, audio).
 
 **Q: What's the file size limit?**
-A: Files <50MB stored in Supabase. Files ≥50MB automatically routed to Google Drive with no size limit.
+A: Files &lt;50MB stored in Supabase. Files &gt;=50MB automatically routed to Google Drive with no size limit.
 
 **Q: How does versioning work?**
 A: Each time you upload a new version, the system creates a new revision. All previous versions preserved and accessible.
@@ -694,7 +694,7 @@ A: Document moved to "Trash" for 30 days. After 30 days permanently deleted. Adm
 A: Yes. Navigate to document detail page, click "Access Log" tab. View all access activity with timestamps and users.
 
 **Q: How does Google Drive integration work?**
-A: Files ≥50MB automatically uploaded to Google Drive. Folder structure synced. Changes reflected in both systems within 5 minutes.
+A: Files &gt;=50MB automatically uploaded to Google Drive. Folder structure synced. Changes reflected in both systems within 5 minutes.
 
 ---
 
