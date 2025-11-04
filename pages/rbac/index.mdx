@@ -1,34 +1,1132 @@
 # Role-Based Access Control (RBAC)
 
-Comprehensive permission system with roles, delegation, and multi-tenancy.
-
 ## Overview
 
-The RBAC system provides enterprise-grade access control with roles, permissions, delegation, conditional access, session constraints, and multi-tenancy support.
+The RBAC system provides enterprise-grade access control with roles, permissions, delegation, conditional access, session constraints, and multi-tenancy support. Built on a robust, auditable foundation with 15 database tables and 81 tRPC endpoints, this system enables fine-grained security controls for complex organizational structures.
 
-## Key Modules
+**Key Benefits:**
 
-- **Roles** - Define user roles
-- **Permissions** - Granular permission management
-- **Role Assignment** - Assign roles to users
-- **Permission Templates** - Reusable permission patterns
-- **Delegation** - Temporary permission delegation
-- **Conditional Access** - Context-based permissions
-- **Session Constraints** - Time, IP, device restrictions
-- **Multi-Tenancy** - Tenant isolation and cross-tenant access
-- **Audit Logs** - Complete permission audit trail
+- **9 System Roles** - Pre-defined roles from viewer to super_admin with hierarchical permissions
+- **Granular Permissions** - Fine-grained permission control (view, create, edit, delete, share) for all resources
+- **Role Hierarchy & Inheritance** - Roles inherit permissions from lower roles
+- **Permission Delegation** - Temporary permission delegation with expiration dates
+- **Conditional Access** - Context-based permissions (time, location, IP, device, resource metadata)
+- **Session Constraints** - IP whitelist/blacklist, time-based access, device restrictions, location-based access
+- **Multi-Tenancy** - Organization-scoped permissions with cross-tenant access controls
+- **Permission Templates** - Reusable permission sets (Project Manager, Designer, QC Inspector, Factory Manager)
+- **Approval Workflows** - Request-approve-audit workflow for sensitive permissions
+- **Complete Audit Trail** - Permission usage logging, role assignment history, delegation tracking
+- **SSO Integration** - Automatic role assignment via Google Workspace SSO
+- **Row Level Security (RLS)** - Database-level security on all RBAC tables
+- **Type-Safe API** - tRPC with Zod validation for all permission operations
 
-## Key Features
+---
 
-- Granular permission control
-- Role hierarchy and inheritance
-- Time-based delegation
-- Conditional access policies
-- Session constraints (IP, time, device)
-- Multi-tenant support
-- Complete audit logging
-- Integration with SSO
+## RBAC Dashboard
 
-## Getting Started
+Navigate to `/admin/rbac` to view the RBAC Dashboard (admin access required).
 
-Learn how to configure roles, assign permissions, and implement secure access control.
+**Dashboard Features:**
+
+- **User Summary** - Total users by role (super_admin, admin, manager, team_lead, developer, designer, analyst, user, viewer)
+- **Permission Requests** - Pending approvals, approved (last 30 days), rejected (last 30 days)
+- **Active Delegations** - Count of active permission delegations with expiration dates
+- **Permission Templates** - Available templates with usage count
+- **Session Constraints** - Active IP restrictions, time-based constraints, device restrictions
+- **Audit Activity** - Recent permission checks, role assignments, delegation events
+- **Quick Actions** - Assign role, create template, approve request, view audit logs
+
+**Key Metrics:**
+
+- Total Users with Roles
+- Permission Requests (pending, approved, rejected)
+- Active Delegations
+- Permission Template Usage
+- Failed Permission Checks (last 24 hours)
+- Cross-Tenant Access Events
+
+---
+
+## System Roles
+
+### Role Hierarchy
+
+**1. Super Admin (super_admin)**
+- **Permissions**: ALL permissions across ALL resources
+- **Use Cases**: System owner, CTO, technical founder
+- **Special Powers**:
+  - Assign/revoke any role (including super_admin)
+  - Bypass all permission checks
+  - Access all organizations
+  - Override session constraints
+  - Delete audit logs (with special authorization)
+  - Modify system roles and permissions
+
+**2. Admin (admin)**
+- **Permissions**: All permissions EXCEPT super_admin operations
+- **Use Cases**: Operations manager, COO, department head
+- **Special Powers**:
+  - Assign/revoke roles (except super_admin)
+  - Approve permission requests
+  - Create permission templates
+  - Manage organization membership
+  - View all audit logs
+  - Configure session constraints
+
+**3. Manager (manager)**
+- **Permissions**: Create, edit, delete for assigned resources; view all non-sensitive resources
+- **Use Cases**: Project manager, production manager, design manager
+- **Special Powers**:
+  - Assign roles within team (developer, designer, analyst, user, viewer)
+  - Approve resource requests
+  - Delegate permissions to team members
+  - View team audit logs
+
+**4. Team Lead (team_lead)**
+- **Permissions**: Create, edit for assigned resources; view team resources
+- **Use Cases**: Senior developer, lead designer, QC supervisor
+- **Special Powers**:
+  - Assign tasks to team members
+  - Review team work
+  - Limited delegation (same role or lower)
+
+**5. Developer (developer)**
+- **Permissions**: Create, edit own resources; view team resources
+- **Use Cases**: Software engineer, technical specialist
+- **Access**:
+  - Code repositories
+  - Development environments
+  - Technical documentation
+  - Production read-only access
+
+**6. Designer (designer)**
+- **Permissions**: Create, edit own designs; view approved designs
+- **Use Cases**: Product designer, graphic designer, UX designer
+- **Access**:
+  - Design projects
+  - Design files (upload, version)
+  - Design briefs
+  - Design templates
+
+**7. Analyst (analyst)**
+- **Permissions**: View all data; create reports; limited edit
+- **Use Cases**: Business analyst, data analyst, financial analyst
+- **Access**:
+  - Dashboards and reports
+  - Financial data (read-only)
+  - Performance metrics
+  - Export capabilities
+
+**8. User (user)**
+- **Permissions**: Create, edit own resources; view public resources
+- **Use Cases**: Standard employee, contractor, temporary staff
+- **Access**:
+  - Assigned projects
+  - Own tasks
+  - Team documents
+  - Basic features
+
+**9. Viewer (viewer)**
+- **Permissions**: View only; no create, edit, or delete
+- **Use Cases**: Auditor, observer, trainee, stakeholder
+- **Access**:
+  - Read-only access to authorized resources
+  - View reports and dashboards
+  - No modification capabilities
+
+### Role Assignment
+
+**To assign role:**
+
+1. Navigate to Admin > RBAC > Users
+2. Search for user by name or email
+3. Click **"Assign Role"**
+4. Select role from dropdown (super_admin, admin, manager, team_lead, developer, designer, analyst, user, viewer)
+5. Optionally add reason (for audit trail)
+6. Click **"Assign"**
+7. User immediately gains role permissions
+8. Email notification sent to user
+
+**Bulk Role Assignment:**
+
+1. Navigate to Admin > RBAC > Bulk Operations
+2. Upload CSV file:
+   - Column 1: user_email
+   - Column 2: role
+   - Column 3: reason (optional)
+3. Click **"Preview"**
+4. Review assignments (shows conflicts, missing users)
+5. Click **"Execute"** to apply
+6. Bulk operation logged in audit trail
+
+**Role Removal:**
+
+1. Navigate to user profile
+2. Scroll to **"Roles"** section
+3. Click **"Remove"** next to role
+4. Optionally add reason
+5. Click **"Confirm"**
+6. User immediately loses role permissions
+7. Active sessions terminated
+
+---
+
+## Permissions
+
+### Permission Structure
+
+Permissions follow the format: `{action}_{resource}` or `{action}_{resource}_{scope}`
+
+**Actions:**
+- `view` - Read access
+- `create` - Create new resources
+- `edit` - Modify existing resources
+- `delete` - Remove resources
+- `share` - Grant access to others
+- `approve` - Approve requests/workflows
+- `manage` - Full control (create, edit, delete, share)
+
+**Resources:**
+- `orders` - Customer orders
+- `projects` - Projects
+- `tasks` - Tasks
+- `documents` - Documents
+- `products` - Products and catalog
+- `production_orders` - Production orders
+- `invoices` - Invoices (customer and production)
+- `payments` - Payments
+- `shipments` - Shipments
+- `users` - User management
+- `roles` - Role management
+- `permissions` - Permission management
+- `settings` - System settings
+- `analytics` - Dashboards and reports
+
+**Scopes** (optional):
+- `own` - User's own resources
+- `team` - Team resources
+- `organization` - Organization resources
+- `all` - All resources
+
+**Example Permissions:**
+- `view_orders_all` - View all orders
+- `edit_orders_own` - Edit own orders only
+- `create_projects` - Create new projects
+- `delete_documents_team` - Delete team documents
+- `approve_production_orders` - Approve production orders
+- `manage_users_organization` - Full user management for organization
+
+### Permission Checking
+
+**In tRPC Procedures:**
+
+```typescript
+import { hasPermission } from '@/lib/services/rbac-service';
+
+export const myRouter = createTRPCRouter({
+  editOrder: protectedProcedure
+    .input(z.object({ orderId: z.string().uuid() }))
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.user.id;
+
+      // Check if user has permission to edit orders
+      const canEdit = await hasPermission(userId, 'edit_orders', {
+        resource: { type: 'order', id: input.orderId }
+      });
+
+      if (!canEdit) {
+        throw new TRPCError({ code: 'FORBIDDEN', message: 'Not authorized to edit this order' });
+      }
+
+      // Proceed with edit
+      return await ctx.db.orders.update({ where: { id: input.orderId }, data: {...} });
+    }),
+});
+```
+
+**In React Components:**
+
+```typescript
+import { api } from '@/utils/api';
+
+export function OrderActions({ orderId }: { orderId: string }) {
+  const { data: currentUser } = api.userProfile.getCurrentUser.useQuery();
+  const { data: permissions } = api.rbac.getUserPermissions.useQuery({ userId: currentUser.id });
+
+  const canEdit = permissions?.includes('edit_orders');
+  const canDelete = permissions?.includes('delete_orders');
+
+  return (
+    <div>
+      {canEdit && <button onClick={handleEdit}>Edit</button>}
+      {canDelete && <button onClick={handleDelete}>Delete</button>}
+    </div>
+  );
+}
+```
+
+**Batch Permission Checking:**
+
+```typescript
+import { hasAllPermissions, hasAnyPermission } from '@/lib/services/rbac-service';
+
+// Check if user has ALL permissions (AND logic)
+const canManageOrders = await hasAllPermissions(userId, [
+  'view_orders',
+  'edit_orders',
+  'delete_orders'
+]);
+
+// Check if user has ANY permission (OR logic)
+const canAccessOrders = await hasAnyPermission(userId, [
+  'view_orders',
+  'edit_orders_own',
+  'manage_orders_team'
+]);
+```
+
+---
+
+## Permission Delegation
+
+### Delegating Permissions
+
+**Use Case:** Manager going on vacation, temporarily delegates approval permissions to team lead.
+
+**To delegate permission:**
+
+1. Navigate to Admin > RBAC > Delegation
+2. Click **"New Delegation"**
+3. Select delegator (yourself or another user if admin)
+4. Select delegatee (recipient of delegated permissions)
+5. Select permissions to delegate:
+   - Must be subset of delegator's permissions
+   - Cannot delegate super_admin permissions
+6. Set expiration date/time (required)
+7. Optionally add reason (for audit trail)
+8. Click **"Create Delegation"**
+9. Delegatee immediately gains permissions
+10. Email notification sent to delegatee
+
+**Delegation Constraints:**
+
+- **Expiration Required** - Delegations MUST have expiration date (max 90 days)
+- **Cannot Escalate** - Cannot delegate permissions you don't have
+- **No Super Admin** - Cannot delegate super_admin permissions
+- **Revocable** - Delegator or admin can revoke anytime
+- **Auditable** - All delegation events logged
+- **Chainable** - Delegatee can re-delegate with approval
+
+### Managing Delegations
+
+**View Active Delegations:**
+1. Navigate to Admin > RBAC > Delegation
+2. Filter by delegator, delegatee, permission, expiration status
+3. View list with columns:
+   - Delegator Name
+   - Delegatee Name
+   - Permissions Delegated
+   - Granted At
+   - Expires At
+   - Status (active, expired, revoked)
+
+**Revoke Delegation:**
+1. Select delegation
+2. Click **"Revoke"**
+3. Optionally add reason
+4. Click **"Confirm"**
+5. Delegatee immediately loses delegated permissions
+6. Revocation logged in audit trail
+
+**Auto-Expiration:**
+
+- Cron job runs hourly to check for expired delegations
+- Expired delegations automatically revoked
+- Delegatee notified via email
+- Delegator notified via email
+- Expiration logged in audit trail
+
+---
+
+## Conditional Access
+
+### Condition Types
+
+**1. Time-Based Conditions**
+
+Restrict permission access to specific times.
+
+**Example:**
+```json
+{
+  "type": "time_range",
+  "start_time": "09:00:00",
+  "end_time": "17:00:00",
+  "timezone": "America/New_York",
+  "days_of_week": [1, 2, 3, 4, 5]
+}
+```
+
+**Use Case:** QC inspector can approve inspections only during business hours (9 AM - 5 PM Monday-Friday).
+
+**2. IP-Based Conditions**
+
+Restrict permission access to specific IP addresses or ranges.
+
+**Example:**
+```json
+{
+  "type": "ip_whitelist",
+  "allowed_ips": ["192.168.1.0/24", "10.0.0.100"]
+}
+```
+
+**Use Case:** Finance team can access financial reports only from office network.
+
+**3. Device-Based Conditions**
+
+Restrict permission access to specific device types or registered devices.
+
+**Example:**
+```json
+{
+  "type": "device_restriction",
+  "allowed_device_types": ["desktop", "laptop"],
+  "registered_devices": ["device-uuid-1", "device-uuid-2"]
+}
+```
+
+**Use Case:** Developers can deploy to production only from registered company-issued laptops.
+
+**4. Location-Based Conditions**
+
+Restrict permission access to specific geographic locations.
+
+**Example:**
+```json
+{
+  "type": "geofence",
+  "allowed_countries": ["US", "CA"],
+  "allowed_regions": ["New York", "California"],
+  "allowed_coordinates": {
+    "lat": 40.7128,
+    "lng": -74.0060,
+    "radius_km": 10
+  }
+}
+```
+
+**Use Case:** Sensitive customer data accessible only from US and Canada.
+
+**5. Resource Metadata Conditions**
+
+Restrict permission based on resource properties.
+
+**Example:**
+```json
+{
+  "type": "resource_metadata",
+  "conditions": {
+    "order_status": ["confirmed", "in_production"],
+    "order_value_max": 50000,
+    "customer_tier": ["gold", "platinum"]
+  }
+}
+```
+
+**Use Case:** Managers can approve orders up to $50,000; orders over $50,000 require director approval.
+
+### Creating Conditions
+
+**To add condition to permission:**
+
+1. Navigate to Admin > RBAC > Permissions
+2. Select permission (e.g., "approve_production_orders")
+3. Click **"Add Condition"**
+4. Select condition type (time, IP, device, location, resource metadata)
+5. Configure condition parameters (JSON editor)
+6. Click **"Save Condition"**
+7. Condition immediately active
+8. Permission checks now evaluate condition
+
+**Condition Evaluation:**
+
+When permission checked:
+1. Check if user has permission via role
+2. If yes, evaluate conditions (if any)
+3. If all conditions pass, grant permission
+4. If any condition fails, deny permission
+5. Log evaluation result with condition details
+
+---
+
+## Session Constraints
+
+### Constraint Types
+
+**1. IP Restrictions**
+
+**Whitelist:**
+```typescript
+await createSessionConstraint({
+  userId,
+  constraintType: 'ip_whitelist',
+  constraintValue: {
+    allowed_ips: ['192.168.1.0/24', '10.0.0.100'],
+    description: 'Office network and VPN'
+  }
+});
+```
+
+**Blacklist:**
+```typescript
+await createSessionConstraint({
+  userId,
+  constraintType: 'ip_blacklist',
+  constraintValue: {
+    blocked_ips: ['123.456.789.0', '98.76.54.0/24'],
+    reason: 'Suspicious activity detected'
+  }
+});
+```
+
+**2. Time-Based Access**
+
+**Business Hours Only:**
+```typescript
+await createSessionConstraint({
+  userId,
+  constraintType: 'time_restriction',
+  constraintValue: {
+    allowed_hours: {
+      start: '08:00',
+      end: '18:00',
+      timezone: 'America/New_York',
+      days: [1, 2, 3, 4, 5] // Monday-Friday
+    }
+  }
+});
+```
+
+**3. Device Restrictions**
+
+**Registered Devices Only:**
+```typescript
+await createSessionConstraint({
+  userId,
+  constraintType: 'device_restriction',
+  constraintValue: {
+    allowed_device_ids: ['device-uuid-1', 'device-uuid-2'],
+    require_registration: true,
+    max_devices: 3
+  }
+});
+```
+
+**4. Location-Based Access**
+
+**Geofence:**
+```typescript
+await createSessionConstraint({
+  userId,
+  constraintType: 'geofence',
+  constraintValue: {
+    allowed_countries: ['US', 'CA', 'MX'],
+    blocked_countries: ['KP', 'IR'],
+    require_location_verification: true
+  }
+});
+```
+
+### Managing Constraints
+
+**View User Constraints:**
+1. Navigate to Admin > RBAC > Users
+2. Search for user
+3. Click **"Session Constraints"** tab
+4. View active constraints with status
+
+**Add Constraint:**
+1. Click **"Add Constraint"**
+2. Select constraint type
+3. Configure constraint parameters
+4. Set expiration (optional)
+5. Click **"Save"**
+6. Constraint immediately enforced
+
+**Disable Constraint:**
+1. Select constraint
+2. Click **"Disable"**
+3. Constraint no longer enforced
+4. Can be re-enabled later
+
+**Delete Constraint:**
+1. Select constraint
+2. Click **"Delete"**
+3. Confirm deletion
+4. Constraint permanently removed
+
+---
+
+## Multi-Tenancy
+
+### Organization Management
+
+**Adding Organization Member:**
+
+```typescript
+await addOrganizationMember({
+  organizationId: 'org-uuid',
+  userId: 'user-uuid',
+  roles: ['manager', 'analyst'],
+  invitedBy: 'inviter-user-id',
+  isPrimary: false // false for multi-org users
+});
+```
+
+**Organization-Scoped Permissions:**
+
+```typescript
+await grantOrganizationPermission({
+  organizationId: 'org-uuid',
+  userId: 'user-uuid',
+  permissionId: 'permission-uuid',
+  resourceType: 'project',
+  resourceId: 'project-uuid', // optional
+  scopeMetadata: { department: 'design' },
+  expiresAt: new Date('2025-12-31'),
+  reason: 'Project manager for design department'
+});
+```
+
+**Cross-Tenant Access:**
+
+By default, users can only access resources in their primary organization. Cross-tenant access must be explicitly granted:
+
+```typescript
+await grantCrossTenantAccess({
+  userId: 'user-uuid',
+  sourceOrganizationId: 'org-1-uuid',
+  targetOrganizationId: 'org-2-uuid',
+  permissions: ['view_projects', 'view_documents'],
+  reason: 'Consultant working on joint project',
+  expiresAt: new Date('2025-06-30')
+});
+```
+
+**Tenant Isolation:**
+
+- **Default**: Users see only their organization's resources
+- **Database**: RLS policies enforce organization_id filtering
+- **API**: tRPC procedures check organization membership
+- **UI**: Navigation and search scoped to organization
+- **Audit**: Cross-tenant access logged separately
+
+---
+
+## Permission Templates
+
+### Template Categories
+
+**1. Project Manager Template**
+
+**Permissions:**
+- `view_projects_all`
+- `edit_projects_all`
+- `create_projects`
+- `view_tasks_all`
+- `create_tasks`
+- `assign_tasks`
+- `view_documents_all`
+- `edit_documents_team`
+- `view_analytics`
+
+**Use Case:** Assign to project managers for full project oversight.
+
+**2. Designer Template**
+
+**Permissions:**
+- `view_projects_assigned`
+- `view_briefs_assigned`
+- `create_designs`
+- `edit_designs_own`
+- `upload_design_files`
+- `view_design_templates`
+- `submit_deliverables`
+
+**Use Case:** Assign to internal and external designers.
+
+**3. QC Inspector Template**
+
+**Permissions:**
+- `view_production_orders_assigned`
+- `create_qc_inspections`
+- `edit_qc_inspections_own`
+- `upload_inspection_photos`
+- `approve_qc_inspections` (conditional: only during business hours)
+- `reject_qc_inspections`
+- `view_qc_history`
+
+**Use Case:** Assign to quality control inspectors.
+
+**4. Factory Manager Template**
+
+**Permissions:**
+- `view_production_orders_all`
+- `edit_production_orders_assigned`
+- `view_materials_all`
+- `request_materials`
+- `update_production_status`
+- `upload_production_photos`
+- `view_shipping_all`
+- `create_shipments`
+
+**Use Case:** Assign to factory managers for production oversight.
+
+**5. Finance Analyst Template**
+
+**Permissions:**
+- `view_invoices_all`
+- `view_payments_all`
+- `view_expenses_all`
+- `view_financial_analytics`
+- `export_financial_reports`
+- `create_expense_reports`
+
+**Use Case:** Assign to finance team for read-only financial access.
+
+### Using Templates
+
+**Apply Template to User:**
+
+1. Navigate to Admin > RBAC > Templates
+2. Select template (e.g., "Project Manager Template")
+3. Click **"Apply Template"**
+4. Search for user
+5. Review permissions to be granted
+6. Optionally customize (add/remove permissions)
+7. Click **"Apply"**
+8. User immediately gains template permissions
+9. Template application logged in audit trail
+
+**Create Custom Template:**
+
+1. Navigate to Admin > RBAC > Templates
+2. Click **"New Template"**
+3. Enter template details:
+   - Name (required)
+   - Description (optional)
+   - Category (optional)
+   - Is Global (checkbox, true for all organizations)
+4. Add permissions:
+   - Search for permission
+   - Click **"Add"**
+   - Optionally configure permission scope
+5. Click **"Save Template"**
+6. Template available for use
+
+---
+
+## Approval Workflows
+
+### Permission Requests
+
+**Requesting Permission:**
+
+1. Navigate to My Profile > Permissions
+2. Click **"Request Permission"**
+3. Search for permission (e.g., "approve_production_orders")
+4. Select permission
+5. Optionally select resource (e.g., specific production order)
+6. Enter justification (required)
+7. Click **"Submit Request"**
+8. Request routed to appropriate approver (manager or admin)
+9. Email notification sent to approver
+
+**Approving Requests:**
+
+1. Navigate to Admin > RBAC > Requests
+2. Filter by status: pending
+3. View request details:
+   - Requester Name
+   - Permission Requested
+   - Justification
+   - Resource (if applicable)
+   - Requested At
+4. Review justification
+5. Click **"Approve"** or **"Reject"**
+6. Optionally add notes
+7. If approved:
+   - User immediately gains permission
+   - Email notification sent to requester
+   - Approval logged in audit trail
+8. If rejected:
+   - Email notification sent to requester with reason
+   - Rejection logged in audit trail
+
+**Bulk Approval:**
+
+1. Navigate to Admin > RBAC > Requests
+2. Select multiple requests (checkboxes)
+3. Click **"Bulk Approve"** or **"Bulk Reject"**
+4. Optionally add bulk notes
+5. Click **"Confirm"**
+6. All selected requests processed
+7. Notifications sent to all requesters
+
+---
+
+## Audit Logging
+
+### Audit Events
+
+**Permission Check Events:**
+- User ID
+- Permission Checked
+- Resource Type/ID (if applicable)
+- Result (granted, denied)
+- Conditions Evaluated
+- Timestamp
+- Session Info (IP, device, location)
+
+**Role Assignment Events:**
+- User ID
+- Role Assigned/Removed
+- Assigned By (user ID)
+- Reason
+- Timestamp
+
+**Delegation Events:**
+- Delegator ID
+- Delegatee ID
+- Permissions Delegated
+- Expires At
+- Granted At
+- Revoked At (if applicable)
+- Revoked By (user ID, if applicable)
+
+**Permission Request Events:**
+- Requester ID
+- Permission Requested
+- Justification
+- Requested At
+- Approver ID (if approved/rejected)
+- Result (approved, rejected, pending)
+- Approver Notes
+
+### Viewing Audit Logs
+
+**Audit Log Dashboard:**
+
+1. Navigate to Admin > RBAC > Audit Logs
+2. Filter by:
+   - Event Type (permission_check, role_assignment, delegation, request)
+   - User (requester, approver, delegator, delegatee)
+   - Date Range (today, last 7 days, last 30 days, custom)
+   - Result (granted, denied, approved, rejected)
+   - Permission
+3. View log entries with columns:
+   - Timestamp
+   - Event Type
+   - User
+   - Action
+   - Resource
+   - Result
+   - Details (expandable JSON)
+
+**Export Audit Logs:**
+
+1. Apply desired filters
+2. Click **"Export"**
+3. Select format (CSV, JSON)
+4. Select date range (max 1 year)
+5. Click **"Download"**
+6. File generated and downloaded
+
+**Audit Log Retention:**
+
+- **Permission Checks**: 90 days (configurable)
+- **Role Assignments**: Indefinite
+- **Delegations**: Indefinite
+- **Permission Requests**: Indefinite
+- **High-Risk Events**: 7 years (regulatory compliance)
+
+---
+
+## SSO Integration
+
+### Google Workspace SSO
+
+**Automatic Role Assignment:**
+
+When user signs in via Google Workspace SSO:
+1. User authenticated via Google OAuth
+2. User's Google groups retrieved from Google Workspace API
+3. Google groups mapped to system roles:
+   - `admin@limn.us.com` → super_admin
+   - `managers@limn.us.com` → manager
+   - `designers@limn.us.com` → designer
+   - `developers@limn.us.com` → developer
+   - Default → user
+4. Roles automatically assigned to user
+5. User redirected to dashboard
+6. Role assignment logged in audit trail
+
+**Group-to-Role Mapping:**
+
+Configure in `/lib/services/sso-role-mapping.ts`:
+
+```typescript
+export const GOOGLE_GROUP_TO_ROLE_MAP: Record<string, SystemRole> = {
+  'admin@limn.us.com': SYSTEM_ROLES.SUPER_ADMIN,
+  'managers@limn.us.com': SYSTEM_ROLES.MANAGER,
+  'team-leads@limn.us.com': SYSTEM_ROLES.TEAM_LEAD,
+  'designers@limn.us.com': SYSTEM_ROLES.DESIGNER,
+  'developers@limn.us.com': SYSTEM_ROLES.DEVELOPER,
+  'analysts@limn.us.com': SYSTEM_ROLES.ANALYST,
+  // Default fallback
+  'default': SYSTEM_ROLES.USER,
+};
+```
+
+**SSO Role Sync:**
+
+- **Initial Login**: Roles assigned based on Google groups
+- **Subsequent Logins**: Roles re-synced if Google groups changed
+- **Group Removal**: If user removed from Google group, role automatically removed
+- **Group Addition**: If user added to Google group, role automatically added
+- **Sync Frequency**: Every login + daily cron job for all SSO users
+
+---
+
+## Integration
+
+### tRPC API
+
+**Core RBAC Router (13 endpoints):**
+- `getUserRoles` - Get user's roles and permissions
+- `assignRole` - Assign role to user (admin only)
+- `removeRole` - Remove role from user (admin only)
+- `setUserRoles` - Set user's roles (replace all, super admin only)
+- `listUsersBy Role` - List users with specific role
+- `batchAssignRoles` - Bulk role assignment (super admin only)
+- `getAuditLogs` - Get audit logs (admin only)
+- `checkPermission` - Check if user has permission
+- `getEffectiveRoles` - Get effective roles including delegations
+- `getUserPermissions` - Get all user permissions
+
+**Enterprise RBAC Router (multi-tenancy & templates):**
+- `addOrganizationMember` - Add user to organization
+- `removeOrganizationMember` - Remove user from organization
+- `updateOrganizationMemberRoles` - Update user's organization roles
+- `grantOrganizationPermission` - Grant organization-scoped permission
+- `revokeOrganizationPermission` - Revoke organization-scoped permission
+- `grantCrossTenantAccess` - Grant cross-tenant access
+- `revokeCrossTenantAccess` - Revoke cross-tenant access
+- `createPermissionTemplate` - Create permission template
+- `applyPermissionTemplate` - Apply template to user
+- `getTemplateUsage` - Get template usage statistics
+
+**Permission Delegation Router:**
+- `createDelegation` - Delegate permissions to user
+- `revokeDelegation` - Revoke delegation
+- `getMyDelegations` - Get delegations I created
+- `getDelegationsToMe` - Get delegations granted to me
+- `extendDelegation` - Extend delegation expiration
+
+**Permission Requests Router:**
+- `createRequest` - Request permission
+- `approveRequest` - Approve permission request (admin only)
+- `rejectRequest` - Reject permission request (admin only)
+- `getPendingRequests` - Get pending requests (admin only)
+- `getMyRequests` - Get my permission requests
+
+### Environment Variables
+
+No additional environment variables required. RBAC system uses existing Supabase Auth and database credentials.
+
+---
+
+## Common Workflows
+
+### Workflow 1: New Employee Onboarding
+
+**Scenario:** New designer hired, needs access to design projects and tools.
+
+**Steps:**
+
+1. **HR creates user account** via Supabase Auth
+2. **Admin assigns "Designer" role**:
+   - Navigate to Admin > RBAC > Users
+   - Search for new employee by email
+   - Click **"Assign Role"**
+   - Select "designer" role
+   - Add reason: "New hire - Designer position"
+   - Click **"Assign"**
+3. **Admin applies "Designer Template"**:
+   - Navigate to Admin > RBAC > Templates
+   - Select "Designer Template"
+   - Click **"Apply Template"**
+   - Search for new employee
+   - Click **"Apply"**
+4. **Manager adds to specific projects**:
+   - Navigate to Projects
+   - Select project
+   - Click **"Add Team Member"**
+   - Search for new employee
+   - Click **"Add"**
+5. **Designer receives welcome email** with login link
+6. **Designer logs in and sees**:
+   - Assigned projects
+   - Design tools and templates
+   - Design files upload capability
+   - No access to other departments
+
+**Timeline:** 5 minutes from account creation to full access
+
+### Workflow 2: Temporary Permission Delegation
+
+**Scenario:** Factory manager going on 2-week vacation, delegates approval permissions to assistant manager.
+
+**Steps:**
+
+1. **Factory manager creates delegation**:
+   - Navigate to My Profile > Permissions > Delegation
+   - Click **"Delegate Permissions"**
+   - Select delegatee: Assistant Manager
+   - Select permissions to delegate:
+     - `approve_production_orders`
+     - `update_production_status`
+   - Set expiration: 2 weeks from today
+   - Add reason: "Vacation July 1-14"
+   - Click **"Create Delegation"**
+2. **Assistant manager receives email notification**
+3. **Assistant manager immediately gains permissions**
+4. **Assistant manager approves production orders** during manager's absence
+5. **Delegation auto-expires after 2 weeks**
+6. **Factory manager returns, permissions revert**
+7. **Delegation logged in audit trail** with all approval actions
+
+**Timeline:** Immediate (seconds)
+
+### Workflow 3: Cross-Organization Consultant Access
+
+**Scenario:** External consultant needs access to projects across 3 client organizations.
+
+**Steps:**
+
+1. **Consultant account created** by super admin
+2. **Super admin grants cross-tenant access**:
+   - Navigate to Admin > RBAC > Multi-Tenancy
+   - Click **"Grant Cross-Tenant Access"**
+   - Select user: Consultant
+   - Select source organization: Consultant's Company
+   - Select target organizations: Client A, Client B, Client C
+   - Select permissions:
+     - `view_projects_all`
+     - `view_documents_all`
+     - `create_reports`
+   - Set expiration: 6 months
+   - Add reason: "Consulting engagement Jan-June 2025"
+   - Click **"Grant"**
+3. **Consultant logs in**
+4. **Consultant sees organization selector** in header
+5. **Consultant switches between organizations** to view projects
+6. **All consultant access logged** in audit trail
+7. **Access auto-expires after 6 months**
+
+**Timeline:** 5 minutes setup, active for 6 months
+
+---
+
+## Best Practices
+
+1. **Principle of Least Privilege** - Assign minimum role/permissions needed for job function
+2. **Use Role Hierarchy** - Leverage inheritance instead of granting individual permissions
+3. **Document Justifications** - Always add reason when assigning roles, especially elevated roles
+4. **Regular Audits** - Review role assignments quarterly, remove inactive users
+5. **Delegation Expiration** - Set realistic expiration dates, prefer shorter periods (7-14 days)
+6. **Template Usage** - Use templates for common role combinations, maintain template library
+7. **Conditional Access** - Apply time/IP restrictions for sensitive permissions
+8. **Session Constraints** - Require device registration for super_admin and admin roles
+9. **Approval Workflows** - Require approval for elevated permissions (approve, delete, manage)
+10. **Cross-Tenant Caution** - Grant cross-tenant access sparingly, set short expiration dates
+
+---
+
+## Troubleshooting
+
+**User cannot access resource** - Check: (1) User has required permission, (2) Conditions met (time, IP, device), (3) Session constraints not blocking, (4) Organization membership if multi-tenant, (5) Permission not expired if delegated.
+
+**Permission check failing unexpectedly** - Review audit logs for detailed condition evaluation; check if IP whitelist blocking; verify device registered if device restriction enabled; check if outside allowed time window.
+
+**Delegation not working** - Verify: (1) Delegation not expired, (2) Delegator has permission to delegate, (3) Delegatee user ID correct, (4) Delegation not revoked, (5) Permission exists in system.
+
+**SSO role assignment failing** - Check: (1) Google group membership correct, (2) Group-to-role mapping configured, (3) User email matches Google account, (4) SSO sync enabled, (5) Review SSO logs for errors.
+
+**Audit logs missing** - Verify: (1) Audit logging enabled in settings, (2) Database connection healthy, (3) Logs not auto-deleted (check retention policy), (4) Date range filter not excluding logs.
+
+**Template application failing** - Check: (1) Template exists and active, (2) Permissions in template valid, (3) User exists, (4) Admin permission to apply template, (5) Organization match if org-scoped template.
+
+**Cross-tenant access not working** - Verify: (1) Cross-tenant grant created, (2) Not expired, (3) Source and target organization IDs correct, (4) Permissions granted sufficient for action, (5) RLS policies allow cross-tenant reads.
+
+---
+
+## Tips & Tricks
+
+- **Role Comparison** - Compare two users' roles/permissions side-by-side to identify differences
+- **Permission Search** - Use permission search to find all users with specific permission
+- **Bulk Role Removal** - Filter users by role, select all, bulk remove role (useful for contractors)
+- **Delegation Calendar** - View calendar of active delegations to identify gaps
+- **Template Versioning** - Create template versions (Project Manager v1, v2) to track permission changes over time
+- **Audit Log Alerts** - Set up alerts for failed permission checks (possible security issue)
+- **Permission Heatmap** - View heatmap of permission usage to identify unused permissions
+- **Role Simulation** - Simulate user's effective permissions before assigning role
+- **Cross-Tenant Reports** - Generate reports of all cross-tenant access for compliance
+- **Delegation Reminders** - Set reminder emails 2 days before delegation expires
+
+---
+
+## FAQ
+
+**Q: What is the difference between roles and permissions?**
+A: Roles are collections of permissions. Permissions are atomic access rights (e.g., "edit_orders"). Roles bundle permissions for common job functions (e.g., "manager" role includes many permissions).
+
+**Q: Can a user have multiple roles?**
+A: Yes, users can have multiple roles. Effective permissions are union of all role permissions.
+
+**Q: How long do delegations last?**
+A: Delegations must have expiration date (max 90 days). Expired delegations auto-revoked by cron job.
+
+**Q: Can I delegate super_admin permissions?**
+A: No, super_admin permissions cannot be delegated for security reasons.
+
+**Q: What happens if I remove a user's role?**
+A: User immediately loses all permissions from that role. Active sessions terminated. User must log in again with reduced permissions.
+
+**Q: How are permissions checked in the database?**
+A: Row Level Security (RLS) policies enforce permissions at database level. Even direct SQL queries respect permission checks.
+
+**Q: Can I create custom permissions?**
+A: Yes, admins can create custom permissions via Admin > RBAC > Permissions > New Permission. Format: `{action}_{resource}`.
+
+**Q: How do I know which permissions are required for an action?**
+A: Check documentation for each feature, or review audit logs to see which permissions are checked.
+
+**Q: What is the permission precedence order?**
+A: 1. Explicit permission grant (highest), 2. Role-based permission, 3. Delegated permission, 4. Organization permission, 5. Deny all (lowest).
+
+**Q: How long are audit logs retained?**
+A: Permission checks: 90 days. Role assignments/delegations/requests: Indefinite. High-risk events: 7 years.
+
+---
+
+## Support
+
+**Technical Support**: support@limnsystems.com | 1-800-XXX-XXXX | Monday-Friday 9 AM-6 PM EST
+
+**Security Team**: security@limnsystems.com for permission-related security questions
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests and improvement suggestions
