@@ -43,6 +43,22 @@ const config: DocsThemeConfig = {
       <meta property="og:title" content="Limn Systems Help Center" />
       <meta property="og:description" content="Complete documentation for Limn Systems Enterprise" />
       <link rel="icon" href="/images/Limn_Logo_Light_Mode.png" />
+      <style>{`
+        /* Fix anchor link scroll offset for fixed header */
+        html {
+          scroll-padding-top: 80px;
+        }
+
+        /* Ensure headings have proper scroll margin */
+        h1, h2, h3, h4, h5, h6 {
+          scroll-margin-top: 80px;
+        }
+
+        /* Smooth scrolling for anchor links */
+        html {
+          scroll-behavior: smooth;
+        }
+      `}</style>
     </>
   ),
   primaryHue: 210,
