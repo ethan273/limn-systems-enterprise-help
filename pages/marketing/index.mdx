@@ -1,40 +1,702 @@
 # Marketing Tools
 
-Email campaigns, flipbooks, SMS campaigns, and marketing analytics.
-
 ## Overview
 
-The marketing system provides powerful tools for creating and managing email campaigns, interactive flipbooks, SMS campaigns, and tracking marketing performance.
+The Marketing Tools module provides a comprehensive suite for creating and managing email campaigns, interactive digital flipbooks, SMS campaigns, and tracking marketing performance. Built on best-in-class platforms (Resend for email, Twilio for SMS) with CAN-SPAM compliance, this system enables effective customer engagement across multiple channels.
 
-## Key Modules
+**Key Benefits:**
 
-### Email Marketing
-- **Email Campaigns** - Create and manage campaigns
-- **Email Templates** - Reusable email templates
-- **Email Scheduling** - Schedule campaign delivery
-- **Email Analytics** - Track opens, clicks, and engagement
-- **Unsubscribe System** - CAN-SPAM compliant unsubscribe
+- **Email Campaign Management** - Complete campaign lifecycle from creation to delivery and analytics
+- **Interactive Flipbooks** - Digital catalogs with clickable hotspots and conversion tracking
+- **SMS Campaigns** - Text message campaigns with delivery confirmation and opt-out management
+- **Template Library** - Reusable email and SMS templates with variable interpolation
+- **Campaign Scheduling** - Schedule campaigns for optimal delivery times
+- **Unsubscribe System** - CAN-SPAM compliant unsubscribe management with automatic suppression
+- **Campaign Analytics** - Track opens, clicks, conversions, and engagement metrics
+- **Resend Integration** - Professional email delivery with webhooks for real-time status updates
+- **Rate Limiting** - Prevent spam with Upstash Redis rate limiting
+- **A/B Testing** - Test subject lines, content, and send times
+- **Segmentation** - Target specific customer segments based on behavior and attributes
+- **Conversion Tracking** - Track flipbook conversions and campaign ROI
 
-### Flipbooks
-- **Flipbooks** - Interactive digital catalogs
-- **Flipbook Builder** - Visual flipbook creator
-- **Flipbook Hotspots** - Interactive clickable areas
-- **Flipbook Analytics** - Track flipbook engagement
+---
 
-### SMS Marketing
-- **SMS Campaigns** - Text message campaigns
-- **SMS Templates** - Reusable SMS templates
+## Marketing Dashboard
 
-## Key Features
+Navigate to `/marketing` to access the Marketing Dashboard.
 
-- Email campaign management
-- Interactive flipbook creator
-- SMS campaign tools
-- Marketing analytics
-- Template library
-- Unsubscribe management
-- Resend integration
+### Dashboard Features
 
-## Getting Started
+**Campaign Overview**: Total campaigns sent, active campaigns, scheduled campaigns, draft campaigns.
 
-Learn how to create effective marketing campaigns using email, flipbooks, and SMS.
+**Email Metrics**: Total emails sent this month, open rate (% of recipients who opened), click rate (% who clicked links), bounce rate (% that bounced).
+
+**Flipbook Analytics**: Total flipbooks published, flipbook views this month, average time viewing flipbooks, conversion rate from flipbooks.
+
+**SMS Metrics**: SMS sent this month, delivery rate (%), reply rate (%), opt-out rate (%).
+
+**Engagement Trends**: Chart showing email opens/clicks over time (30 days), flipbook views trend, SMS engagement trend.
+
+**Top Performing Campaigns**: Top 5 campaigns by open rate, top 5 by click rate, top 5 by conversion rate.
+
+**Unsubscribe Analytics**: Total unsubscribes, unsubscribe rate (%), unsubscribe reasons (when provided), suppression list size.
+
+---
+
+## Email Campaigns
+
+### Creating Campaigns
+
+**Navigate to Marketing > Campaigns > New Campaign**.
+
+**Campaign Details:**
+- **Campaign Name** - Internal name for campaign
+- **Subject Line** - Email subject (supports variables: `{{first_name}}`, `{{company_name}}`)
+- **From Name** - Sender name (e.g., "Limn Systems Team")
+- **From Email** - Sender email (must be verified domain)
+- **Reply-To Email** - Where replies go
+- **Campaign Type** - Newsletter, Promotion, Announcement, Transactional
+- **Send Date** - Immediate or scheduled
+
+**Email Content:**
+- **HTML Editor** - Visual HTML email editor with drag-and-drop
+- **Plain Text** - Plain text version (auto-generated from HTML or custom)
+- **Preview Text** - Preview text shown in inbox (first line)
+- **Template Selection** - Start from template or blank
+- **Variable Insertion** - Insert merge tags: `{{first_name}}`, `{{company_name}}`, `{{custom_field}}`
+- **Unsubscribe Link** - Automatically added to footer (CAN-SPAM requirement)
+
+**Recipient Selection:**
+- **All Contacts** - Send to all active contacts
+- **Customer Segment** - Filter by customer type, location, order history, engagement
+- **Manual List** - Upload CSV with email addresses
+- **Exclude Unsubscribed** - Automatically excluded (cannot be overridden)
+
+### Campaign Scheduling
+
+**Immediate Send:**
+1. Create campaign
+2. Review preview
+3. Click "Send Now"
+4. Confirm send
+5. Campaign queued for delivery
+6. Emails sent via Resend within minutes
+
+**Scheduled Send:**
+1. Create campaign
+2. Select "Schedule" option
+3. Choose date and time (timezone aware)
+4. Click "Schedule Campaign"
+5. Campaign saved as "Scheduled"
+6. Cron job triggers send at scheduled time
+7. Can edit or cancel before send time
+
+**A/B Testing:**
+1. Create campaign
+2. Enable A/B Testing
+3. Create variant B (different subject line, content, or send time)
+4. Set test percentage (e.g., 10% gets A, 10% gets B)
+5. Set winner criteria (open rate, click rate, conversion rate)
+6. Set test duration (e.g., 4 hours)
+7. After test, winning variant sent to remaining 80%
+
+### Campaign Status
+
+**Draft** - Campaign created but not sent, can be edited freely.
+
+**Scheduled** - Campaign scheduled for future send, can still edit or cancel.
+
+**Queued** - Campaign queued for sending, emails being sent now.
+
+**Sending** - Campaign actively sending, partial delivery complete.
+
+**Sent** - Campaign fully sent, all emails delivered or bounced.
+
+**Cancelled** - Scheduled campaign cancelled before send.
+
+---
+
+## Email Templates
+
+### Template Library
+
+Reusable email templates with variable placeholders for consistent branding.
+
+### Creating Templates
+
+**Navigate to Marketing > Templates > New Template**.
+
+**Template Components:**
+- **Template Name** - Internal name
+- **Template Type** - Newsletter, Promotion, Transactional, Custom
+- **HTML Content** - Email HTML with merge tags
+- **Plain Text Version** - Plain text alternative
+- **Default Subject** - Suggested subject line
+- **Preview Image** - Template thumbnail
+
+**Merge Tags:**
+- `{{first_name}}` - Recipient first name
+- `{{last_name}}` - Recipient last name
+- `{{email}}` - Recipient email
+- `{{company_name}}` - Company name
+- `{{order_number}}` - Recent order number
+- `{{custom_field}}` - Any custom contact field
+- `{{unsubscribe_url}}` - Unsubscribe link (required)
+
+**Template Usage:**
+1. Create new campaign
+2. Select "Use Template"
+3. Choose template from library
+4. Template content loaded
+5. Customize as needed for this campaign
+6. Send campaign
+
+---
+
+## Email Analytics
+
+### Campaign Analytics
+
+Track comprehensive metrics for each campaign.
+
+### Key Metrics
+
+**Sent Count** - Total emails sent for campaign.
+
+**Delivered Count** - Emails successfully delivered (sent - bounced).
+
+**Delivery Rate** - Delivered / Sent × 100%.
+
+**Opened Count** - Unique recipients who opened email (tracked via pixel).
+
+**Open Rate** - Opened / Delivered × 100%.
+
+**Clicked Count** - Unique recipients who clicked any link.
+
+**Click Rate** - Clicked / Delivered × 100%.
+
+**Bounced Count** - Emails that bounced (hard bounce: invalid email, soft bounce: full inbox).
+
+**Bounce Rate** - Bounced / Sent × 100%.
+
+**Unsubscribed Count** - Recipients who unsubscribed via this campaign.
+
+**Unsubscribe Rate** - Unsubscribed / Delivered × 100%.
+
+**Conversion Count** - Recipients who completed desired action (order placed, form submitted).
+
+**Conversion Rate** - Conversions / Delivered × 100%.
+
+### Link Tracking
+
+**Individual Link Performance:**
+- URL clicked
+- Total clicks (including multiple clicks from same recipient)
+- Unique clicks (distinct recipients)
+- Click-through rate (CTR)
+- Conversion rate per link
+
+**Top Links:**
+- Most clicked links in campaign
+- Link performance over time
+- Geographic distribution of clicks
+
+### Geographic Analytics
+
+**Location Data:**
+- Opens by country, state, city
+- Clicks by location
+- Conversions by geography
+- Map visualization
+
+### Device & Client Analytics
+
+**Device Types:**
+- Desktop vs mobile vs tablet
+- Operating system (Windows, macOS, iOS, Android)
+- Email client (Gmail, Outlook, Apple Mail, etc.)
+
+**Optimization Insights:**
+- Mobile open rate (optimize for mobile if high)
+- Preferred email client (test compatibility)
+- Peak engagement times (optimize send time)
+
+---
+
+## Unsubscribe Management
+
+### CAN-SPAM Compliance
+
+Complete unsubscribe system ensuring compliance with U.S. CAN-SPAM Act.
+
+### Unsubscribe Process
+
+**Unsubscribe Link:**
+- Automatically added to all marketing emails
+- One-click unsubscribe (no login required)
+- Unique token per recipient per campaign
+- Links format: `{{unsubscribe_url}}`
+
+**Unsubscribe Page:**
+1. Recipient clicks unsubscribe link
+2. Redirected to unsubscribe confirmation page
+3. Optionally select reason for unsubscribing
+4. Click "Confirm Unsubscribe"
+5. Immediately added to suppression list
+6. Confirmation message displayed
+7. Confirmation email sent (non-marketing)
+
+**Unsubscribe Reasons (Optional):**
+- Too many emails
+- Content not relevant
+- Never signed up
+- Spam or inappropriate
+- Other (free text)
+
+### Suppression List
+
+**Automatic Suppression:**
+- Unsubscribed users automatically added
+- Hard bounces added after bounce
+- Spam complaints added immediately
+- Cannot be removed (GDPR allows request)
+
+**Suppression Enforcement:**
+- All marketing campaigns filtered against suppression list
+- Attempts to email suppressed addresses blocked
+- Transactional emails (order confirmations, etc.) NOT suppressed
+- Manual override NOT allowed (compliance requirement)
+
+**Suppression List Management:**
+- View all suppressed emails
+- Export suppression list (CSV)
+- Add email manually (for customer service)
+- Cannot remove (unless GDPR request with verification)
+
+---
+
+## Flipbooks
+
+### Interactive Digital Catalogs
+
+Create engaging digital flipbooks with page-turning animations and interactive hotspots.
+
+### Creating Flipbooks
+
+**Navigate to Marketing > Flipbooks > New Flipbook**.
+
+**Flipbook Setup:**
+- **Flipbook Name** - Internal name
+- **Title** - Public-facing title
+- **Description** - Flipbook description (SEO)
+- **Cover Image** - Flipbook cover (auto-generated from first page or custom)
+- **Page Images** - Upload page images (JPG, PNG)
+- **Page Order** - Drag-and-drop to reorder pages
+- **Publish Status** - Draft, Published, Archived
+
+**Page Upload:**
+1. Click "Add Pages"
+2. Select multiple images (up to 100 pages)
+3. Images uploaded to Supabase Storage
+4. Thumbnail previews generated
+5. Pages added to flipbook
+6. Reorder pages via drag-and-drop
+
+**Flipbook Settings:**
+- **Allow Download** - Enable PDF download of entire flipbook
+- **Allow Print** - Enable printing individual pages
+- **Show Page Numbers** - Display page numbers
+- **Enable Zoom** - Allow zooming into pages
+- **Auto-Flip** - Automatically flip pages after N seconds
+- **Background Color** - Flipbook background color
+
+### Hotspots
+
+Interactive clickable areas on flipbook pages for product links, videos, forms.
+
+**Adding Hotspots:**
+1. Navigate to flipbook page editor
+2. Click page to add hotspot
+3. Draw rectangle over clickable area
+4. Configure hotspot action:
+   - **Link to URL** - External link
+   - **Link to Product** - Link to product catalog page
+   - **Show Video** - Lightbox with embedded video
+   - **Show Form** - Lead capture form
+   - **Go to Page** - Jump to another page in flipbook
+5. Set hotspot style:
+   - **Visible** - Button or icon always visible
+   - **Invisible** - Transparent, cursor changes on hover
+6. Click "Save Hotspot"
+
+**Hotspot Styles:**
+- Button (solid color with text)
+- Icon (shopping cart, play button, info icon)
+- Transparent (invisible, hover reveals)
+- Custom image
+
+### Sharing Flipbooks
+
+**Public Link:**
+- Each flipbook gets unique URL: `/flipbooks/{flipbook-id}`
+- Share link via email, social media, website
+- No login required to view
+- Responsive (works on mobile, tablet, desktop)
+
+**Embed Code:**
+- Generate iframe embed code
+- Embed flipbook on external website
+- Customize width, height, autoplay
+- Example: `<iframe src="https://app.limnsystems.com/flipbooks/{id}" width="800" height="600"></iframe>`
+
+**Email Campaign Integration:**
+- Add flipbook link to email campaigns
+- Track clicks from email to flipbook
+- Track conversions from flipbook views
+
+---
+
+## Flipbook Analytics
+
+### Tracking Engagement
+
+Comprehensive analytics for flipbook performance.
+
+### Key Metrics
+
+**Total Views** - Total flipbook views (including repeat views).
+
+**Unique Visitors** - Distinct users who viewed flipbook.
+
+**Average View Duration** - Average time spent viewing flipbook (seconds).
+
+**Page Views** - Total pages viewed across all sessions.
+
+**Average Pages Viewed** - Average pages viewed per session.
+
+**Completion Rate** - % of visitors who reached last page.
+
+**Bounce Rate** - % of visitors who left after viewing only one page.
+
+**Download Rate** - % of visitors who downloaded PDF (if enabled).
+
+### Page Analytics
+
+**Per-Page Metrics:**
+- Views per page
+- Time spent on each page
+- Hotspot clicks per page
+- Drop-off rate per page
+
+**Popular Pages:**
+- Most viewed pages
+- Pages with highest engagement
+- Pages with most hotspot clicks
+
+### Hotspot Analytics
+
+**Per-Hotspot Metrics:**
+- Total clicks
+- Unique clicks
+- Click-through rate (CTR)
+- Conversion rate (if hotspot links to product)
+
+**Top Hotspots:**
+- Most clicked hotspots
+- Highest converting hotspots
+- Hotspot performance by page
+
+### Conversion Tracking
+
+**Flipbook Conversions:**
+- Track when flipbook viewer places order
+- Attribute order to specific flipbook
+- Conversion value (order total)
+- Time to conversion (days between view and order)
+
+**Conversion Attribution:**
+- First-touch attribution (first flipbook viewed)
+- Last-touch attribution (last flipbook before order)
+- Multi-touch attribution (all flipbooks in journey)
+
+**ROI Tracking:**
+- Flipbook production cost
+- Revenue generated from flipbook conversions
+- ROI = (Revenue - Cost) / Cost × 100%
+
+---
+
+## SMS Campaigns
+
+### Text Message Campaigns
+
+Send SMS campaigns to customers with delivery confirmation and opt-out management.
+
+### Creating SMS Campaigns
+
+**Navigate to Marketing > SMS > New Campaign**.
+
+**Campaign Setup:**
+- **Campaign Name** - Internal name
+- **Message** - SMS text (max 160 characters for single SMS, auto-splits longer)
+- **From Number** - Your verified phone number (Twilio)
+- **Send Date** - Immediate or scheduled
+- **Recipients** - Phone number list (CSV upload or customer filter)
+
+**Message Content:**
+- **Plain Text Only** - No HTML, emojis supported
+- **Character Count** - Real-time character counter
+- **Variable Insertion** - `{{first_name}}`, `{{order_number}}`
+- **Opt-Out Instructions** - Required "Reply STOP to unsubscribe" (auto-added)
+- **Link Shortening** - Long URLs automatically shortened
+
+**Recipient Selection:**
+- Import CSV with phone numbers
+- Filter customers with phone numbers
+- Exclude opted-out numbers (automatic)
+- Validate phone number format (E.164 international format)
+
+### SMS Scheduling
+
+**Immediate Send:**
+1. Create SMS campaign
+2. Preview message
+3. Click "Send Now"
+4. Confirm send
+5. SMS queued via Twilio
+6. Delivered within seconds
+
+**Scheduled Send:**
+1. Create SMS campaign
+2. Select "Schedule"
+3. Choose date and time (recipient's timezone)
+4. Click "Schedule"
+5. Cron job triggers send at scheduled time
+
+### SMS Analytics
+
+**SMS Metrics:**
+- Total sent
+- Delivered count
+- Delivery rate (%)
+- Bounced (invalid numbers)
+- Clicked (if link included)
+- Replies received
+- Opt-outs (STOP responses)
+
+---
+
+## Common Workflows
+
+### Workflow 1: Email Newsletter Campaign
+
+1. Navigate to Marketing > Campaigns > New Campaign
+2. Select "Newsletter" campaign type
+3. Choose email template from library
+4. Customize content and subject line
+5. Insert merge tags (`{{first_name}}`)
+6. Add links to latest products/content
+7. Preview email (desktop and mobile)
+8. Select recipient segment (all active customers)
+9. Schedule for Tuesday 10 AM (optimal engagement)
+10. Campaign sent automatically at scheduled time
+11. Monitor opens and clicks in real-time
+12. Analyze performance after 48 hours
+13. Export report for stakeholders
+**Timeline: 1-2 hours to create, 48 hours to analyze**
+
+### Workflow 2: Interactive Flipbook for Product Launch
+
+1. Design team creates flipbook pages (PDF → JPG export)
+2. Navigate to Marketing > Flipbooks > New Flipbook
+3. Upload 50 pages of product catalog
+4. Reorder pages for optimal flow
+5. Add hotspots to key products:
+   - Product 1 (page 5) → Link to catalog page
+   - Product 2 (page 12) → "Add to Cart" link
+   - Video (page 20) → Product demo video
+6. Enable download (allow PDF download)
+7. Publish flipbook
+8. Copy public link
+9. Create email campaign with flipbook link
+10. Send email to customer list
+11. Track flipbook views and hotspot clicks
+12. Analyze conversion from flipbook to orders
+13. Optimize hotspot placement based on data
+**Timeline: 4-6 hours to create, 2 weeks to analyze**
+
+### Workflow 3: Abandoned Cart SMS Reminder
+
+1. System detects abandoned cart (24 hours no checkout)
+2. Create SMS campaign: "Hi {{first_name}}, you left items in your cart! Complete your order: {{cart_url}} Reply STOP to unsubscribe."
+3. Send immediately to customer's phone number
+4. Customer clicks link, completes order
+5. Conversion tracked to SMS campaign
+6. ROI calculated (order value vs SMS cost)
+**Timeline: 24 hours after abandonment, instant delivery**
+
+---
+
+## Integration
+
+### Resend Integration
+
+**Email Service Provider:**
+- Professional email delivery via Resend
+- High deliverability (99%+)
+- Real-time webhooks for delivery, opens, clicks, bounces
+- Automatic retry for transient failures
+
+**Webhook Events:**
+- `email.sent` - Email accepted by Resend
+- `email.delivered` - Email delivered to recipient
+- `email.opened` - Recipient opened email
+- `email.clicked` - Recipient clicked link
+- `email.bounced` - Email bounced (hard or soft)
+- `email.complained` - Recipient marked as spam
+
+### Upstash Redis Integration
+
+**Rate Limiting:**
+- Prevent spam by limiting sends per hour
+- Per-user rate limits (10 campaigns/hour)
+- Per-campaign rate limits (10,000 emails/hour)
+- Automatic throttling if limits exceeded
+
+### Twilio Integration
+
+**SMS Service Provider:**
+- SMS delivery via Twilio
+- Delivery confirmation
+- Two-way messaging support
+- Opt-out management (STOP, UNSTOP)
+- Link shortening via Twilio
+
+### CRM Integration
+
+**Customer Data:**
+- Email addresses from CRM customer records
+- Phone numbers for SMS campaigns
+- Customer segments (active, VIP, new, churned)
+- Order history for behavioral targeting
+
+**Campaign Triggers:**
+- New customer welcome email
+- Post-purchase thank you email
+- Abandoned cart SMS
+- Win-back campaign for inactive customers
+
+---
+
+## Best Practices
+
+1. **Segment Your Audience** - Target specific customer groups for higher engagement
+2. **Test Subject Lines** - A/B test subject lines to improve open rates
+3. **Mobile Optimization** - 70% of emails opened on mobile, optimize design
+4. **Personalize Content** - Use merge tags for first name, company, recent order
+5. **Include Clear CTA** - Every email should have one clear call-to-action
+6. **Monitor Unsubscribes** - High unsubscribe rate indicates content issues
+7. **Clean Your List** - Remove invalid emails and inactive subscribers quarterly
+8. **Respect Opt-Outs** - Never email unsubscribed users (legal requirement)
+9. **Send Time Optimization** - Test different send times (Tuesday 10 AM often best)
+10. **Track Conversions** - Link campaigns to orders to calculate ROI
+11. **Use Templates** - Consistent branding with reusable templates
+12. **Preview Before Send** - Always preview on desktop and mobile
+13. **Monitor Deliverability** - Keep bounce rate <2%, spam complaint rate <0.1%
+14. **Update Flipbooks** - Refresh flipbook content monthly for repeat visitors
+15. **SMS Sparingly** - SMS has high engagement but can annoy if overused
+
+---
+
+## Troubleshooting
+
+**Emails not delivering** - Check sender email verified; verify recipient not unsubscribed; check spam score; review Resend dashboard for errors; check domain SPF/DKIM records.
+
+**High bounce rate** - Clean email list; verify email addresses; remove invalid addresses; check for typos in email addresses; use double opt-in for new subscribers.
+
+**Low open rate** - Test different subject lines; improve sender name recognition; optimize send time; clean inactive subscribers; check spam folder placement.
+
+**Unsubscribe link not working** - Verify `{{unsubscribe_url}}` in email template; check unsubscribe page accessibility; test with different browsers; ensure database connection.
+
+**Flipbook not loading** - Check image uploads completed; verify flipbook published; test with different browsers; check internet connection; clear browser cache.
+
+**Hotspots not clickable** - Verify hotspot coordinates correct; check z-index CSS; test on different devices; ensure JavaScript enabled; check for overlapping hotspots.
+
+**SMS not sending** - Verify Twilio credentials; check phone number format (E.164); verify phone number not opted out; check Twilio account balance; verify sender number verified.
+
+**SMS not delivering** - Check recipient phone number valid; verify carrier not blocking; check message content for spam keywords; verify recipient opted in.
+
+**Campaign stuck in queued** - Check cron job running; verify Resend API accessible; check rate limits not exceeded; manually trigger send; contact support.
+
+**Analytics not tracking** - Verify tracking pixel in email; check JavaScript enabled; test with different email clients; ensure recipient images enabled; check webhook configuration.
+
+---
+
+## Tips & Tricks
+
+- **Emoji in Subject Lines** - Use sparingly (1-2 emojis max) to increase opens
+- **Preview Text Optimization** - First 100 characters shown in inbox, make compelling
+- **Link Tracking** - Use UTM parameters for Google Analytics integration
+- **Re-Engagement Campaign** - Target users who haven't opened last 5 emails
+- **VIP List** - Create segment for most engaged customers, send exclusive content
+- **Seasonal Campaigns** - Plan holiday campaigns 4-6 weeks in advance
+- **Social Proof** - Include customer testimonials and reviews in emails
+- **Scarcity Tactics** - "Limited time" or "Only 5 left" increase urgency
+- **Flipbook SEO** - Optimize flipbook title and description for search engines
+- **Page Thumbnails** - Generate attractive thumbnails for social media sharing
+- **SMS + Email** - Combine SMS and email for highest engagement
+- **Drip Campaigns** - Automate series of emails over time (welcome series, onboarding)
+- **Birthday Emails** - Automated birthday emails with discount code (high conversion)
+- **Win-Back Campaigns** - Re-engage customers who haven't ordered in 6 months
+
+---
+
+## FAQ
+
+**Q: What's the difference between marketing and transactional emails?**
+A: Marketing emails (newsletters, promotions) require opt-in and unsubscribe link. Transactional emails (order confirmations, shipping notifications) do not require unsubscribe.
+
+**Q: Can I send to users who unsubscribed?**
+A: No. CAN-SPAM law prohibits sending marketing emails to unsubscribed users. Violation can result in $46,517 fine per email.
+
+**Q: How do I improve email deliverability?**
+A: Verify sender domain (SPF, DKIM), maintain low bounce rate (<2%), avoid spam keywords, use double opt-in, clean inactive subscribers.
+
+**Q: What's a good open rate?**
+A: Industry average is 15-25%. Above 30% is excellent. Below 10% indicates issues with subject lines, sender reputation, or list quality.
+
+**Q: What's a good click rate?**
+A: Industry average is 2-5%. Above 5% is excellent. Focus on clear CTAs, relevant content, and mobile optimization.
+
+**Q: How many hotspots should I add per flipbook page?**
+A: 1-3 hotspots per page maximum. Too many hotspots overwhelm viewers and reduce conversions.
+
+**Q: Can I edit a campaign after it's sent?**
+A: No. Once sent, campaigns are immutable. You can create a new campaign with corrections and send to remaining recipients.
+
+**Q: How long does it take for email to be delivered?**
+A: Typically 1-5 minutes via Resend. Delays can occur due to recipient server issues, spam filtering, or large campaign sizes.
+
+**Q: What happens if I send too many emails too fast?**
+A: Upstash Redis rate limiting will throttle sends. Maximum 10,000 emails/hour per campaign. Exceeding this triggers automatic slowdown.
+
+**Q: Can I track individual recipient behavior?**
+A: Yes. View individual recipient's opens, clicks, and conversions in campaign analytics. GDPR-compliant with proper consent.
+
+---
+
+## Support
+
+For additional assistance with Marketing Tools:
+
+**Technical Support**: Email support@limnsystems.com | Phone 1-800-XXX-XXXX | Hours Monday-Friday 9 AM-6 PM EST
+
+**Marketing Team**: marketing@limnsystems.com for campaign strategy and content questions
+
+**Resend Support**: resend@limnsystems.com for email deliverability issues
+
+**Twilio Support**: sms@limnsystems.com for SMS campaign issues
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
