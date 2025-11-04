@@ -12,14 +12,19 @@ function fixMetaFile(metaPath) {
   const metaContent = JSON.parse(fs.readFileSync(metaPath, 'utf8'));
   const keys = Object.keys(metaContent);
 
-  // If this _meta.json file ONLY has "index" entry, remove it to prevent nesting
-  if (keys.length === 1 && keys[0] === 'index') {
+  // If this _meta.json file ONLY has "index" entry, or is empty, hide the index page
+  if (keys.length === 0 || (keys.length === 1 && keys[0] === 'index')) {
     console.log(`✅ Fixing: ${metaPath}`);
     console.log(`   Before: ${JSON.stringify(metaContent)}`);
 
-    // Replace with empty object (Nextra will use default behavior)
-    fs.writeFileSync(metaPath, '{}\n');
-    console.log(`   After: {}`);
+    // Set index display to hidden to prevent nested Overview
+    const fixedContent = {
+      index: {
+        display: 'hidden'
+      }
+    };
+    fs.writeFileSync(metaPath, JSON.stringify(fixedContent, null, 2) + '\n');
+    console.log(`   After: ${JSON.stringify(fixedContent)}`);
     return true;
   }
 
