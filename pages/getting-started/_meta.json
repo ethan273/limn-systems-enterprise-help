@@ -1,19 +1,8 @@
 {
   "index": {
-    "title": "Introduction"
+    "title": "Introduction",
+    "type": "page"
   },
   "authentication": "Authentication",
-  "authentication-portal": {
-    "title": "→ Portal Access",
-    "href": "/getting-started/authentication#portal-access"
-  },
-  "authentication-employee": {
-    "title": "→ Employee Login",
-    "href": "/getting-started/authentication#employee-login-google-sso"
-  },
-  "authentication-external": {
-    "title": "→ External User Login",
-    "href": "/getting-started/authentication#external-user-login-magic-link"
-  },
   "user-roles": "User Roles"
 }

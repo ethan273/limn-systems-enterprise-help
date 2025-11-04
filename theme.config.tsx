@@ -52,7 +52,7 @@ const config: DocsThemeConfig = {
     toggleButton: true,
   },
   toc: {
-    component: null, // Completely disable TOC
+    float: true,
   },
   navigation: {
     prev: true,
