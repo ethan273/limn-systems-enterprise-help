@@ -59,6 +59,71 @@ const config: DocsThemeConfig = {
           scroll-behavior: smooth;
         }
       `}</style>
+      <script dangerouslySetInnerHTML={{__html: `
+        (function() {
+          function handleAnchorClick(e) {
+            var target = e.target;
+            while (target && target.tagName !== 'A') {
+              target = target.parentElement;
+            }
+
+            if (!target || !target.href) return;
+
+            var href = target.getAttribute('href');
+            if (!href || !href.startsWith('#')) return;
+
+            e.preventDefault();
+            e.stopPropagation();
+
+            var targetId = href.substring(1);
+            var targetElement = document.getElementById(targetId);
+
+            if (!targetElement) return;
+
+            var headerOffset = 80;
+            var elementPosition = targetElement.getBoundingClientRect().top;
+            var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            });
+
+            history.pushState(null, '', href);
+          }
+
+          function handleHashOnLoad() {
+            var hash = window.location.hash;
+            if (!hash) return;
+
+            var targetElement = document.getElementById(hash.substring(1));
+            if (!targetElement) return;
+
+            setTimeout(function() {
+              var headerOffset = 80;
+              var elementPosition = targetElement.getBoundingClientRect().top;
+              var offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+              window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+              });
+            }, 100);
+          }
+
+          if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+              document.addEventListener('click', handleAnchorClick, true);
+              window.addEventListener('hashchange', handleHashOnLoad);
+              handleHashOnLoad();
+            });
+          } else {
+            document.addEventListener('click', handleAnchorClick, true);
+            window.addEventListener('hashchange', handleHashOnLoad);
+            handleHashOnLoad();
+          }
+        })();
+      `}} />
     </>
   ),
   primaryHue: 210,
