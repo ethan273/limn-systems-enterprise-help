@@ -1,34 +1,757 @@
 # Financial Management
 
-Manage invoices, payments, expenses, and financial reporting.
-
 ## Overview
 
-The financial management system provides comprehensive tools for invoicing, payment tracking, expense management, and financial reporting. Integrates with QuickBooks and PandaDoc.
+The Financial Management module provides comprehensive tools for managing all financial operations including customer invoicing, production invoicing, payment tracking, payment allocation, and expense management. This integrated system ensures accurate financial records, streamlined workflows, and seamless integration with accounting platforms like QuickBooks and PandaDoc.
 
-## Key Modules
+**Key Benefits:**
 
-- **Invoices** - Customer invoicing
-- **Production Invoices** - Factory and supplier invoices
-- **Payments** - Payment tracking and recording
-- **Payment Allocation** - Allocate payments to invoices
-- **Expenses** - Expense tracking and categorization
-- **AR Aging** - Accounts receivable aging reports
-- **Financial Reports** - Comprehensive financial reporting
-- **QuickBooks** - QuickBooks integration setup
-- **QuickBooks Sync** - Sync data with QuickBooks
-- **PandaDoc** - PandaDoc integration for proposals
+- **Dual Invoicing System** - Separate workflows for customer invoices (general accounting) and production invoices (factory/supplier payments)
+- **Payment Allocation** - Flexible payment-to-invoice allocation supporting partial and multi-invoice payments
+- **Expense Tracking** - Complete expense management with approval workflows and categorization
+- **Cursor-Based Pagination** - High-performance invoice queries with O(1) consistent performance
+- **QuickBooks Integration** - Seamless sync with QuickBooks for accounting consolidation
+- **PandaDoc Integration** - Professional proposal and invoice generation
+- **Real-Time Notifications** - Automated payment received notifications to customers
+- **AR Aging Reports** - Accounts receivable aging analysis for cash flow management
+- **Multi-Status Tracking** - Track invoice status (draft, sent, viewed, paid, overdue, cancelled)
+- **Payment Method Flexibility** - Support for multiple payment methods (credit card, ACH, check, wire, cash)
 
-## Key Features
+---
 
-- Customer and supplier invoicing
-- Payment tracking and allocation
-- Expense management
-- AR aging reports
-- QuickBooks integration
-- PandaDoc integration
-- Financial reporting and analytics
+## Financial Dashboard
 
-## Getting Started
+Access the Financial Dashboard by navigating to `/dashboards/financial` from the main navigation menu.
 
-Learn how to manage invoices, track payments, and maintain accurate financial records.
+### Dashboard Features
+
+**Revenue Overview**: Total revenue (all time), revenue this month, revenue this year, revenue growth percentage compared to previous period.
+
+**Invoice Metrics**: Total invoices outstanding, invoices overdue (past due date), invoices paid this month, average days to payment.
+
+**Payment Analytics**: Total payments received this month, pending payments awaiting processing, failed payments requiring retry, refunded payment count.
+
+**Expense Summary**: Total expenses this month, pending expense approvals, expense by category breakdown, budget vs actual comparison.
+
+**AR Aging Analysis**: Aging buckets (Current, 1-30 days, 31-60 days, 61-90 days, 90+ days), total outstanding by bucket, percentage of total AR.
+
+**Cash Flow Projection**: Projected cash inflow from outstanding invoices, projected cash outflow from pending expenses, net cash flow forecast.
+
+**Top Customers by Revenue**: List of top 10 customers ranked by total revenue, year-to-date revenue per customer, outstanding balance per customer.
+
+**Payment Method Distribution**: Chart showing payment breakdown by method (Credit Card, ACH, Check, Wire, Cash), processing fees by method.
+
+---
+
+## Customer Invoicing
+
+### Invoice Creation
+
+**Navigate to Finance > Invoices > New Invoice**. Customer invoices follow a structured workflow from draft to payment.
+
+### Invoice Components
+
+**Invoice Header:**
+- **Invoice Number** - Auto-generated unique identifier (e.g., INV-2025-0001)
+- **Customer** - Select from customers database
+- **Issue Date** - Date invoice was created
+- **Due Date** - Payment due date (calculates aging)
+- **Status** - Draft, Sent, Viewed, Paid, Overdue, Cancelled
+- **Payment Terms** - Net 15, Net 30, Net 60, Due on Receipt
+
+**Invoice Line Items:**
+- **Description** - Item or service description
+- **Quantity** - Number of units
+- **Unit Price** - Price per unit
+- **Line Total** - Automatically calculated (quantity × unit price)
+- **Tax** - Optional tax amount per line item
+- **Discount** - Optional discount percentage or fixed amount
+
+**Invoice Totals:**
+- **Subtotal** - Sum of all line item totals
+- **Tax Total** - Sum of all line item taxes
+- **Discount Total** - Sum of all line item discounts
+- **Grand Total** - Subtotal + Tax - Discount
+
+**Additional Fields:**
+- **Invoice Notes** - Internal notes visible on invoice
+- **Payment Instructions** - Instructions for customer (bank details, payment link)
+- **Terms & Conditions** - Standard terms and conditions
+
+### Invoice Status Workflow
+
+**1. Draft** - Invoice created but not sent to customer, can be edited freely.
+
+**2. Sent** - Invoice emailed to customer, customer notified, invoice locked from editing (requires void/reissue to modify).
+
+**3. Viewed** - Customer opened invoice email or viewed invoice portal, tracking timestamp recorded.
+
+**4. Paid** - Full payment received and allocated, invoice marked complete, customer receives payment confirmation.
+
+**5. Overdue** - Due date passed without full payment, aging calculation begins, automated reminder notifications sent.
+
+**6. Cancelled** - Invoice voided before payment, reason documented, removed from AR aging.
+
+### Sending Invoices
+
+**Manual Send:**
+1. Navigate to invoice detail page
+2. Click **"Send Invoice"**
+3. Verify customer email address
+4. Optionally customize email subject/message
+5. Click **"Send Email"**
+6. Invoice status changes to "Sent"
+7. Customer receives email with PDF attachment and portal link
+
+**Bulk Send:**
+1. Navigate to Invoices list
+2. Select multiple draft invoices (checkbox)
+3. Click **"Bulk Send"** action
+4. Review recipient list
+5. Confirm send
+6. All selected invoices sent and marked "Sent"
+
+### Invoice Pagination
+
+All invoice queries use **cursor-based pagination** for consistent O(1) performance regardless of page number. This ensures fast query performance even with thousands of invoices.
+
+**Pagination Features:**
+- **Cursor Parameter** - Last invoice ID from previous page
+- **Limit** - Number of invoices per page (1-100, default 20)
+- **Filters** - Search by invoice number/notes, filter by customer, filter by status
+- **Ordering** - Always ordered by created_at desc for indexed performance
+- **Next Cursor** - Returned in response for fetching next page
+
+---
+
+## Production Invoicing
+
+### Production Invoice Overview
+
+Production invoices are used for **factory and supplier payments**, separate from customer invoicing. These invoices track payments to external manufacturing partners for production orders.
+
+### Creating Production Invoices
+
+Production invoices are typically auto-generated from production orders when production completes.
+
+**Automatic Generation:**
+1. Production order status changes to "QC Passed"
+2. System calculates total production cost
+3. Balance invoice (50%) auto-generated
+4. Factory notified via portal
+
+**Manual Creation:**
+1. Navigate to Finance > Production Invoices > New Invoice
+2. Select production order
+3. Select factory/supplier
+4. Enter line items (materials, labor, shipping)
+5. Calculate totals
+6. Save and send to factory
+
+### Production Invoice Components
+
+**Header Fields:**
+- **Invoice Number** - Auto-generated (PROD-INV-YYYY-XXXX)
+- **Production Order** - Linked production order ID
+- **Factory** - Manufacturing partner
+- **Issue Date** - Date invoice created
+- **Due Date** - Payment due date
+- **Status** - Pending, Approved, Paid, Disputed
+
+**Line Items:**
+- **Description** - Material, labor, or service description
+- **Quantity** - Number of units
+- **Unit Cost** - Cost per unit
+- **Line Total** - Calculated total
+- **Category** - Materials, Labor, Shipping, Other
+
+**Payment Schedule:**
+- **Deposit (50%)** - Due before production starts
+- **Balance (50%)** - Due when production completes
+
+### Production Invoice Workflow
+
+1. Production order created → Deposit invoice generated (50%)
+2. Deposit paid → Production begins
+3. Production completes → Balance invoice generated (50%)
+4. Balance paid → Ready for shipping
+5. Both invoices paid → Production order financially complete
+
+---
+
+## Payment Management
+
+### Payment Tracking
+
+Track all payments received from customers and payments made to suppliers.
+
+### Creating Payment Records
+
+**Navigate to Finance > Payments > New Payment**.
+
+**Payment Fields:**
+- **Payment Number** - Auto-generated unique identifier
+- **Customer/Supplier** - Payment from customer or to supplier
+- **Amount** - Payment amount
+- **Payment Date** - Date payment received/sent
+- **Payment Method** - Credit Card, ACH, Check, Wire, Cash
+- **Status** - Pending, Completed, Failed, Refunded
+- **Reference Number** - Check number, transaction ID, etc.
+- **Processor Transaction ID** - Payment gateway transaction ID
+- **Payment Notes** - Additional payment details
+
+### Payment Methods
+
+**Credit Card:**
+- Processed via payment gateway (Stripe, Square, etc.)
+- Processor transaction ID automatically recorded
+- Fastest processing (instant)
+- Highest processing fees (2-3%)
+
+**ACH (Bank Transfer):**
+- Electronic bank-to-bank transfer
+- 3-5 business day processing
+- Low processing fees (0.5-1%)
+- Suitable for large payments
+
+**Check:**
+- Physical check received and deposited
+- Manual entry of check number as reference
+- 3-7 business day clearance
+- No processing fees
+
+**Wire Transfer:**
+- Direct bank wire
+- Same-day or next-day processing
+- Fixed wire fees ($15-$50)
+- Suitable for international payments
+
+**Cash:**
+- Physical cash received
+- Immediate availability
+- No processing fees
+- Requires manual deposit to bank
+
+### Payment Status
+
+**Pending** - Payment initiated but not yet cleared (ACH processing, check not cleared).
+
+**Completed** - Payment successfully received and cleared, funds available.
+
+**Failed** - Payment attempt failed (insufficient funds, declined card, ACH rejection), requires retry or alternative payment method.
+
+**Refunded** - Payment reversed and returned to customer, original payment transaction reversed.
+
+---
+
+## Payment Allocation
+
+Payment allocation links payments to specific invoices, supporting partial payments and multi-invoice payments.
+
+### Allocation Workflow
+
+**Scenario 1: Full Payment for Single Invoice**
+1. Customer pays invoice for $1,000
+2. Create payment record for $1,000
+3. Allocate full $1,000 to invoice
+4. Invoice status changes to "Paid"
+5. Customer receives payment confirmation
+
+**Scenario 2: Partial Payment**
+1. Customer pays $500 on $1,000 invoice
+2. Create payment record for $500
+3. Allocate $500 to invoice
+4. Invoice status remains "Sent" or "Overdue"
+5. Outstanding balance shows $500
+
+**Scenario 3: Payment Covering Multiple Invoices**
+1. Customer pays $2,000 for three invoices ($800 + $700 + $500)
+2. Create payment record for $2,000
+3. Allocate $800 to Invoice #1 → marks Invoice #1 "Paid"
+4. Allocate $700 to Invoice #2 → marks Invoice #2 "Paid"
+5. Allocate $500 to Invoice #3 → marks Invoice #3 "Paid"
+6. All three invoices marked complete
+
+**Scenario 4: Over-Payment (Credit Balance)**
+1. Customer pays $1,200 on $1,000 invoice
+2. Create payment record for $1,200
+3. Allocate $1,000 to invoice → marks invoice "Paid"
+4. Remaining $200 creates customer credit balance
+5. Credit balance applied to future invoices
+
+### Creating Payment Allocations
+
+**Navigate to Payment Detail Page:**
+1. View payment record
+2. Click **"Allocate to Invoices"**
+3. Search for invoice(s) to allocate
+4. Enter allocation amount for each invoice
+5. System validates: Sum of allocations ≤ Total payment amount
+6. Click **"Save Allocations"**
+7. Invoice balances update automatically
+
+**From Invoice Detail Page:**
+1. View invoice record
+2. Click **"Record Payment"**
+3. Select existing payment or create new payment
+4. Enter allocation amount (up to invoice outstanding balance)
+5. Click **"Save Allocation"**
+6. Invoice balance updates, status changes if fully paid
+
+---
+
+## Expense Management
+
+### Expense Tracking
+
+Track all company expenses with approval workflows and categorization for financial reporting.
+
+### Creating Expenses
+
+**Navigate to Finance > Expenses > New Expense**.
+
+**Expense Fields:**
+- **Expense Date** - Date expense occurred
+- **Amount** - Expense amount
+- **Category** - Expense category (see categories below)
+- **Subcategory** - More specific categorization
+- **Vendor** - Vendor or merchant name
+- **Description** - Detailed expense description
+- **Reference Number** - Invoice number, receipt number, etc.
+- **Approval Status** - Pending, Approved, Rejected
+- **Payment Status** - Unpaid, Paid, Reimbursed
+
+### Expense Categories
+
+**1. Materials** - Raw materials, components, supplies for production.
+
+**2. Labor** - Employee salaries, contractor payments, factory labor.
+
+**3. Shipping & Freight** - Shipping costs, freight charges, courier services.
+
+**4. Marketing** - Advertising, campaigns, promotional materials, trade shows.
+
+**5. Operations** - Rent, utilities, insurance, office supplies.
+
+**6. Travel** - Business travel, hotels, meals, transportation.
+
+**7. Technology** - Software subscriptions, hardware, IT services.
+
+**8. Professional Services** - Legal fees, accounting, consultants.
+
+**9. Manufacturing** - Factory fees, tooling, setup costs.
+
+**10. Other** - Miscellaneous expenses not categorized above.
+
+### Expense Approval Workflow
+
+**1. Pending** - Expense submitted, awaiting manager review.
+
+**2. Approved** - Manager approved, expense can be paid/reimbursed.
+
+**3. Rejected** - Manager rejected, expense not valid, reason documented.
+
+**Approval Process:**
+1. Employee submits expense
+2. Notification sent to manager
+3. Manager reviews expense details
+4. Manager approves or rejects with comments
+5. Employee receives notification of decision
+6. Approved expenses move to payment queue
+
+### Expense Reporting
+
+**Expense Reports:**
+- Total expenses by category (monthly, quarterly, yearly)
+- Expenses by vendor
+- Expenses by employee/submitter
+- Budget vs actual comparison
+- Expense trends over time
+- Pending approval count
+
+**Export Options:**
+- Export to CSV for Excel analysis
+- Export to PDF for reporting
+- Export to QuickBooks for accounting
+
+---
+
+## QuickBooks Integration
+
+### Integration Setup
+
+**Navigate to Finance > QuickBooks > Setup**.
+
+**Setup Steps:**
+1. Click **"Connect to QuickBooks"**
+2. Authenticate with QuickBooks account
+3. Grant Limn Systems permissions
+4. Map Limn categories to QuickBooks accounts
+5. Configure sync settings (automatic vs manual)
+6. Test connection
+7. Click **"Save Settings"**
+
+### Sync Configuration
+
+**Automatic Sync:**
+- Invoices sync to QuickBooks when status changes to "Sent"
+- Payments sync when status changes to "Completed"
+- Expenses sync when status changes to "Approved"
+- Sync frequency: Every 1 hour or real-time (configurable)
+
+**Manual Sync:**
+- Click **"Sync Now"** button on QuickBooks page
+- Select specific invoices/payments/expenses to sync
+- Review sync report for errors
+- Retry failed sync items
+
+### Synced Data
+
+**Invoices:**
+- Customer information
+- Invoice line items
+- Invoice totals
+- Due dates and payment terms
+- Invoice status
+
+**Payments:**
+- Payment amounts
+- Payment dates
+- Payment methods
+- Payment allocations to invoices
+
+**Expenses:**
+- Expense amounts
+- Expense dates
+- Expense categories (mapped to QuickBooks accounts)
+- Vendor information
+
+### Sync Status
+
+**Success** - Item synced successfully to QuickBooks, QuickBooks ID stored in Limn Systems.
+
+**Pending** - Item queued for sync, waiting for next sync cycle.
+
+**Failed** - Sync error occurred, error message displayed, requires manual review and retry.
+
+**Disabled** - Item excluded from sync (manually disabled), will not sync to QuickBooks.
+
+---
+
+## PandaDoc Integration
+
+### Integration Overview
+
+PandaDoc integration enables professional proposal and invoice generation with e-signature capabilities.
+
+### Setup
+
+**Navigate to Finance > PandaDoc > Setup**.
+
+**Setup Steps:**
+1. Click **"Connect to PandaDoc"**
+2. Authenticate with PandaDoc account
+3. Grant Limn Systems permissions
+4. Upload or select PandaDoc templates
+5. Map template fields to Limn data fields
+6. Click **"Save Settings"**
+
+### Creating PandaDoc Invoices
+
+**From Invoice Detail Page:**
+1. Click **"Generate PandaDoc Invoice"**
+2. Select PandaDoc template
+3. Review pre-populated data from invoice
+4. Customize if needed
+5. Click **"Generate"**
+6. PandaDoc document created
+7. Link to PandaDoc document stored in invoice record
+
+**Sending for Signature:**
+1. Open PandaDoc document
+2. Add signer (customer)
+3. Configure signing workflow
+4. Click **"Send for Signature"**
+5. Customer receives email with document
+6. Customer reviews and signs electronically
+7. Signed document stored in invoice record
+
+---
+
+## AR Aging Reports
+
+### AR Aging Overview
+
+Accounts Receivable (AR) Aging reports show outstanding invoice balances grouped by age for cash flow management.
+
+### Accessing AR Aging
+
+**Navigate to Finance > AR Aging**.
+
+### Aging Buckets
+
+**Current (0 days)** - Invoices not yet past due date, payment expected on time.
+
+**1-30 Days** - Invoices 1-30 days past due, first reminder sent.
+
+**31-60 Days** - Invoices 31-60 days past due, second reminder sent, follow-up call recommended.
+
+**61-90 Days** - Invoices 61-90 days past due, escalate to manager, consider payment plan.
+
+**90+ Days** - Invoices 90+ days past due, critical collection status, legal action consideration.
+
+### AR Metrics
+
+**Total Outstanding** - Sum of all unpaid invoice balances across all buckets.
+
+**Percentage by Bucket** - Percentage of total AR in each aging bucket for risk assessment.
+
+**Days Sales Outstanding (DSO)** - Average number of days to collect payment, calculated as (Total AR / Average Daily Sales).
+
+**Collection Effectiveness Index (CEI)** - Percentage of total AR successfully collected, target >90%.
+
+### AR Actions
+
+**Send Reminder Emails:**
+- Automated reminders at 1 day, 7 days, 30 days, 60 days past due
+- Customizable reminder templates
+- Escalating tone based on aging bucket
+
+**Payment Plans:**
+- Offer installment payment plans for large overdue balances
+- Track payment plan schedule
+- Send payment plan reminders
+
+**Write-Offs:**
+- Write off uncollectible invoices after exhausting collection efforts
+- Document write-off reason
+- Remove from AR aging
+
+---
+
+## Common Workflows
+
+### Workflow 1: Standard Customer Invoice to Payment
+
+1. Customer places order via CRM
+2. Order fulfilled and ready to invoice
+3. Navigate to Finance > Invoices > New Invoice
+4. Select customer (auto-populated from order)
+5. Add invoice line items from order items
+6. Review totals and payment terms (Net 30)
+7. Save invoice (status: Draft)
+8. Review invoice for accuracy
+9. Click "Send Invoice"
+10. Customer receives email with PDF and portal link
+11. Customer reviews invoice (status changes to "Viewed")
+12. Customer submits payment via portal (credit card)
+13. Payment processor notifies system (webhook)
+14. Payment record created automatically (status: Completed)
+15. Payment allocated to invoice automatically
+16. Invoice status changes to "Paid"
+17. Customer receives payment confirmation email
+18. Invoice syncs to QuickBooks
+19. **Timeline: 0-30 days depending on payment terms**
+
+### Workflow 2: Production Invoice to Factory Payment
+
+1. Production order status: "Packed"
+2. System generates deposit invoice (50% of total cost)
+3. Factory receives deposit invoice via portal
+4. Deposit payment received and recorded
+5. Production begins
+6. Production completes, QC passes
+7. System generates balance invoice (50% of total cost)
+8. Factory receives balance invoice via portal
+9. Balance payment received and recorded
+10. Both invoices marked "Paid"
+11. Production order marked "Financially Complete"
+12. Ready for shipping
+13. **Timeline: 6-12 weeks from order to completion**
+
+### Workflow 3: Partial Payment Allocation
+
+1. Customer has three outstanding invoices: $800, $700, $500 (total $2,000)
+2. Customer submits partial payment of $1,200
+3. Navigate to Finance > Payments > New Payment
+4. Enter payment amount: $1,200
+5. Payment method: ACH
+6. Status: Pending (waiting for ACH clearance)
+7. Click **"Allocate to Invoices"**
+8. Allocate $800 to Invoice #1 → Invoice #1 marked "Paid"
+9. Allocate $400 to Invoice #2 → Invoice #2 remaining balance $300
+10. Payment fully allocated ($800 + $400 = $1,200)
+11. Invoice #2 and Invoice #3 remain partially unpaid
+12. Customer receives confirmation showing payment allocation
+13. AR aging updated to reflect remaining balances
+14. **Timeline: 3-5 business days for ACH clearance**
+
+### Workflow 4: Expense Approval and Payment
+
+1. Employee incurs business expense (travel, materials, etc.)
+2. Employee navigates to Finance > Expenses > New Expense
+3. Enter expense details (date, amount, category, vendor)
+4. Upload receipt photo
+5. Submit expense (status: Pending)
+6. Manager receives approval notification
+7. Manager reviews expense and receipt
+8. Manager approves expense (status: Approved)
+9. Employee receives approval notification
+10. Accounting team processes payment
+11. Payment issued to employee or vendor
+12. Expense status changes to "Paid"
+13. Expense syncs to QuickBooks
+14. **Timeline: 3-7 days for approval and payment**
+
+---
+
+## Integration
+
+### CRM Integration
+
+**Order to Invoice:**
+- Create invoices directly from CRM orders
+- Order items auto-populate as invoice line items
+- Customer information pre-filled
+- Pricing and quantities transferred automatically
+
+**Customer Data Sync:**
+- Customer details from CRM used for invoicing
+- Billing addresses synced
+- Payment terms from customer record
+- Contact preferences for invoice delivery
+
+### Production Integration
+
+**Production Order Invoicing:**
+- Deposit invoice (50%) generated when production order created
+- Balance invoice (50%) generated when QC passes
+- Invoice amounts calculated from production costs
+- Factory information from production order
+
+**Payment Blocking:**
+- Production cannot start until deposit invoice paid
+- Shipping blocked until balance invoice paid
+- Financial gates ensure payment before progression
+
+### Inventory Integration
+
+**Expense to Inventory:**
+- Material expenses can create inventory items
+- Purchase orders generate expense records
+- Inventory receipt triggers expense recording
+- Material costs tracked for COGS calculation
+
+---
+
+## Best Practices
+
+1. **Set Clear Payment Terms** - Define Net 15, Net 30, or Net 60 upfront with customers
+2. **Send Invoices Promptly** - Invoice immediately upon order fulfillment, don't delay
+3. **Use Automated Reminders** - Configure automatic overdue reminders at 1, 7, 30, 60 days
+4. **Track Payment Allocations** - Always allocate payments to specific invoices for accurate AR
+5. **Review AR Aging Weekly** - Monitor aging reports to identify collection issues early
+6. **Offer Multiple Payment Methods** - Credit card, ACH, check for customer convenience
+7. **Require Deposit Invoices** - Always collect 50% deposit before starting production
+8. **Approve Expenses Promptly** - Review expense approvals within 2 business days
+9. **Sync to QuickBooks Daily** - Ensure accounting records always current
+10. **Categorize Expenses Consistently** - Use standard categories for accurate reporting
+11. **Document Payment Plans** - Formalize payment plans in writing with schedule
+12. **Write Off Bad Debt** - Don't let uncollectible invoices distort AR aging indefinitely
+13. **Use PandaDoc for Large Invoices** - Professional presentation for major projects
+14. **Monitor Payment Processing Fees** - Optimize payment methods to minimize fees
+15. **Reconcile Payments Daily** - Ensure payment records match bank deposits
+
+---
+
+## Troubleshooting
+
+**Invoice not sending to customer** - Verify customer email address is valid; check spam folder; ensure invoice status is "Draft" before sending; review email sending logs for errors.
+
+**Payment allocation not updating invoice balance** - Verify allocation amount entered correctly; check if allocation saved successfully; ensure payment status is "Completed" not "Pending"; refresh invoice page.
+
+**QuickBooks sync failing** - Re-authenticate QuickBooks connection; verify QuickBooks subscription active; check category mappings are valid; review sync error logs; retry failed items manually.
+
+**AR aging showing incorrect amounts** - Verify all payments allocated to correct invoices; check for duplicate payment records; ensure invoice status updated after payment; recalculate aging manually if needed.
+
+**Expense approval notifications not received** - Verify manager email address correct; check notification settings enabled; review spam/junk folder; manually notify manager if needed.
+
+**PandaDoc template fields not populating** - Verify template field mapping configured; check invoice data contains required fields; test with different template; re-map template fields.
+
+**Payment method not showing** - Verify payment gateway integration active; check payment processor credentials; ensure payment method enabled in settings; test with different method.
+
+**Invoice numbers skipping** - PostgreSQL advisory locks ensure uniqueness; some numbers reserved during concurrent creation attempts; skipping is normal and acceptable.
+
+**Partial payment not showing** - Verify payment status is "Completed"; check payment allocation created; ensure allocation amount correct; refresh payment and invoice pages.
+
+**Overdue invoices not triggering reminders** - Verify automated reminder settings enabled; check reminder schedule configured; ensure customer opted in to notifications; review email logs.
+
+---
+
+## Tips & Tricks
+
+- **Bulk Invoice Creation** - Create multiple invoices at once from CRM order list view
+- **Invoice Templates** - Save recurring invoice line items as templates for quick entry
+- **Payment Portal Links** - Include payment portal links in invoice emails for instant payment
+- **Expense Receipt Scanning** - Use mobile app to scan receipts immediately after purchase
+- **AR Dashboard Widgets** - Add AR aging widget to main dashboard for daily monitoring
+- **Payment Allocation Shortcuts** - Use "Allocate Full Payment" button for single-invoice payments
+- **QuickBooks Category Mapping** - Review and update category mappings quarterly
+- **Invoice Search** - Use invoice number or customer name to search, much faster than scrolling
+- **Payment Matching** - Match ACH payments by reference number to invoices automatically
+- **Expense Auto-Approval** - Configure auto-approval for expenses under $50 to reduce approvals
+- **Multi-Currency Support** - Add currency field to invoices for international customers (future)
+- **Invoice Aging Alerts** - Set up alerts for invoices entering 60+ day bucket
+- **Payment Plan Templates** - Create standard payment plan templates (3-month, 6-month, 12-month)
+- **Expense Budget Tracking** - Set monthly budgets by category and track variance
+- **Invoice Discounts** - Apply early payment discounts (2% Net 10) to encourage faster payment
+
+---
+
+## FAQ
+
+**Q: What's the difference between customer invoices and production invoices?**
+A: Customer invoices are for revenue from customers (accounts receivable). Production invoices are for payments to factories/suppliers (accounts payable). They have separate workflows and numbering systems.
+
+**Q: How do I handle partial payments?**
+A: Create a payment record for the partial amount, then allocate it to the invoice. The invoice remains open with a reduced outstanding balance until fully paid.
+
+**Q: Can I edit an invoice after sending?**
+A: No. Once sent, invoices are locked to maintain audit trail. To modify, you must cancel the original invoice and issue a new one.
+
+**Q: How do payment allocations work with multiple invoices?**
+A: A single payment can be allocated to multiple invoices. Enter allocation amounts for each invoice ensuring the sum doesn't exceed the payment amount.
+
+**Q: What happens if a payment fails?**
+A: Payment status changes to "Failed" and customer is notified. Customer must retry payment with a different method or correct the issue with their original payment method.
+
+**Q: How often does QuickBooks sync run?**
+A: Automatic sync runs every 1 hour (configurable). You can also trigger manual sync anytime via the QuickBooks page.
+
+**Q: Can I export AR aging reports?**
+A: Yes. AR aging reports can be exported to CSV, PDF, or directly to QuickBooks for further analysis.
+
+**Q: How do I write off an uncollectible invoice?**
+A: Navigate to invoice detail page, click "Write Off", enter reason, and confirm. Invoice is removed from AR aging but remains in records for audit.
+
+**Q: What is cursor-based pagination?**
+A: Cursor-based pagination uses the last record ID to fetch the next page, providing O(1) consistent performance regardless of page number. Much faster than offset pagination for large datasets.
+
+**Q: How do I set up automated payment reminders?**
+A: Navigate to Finance > Settings > Reminders. Configure reminder schedule (1 day, 7 days, 30 days, 60 days past due) and customize email templates.
+
+---
+
+## Support
+
+For additional assistance with Financial Management:
+
+**Technical Support**: Email support@limnsystems.com | Phone 1-800-XXX-XXXX | Hours Monday-Friday 9 AM-6 PM EST
+
+**Accounting Team**: accounting@limnsystems.com for invoicing questions and payment issues
+
+**QuickBooks Support**: quickbooks@limnsystems.com for integration and sync issues
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
