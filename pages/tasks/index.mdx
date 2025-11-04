@@ -1,27 +1,1326 @@
-# Task Management
+# Tasks Management
 
-Comprehensive task management system for tracking work across teams and projects.
+The Tasks module provides a comprehensive project and work management system for organizing, tracking, and collaborating on tasks across your organization. Whether managing individual assignments, team projects, or department-wide initiatives, Tasks offers powerful features for efficient workflow management.
 
 ## Overview
 
-The task management system provides powerful tools for creating, organizing, and tracking tasks throughout your organization. Tasks can be linked to orders, projects, designs, and other entities.
+The Tasks system enables teams to:
 
-## Key Features
+- **Create and assign tasks** to team members with clear ownership and accountability
+- **Track progress** through customizable status workflows (To Do → In Progress → Completed)
+- **Prioritize work** with a three-tier priority system (Low, Medium, High)
+- **Organize by department** across Admin, Production, Design, and Sales teams
+- **Set deadlines** with due date tracking and visual reminders
+- **Collaborate** with comments, @mentions, and activity feeds
+- **Attach files** to tasks for context and documentation
+- **Link entities** to connect tasks with clients, projects, orders, and other records
+- **Track time** with built-in time entry logging for accurate reporting
+- **Manage dependencies** by defining task relationships (depends on, blocks)
+- **Visualize workflows** with both list and Kanban board views
+- **Monitor team workload** with assignment tracking and reporting
 
-- **Task Creation** - Create tasks with detailed descriptions, deadlines, and assignments
-- **Task Templates** - Reusable templates for common workflows
-- **Kanban View** - Visual board for tracking task progress
-- **Time Tracking** - Track time spent on tasks
-- **Task Automation** - Automatic task creation based on triggers
-- **Entity Linking** - Link tasks to orders, projects, and other entities
+## Benefits
 
-## Getting Started
+### For Individuals
+- **Clear priorities** - Visual indicators show what's most important
+- **Deadline awareness** - Never miss a due date with date tracking
+- **Work history** - Complete activity log of all task changes
+- **Time tracking** - Log hours worked for accurate timekeeping
+- **File organization** - Keep all task-related documents in one place
 
-Explore the sections below to learn how to effectively use the task management system:
+### For Teams
+- **Collaboration hub** - Centralized place for team discussions and updates
+- **Visibility** - See who's working on what at a glance
+- **Accountability** - Clear ownership and responsibility tracking
+- **Workload balancing** - Distribute tasks evenly across team members
+- **Progress tracking** - Monitor completion rates by status and department
 
-- Creating and managing tasks
-- Using task templates
-- Working with the Kanban board
-- Tracking time on tasks
-- Setting up automation rules
-- Linking tasks to other entities
+### For Managers
+- **Resource planning** - Estimated vs. actual hours for project planning
+- **Performance insights** - Track completion rates and velocity
+- **Bottleneck identification** - See blocked or overdue tasks quickly
+- **Cross-functional coordination** - Link tasks to projects, clients, and orders
+- **Audit trail** - Complete history of task changes and decisions
+
+## Creating Tasks
+
+### Basic Task Creation
+
+1. Navigate to **Tasks** in the main navigation
+2. Click **New Task** in the top-right corner
+3. Fill out the task details:
+   - **Title** (required) - Clear, concise description of the task
+   - **Description** (optional) - Detailed information, requirements, or context
+   - **Status** - Current state: To Do, In Progress, Completed, or Cancelled
+   - **Priority** - Importance level: Low, Medium, or High
+   - **Department** - Responsible team: Admin, Production, Design, or Sales
+4. Click **Create Task** to save
+
+**Example:**
+```
+Title: Review Q4 product catalog designs
+Description: Review all product images and descriptions for accuracy before publication.
+             Check for consistency with brand guidelines.
+Status: To Do
+Priority: High
+Department: Design
+```
+
+### Advanced Task Options
+
+When creating a task, additional fields are available:
+
+#### Assignment
+- **Assigned To** - Select one or more team members responsible for completing the task
+- Multiple assignees can collaborate on the same task
+- Assignees receive automatic notifications when assigned
+
+#### Scheduling
+- **Start Date** - When work should begin on the task
+- **Due Date** - Deadline for task completion
+- **Estimated Hours** - Projected time needed to complete the task
+
+#### Organization
+- **Visibility** - Control who can see the task:
+  - **Company** - Visible to all users (default)
+  - **Project** - Visible only to project team members
+  - **Private** - Visible only to assigned users and creator
+- **Tags** - Custom labels for categorization and filtering
+- **Task Type** - Custom classification (default: "task")
+
+#### Project Linking
+- **Project ID** - Associate the task with a specific project
+- Tasks appear in project detail pages when linked
+
+### Creating from Templates
+
+For recurring task types, use task templates:
+
+1. Click **Templates** in the task header
+2. Browse available templates by category
+3. Select a template to pre-fill task details
+4. Customize as needed and create
+
+**Common Template Categories:**
+- Client onboarding checklists
+- Quality control procedures
+- Production workflows
+- Sales follow-up sequences
+
+## Task Fields and Properties
+
+### Core Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| **Title** | Text (required) | Short description of the task |
+| **Description** | Text | Detailed information and requirements |
+| **Status** | Dropdown | Current workflow state (see below) |
+| **Priority** | Dropdown | Urgency level (Low, Medium, High) |
+| **Department** | Dropdown | Responsible team or division |
+| **Assigned To** | User(s) | Team members working on the task |
+| **Created By** | User | Original task creator (auto-set) |
+| **Reporter** | User | Person who reported the issue/need |
+
+### Scheduling Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| **Start Date** | Date | When work should begin |
+| **Due Date** | Date | Deadline for completion |
+| **Estimated Hours** | Number | Projected time to complete |
+| **Actual Hours** | Number | Time logged via time entries |
+| **Created At** | Timestamp | Task creation date (auto-set) |
+| **Updated At** | Timestamp | Last modification date (auto-set) |
+| **Completed At** | Timestamp | Completion date (auto-set) |
+| **Last Activity At** | Timestamp | Most recent activity (auto-set) |
+
+### Organizational Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| **Visibility** | Dropdown | Who can view the task |
+| **Tags** | Array | Custom labels for categorization |
+| **Task Type** | Text | Custom classification or category |
+| **Position** | Number | Sort order for manual arrangement |
+| **Project ID** | Reference | Associated project (if any) |
+
+### Collaboration Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| **Watchers** | User(s) | Users receiving notifications |
+| **Mentioned Users** | User(s) | Users @mentioned in comments |
+| **Depends On** | Task(s) | Tasks that must complete first |
+| **Blocks** | Task(s) | Tasks waiting on this one |
+
+### Completion Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| **Resolution** | Text | How the task was resolved |
+| **Is Completed** | Boolean | Completion flag (auto-set) |
+| **Archived At** | Timestamp | Archive date (if archived) |
+| **Archived By** | User | User who archived the task |
+
+## Task Statuses and Workflows
+
+### Available Statuses
+
+The Tasks system uses a four-stage workflow:
+
+#### 1. To Do
+- **Icon:** Alert circle (⚠)
+- **Meaning:** Task is ready to start but work hasn't begun
+- **Use when:** Task is planned, requirements are clear, and ready for assignment
+- **Next step:** Move to "In Progress" when work begins
+
+#### 2. In Progress
+- **Icon:** Clock (⏰)
+- **Meaning:** Active work is currently being done on the task
+- **Use when:** Someone is actively working to complete the task
+- **Next step:** Move to "Completed" when finished or "Cancelled" if abandoned
+
+#### 3. Completed
+- **Icon:** Check circle (✓)
+- **Meaning:** Task is finished and meets all requirements
+- **Use when:** All work is done, deliverables are ready, and task can be closed
+- **Result:** Task is marked complete with completion timestamp
+
+#### 4. Cancelled
+- **Icon:** X circle (✕)
+- **Meaning:** Task is no longer needed or was abandoned
+- **Use when:** Requirements changed, task is no longer relevant, or work was deprioritized
+- **Result:** Task is closed without completion
+
+### Status Workflow Examples
+
+**Typical Workflow:**
+```
+To Do → In Progress → Completed
+```
+
+**Task No Longer Needed:**
+```
+To Do → Cancelled
+```
+
+**Work Interrupted:**
+```
+In Progress → Cancelled
+```
+
+**Reopening Completed Task:**
+```
+Completed → To Do (create new task instead)
+```
+
+### Changing Task Status
+
+**From Task List:**
+1. Find the task in the task list
+2. Click the status badge
+3. Select new status from dropdown
+
+**From Task Detail Page:**
+1. Open the task by clicking on it
+2. Click **Edit** or the status field
+3. Select new status
+4. Click **Save**
+
+**Bulk Status Updates:**
+1. Select multiple tasks using checkboxes
+2. Click **Bulk Actions** → **Update Status**
+3. Choose new status
+4. Confirm the update
+
+**Status Change Notifications:**
+- Assigned users receive notifications when status changes
+- Watchers are notified of all status transitions
+- Activity log records the change with timestamp and user
+
+## Priority System
+
+### Priority Levels
+
+#### High Priority
+- **Badge Color:** Red
+- **Use for:** Urgent tasks, critical issues, blocking problems
+- **Examples:**
+  - Production down or quality issues
+  - Client-facing problems requiring immediate attention
+  - Legal or compliance deadlines
+  - Tasks blocking other team members
+- **SLA:** Should be addressed within 24 hours
+
+#### Medium Priority
+- **Badge Color:** Yellow/Orange
+- **Use for:** Important work with standard timelines
+- **Examples:**
+  - Regular project tasks with upcoming deadlines
+  - Feature development work
+  - Process improvements
+  - Standard client requests
+- **SLA:** Should be addressed within 3-5 business days
+
+#### Low Priority
+- **Badge Color:** Green/Gray
+- **Use for:** Nice-to-have improvements, future planning
+- **Examples:**
+  - Documentation updates
+  - UI/UX enhancements
+  - Technical debt cleanup
+  - Long-term strategic planning
+- **SLA:** Can be scheduled for future sprints or iterations
+
+### Setting Task Priority
+
+**During Creation:**
+- Select priority from dropdown when creating task
+- Default is "Medium" if not specified
+
+**Updating Priority:**
+1. Open task detail page
+2. Click priority badge or **Edit**
+3. Select new priority level
+4. Save changes
+
+**Priority-Based Filtering:**
+- Use priority filter in task list to show only high-priority items
+- Sort tasks by priority to work on most important items first
+- Dashboard shows high-priority task count for quick overview
+
+### Priority Best Practices
+
+1. **Use High sparingly** - Reserve for truly urgent matters
+2. **Review regularly** - Priorities change as deadlines approach
+3. **Communicate changes** - Notify team when priority increases
+4. **Balance workload** - Don't overload team with all high-priority tasks
+5. **Set expectations** - Link priority to response time expectations
+
+## Assignment and Delegation
+
+### Assigning Tasks
+
+#### Single Assignment
+1. Open task detail page or creation form
+2. Click **Assigned To** field
+3. Search for and select team member
+4. User receives notification of assignment
+
+#### Multiple Assignments
+1. In **Assigned To** field, select first user
+2. Click **+ Add Another** or select additional users
+3. All assigned users receive notifications
+4. Each user sees task in their "My Tasks" view
+
+#### Reassigning Tasks
+1. Open task detail page
+2. Click **Edit** or **Assigned To** field
+3. Remove current assignee(s) and add new ones
+4. Both old and new assignees receive notifications
+
+### Assignment Strategies
+
+#### Individual Ownership
+- Assign to one person for clear accountability
+- Best for: Specific deliverables, individual work, decision-making tasks
+
+#### Collaborative Work
+- Assign to multiple team members for shared responsibility
+- Best for: Cross-functional projects, peer review, team efforts
+
+#### Department Assignment
+- Use department field instead of individual assignment
+- Best for: General team backlogs, work pools, unassigned work
+
+### My Tasks View
+
+Access your assigned tasks:
+
+1. Click **Tasks** → **My Tasks** in navigation
+2. View all tasks assigned to you
+3. Filter by status, priority, or due date
+4. Toggle "Include Watching" to see tasks you're following
+
+**My Tasks Features:**
+- Default view sorted by due date
+- Shows overdue tasks with red highlight
+- Quick status updates without opening task
+- Estimated vs. actual hours tracking
+- Workload summary statistics
+
+### Watchers
+
+Add watchers to tasks for notification without assignment:
+
+1. Open task detail page
+2. Scroll to **Watchers** section
+3. Click **+ Add Watcher**
+4. Select team members
+5. Watchers receive notifications but aren't responsible for completion
+
+**When to Use Watchers:**
+- Managers monitoring team progress
+- Stakeholders needing updates
+- Team members who need to stay informed
+- Cross-functional coordination
+
+## Collaboration Features
+
+### Task Comments
+
+Add comments to discuss task details:
+
+1. Open task detail page
+2. Navigate to **Activity** tab
+3. Type comment in text box
+4. Click **Post Comment**
+
+**Comment Features:**
+- Markdown formatting support
+- @mention users for notifications
+- Edit or delete your own comments
+- Comments appear in activity feed chronologically
+
+### @Mentions
+
+Notify specific users in comments:
+
+1. Type `@` in comment box
+2. Start typing user's name
+3. Select from autocomplete dropdown
+4. Mentioned user receives notification
+
+**Mention Best Practices:**
+- Use to ask questions or request input
+- Mention decision-makers for approvals
+- Tag subject matter experts for guidance
+- Avoid over-mentioning to prevent notification fatigue
+
+### Activity Feed
+
+Every task has a complete activity log showing:
+
+- **Comments** - User discussions and updates
+- **Status Changes** - Workflow transitions with timestamps
+- **Assignment Changes** - Who was added/removed
+- **Field Updates** - Changes to priority, due date, etc.
+- **Attachments** - Files uploaded or deleted
+- **Entity Links** - Related records linked/unlinked
+- **Time Entries** - Hours logged by team members
+
+**Viewing Activity:**
+1. Open task detail page
+2. Click **Activity** tab
+3. Scroll through chronological feed
+4. Filter by activity type if needed
+
+### Notifications
+
+Users receive notifications for:
+
+- **New assignments** - When assigned to a task
+- **@Mentions** - When mentioned in comments
+- **Status changes** - Updates to tasks you're assigned to or watching
+- **Due date reminders** - Tasks approaching deadline
+- **Comments** - New comments on your tasks
+- **File uploads** - Attachments added to your tasks
+
+**Notification Channels:**
+- In-app notifications (bell icon)
+- Email notifications (configurable per user)
+- Push notifications (if enabled)
+
+## File Attachments
+
+### Uploading Files
+
+Add files to provide context, documentation, or deliverables:
+
+1. Open task detail page
+2. Navigate to **Attachments** tab
+3. Click **Upload File** or drag-and-drop
+4. Select file(s) from your computer
+5. Files upload with progress indicator
+
+**Supported File Types:**
+- Documents (PDF, DOC, DOCX, XLS, XLSX, TXT)
+- Images (JPG, PNG, GIF, SVG)
+- Archives (ZIP, RAR)
+- Design files (PSD, AI, SKETCH)
+- Any file type up to size limit
+
+**File Size Limits:**
+- Maximum per file: 50 MB
+- Maximum per task: 500 MB total
+- Large files may require compression
+
+### Managing Attachments
+
+**Viewing Attachments:**
+- Thumbnails shown for image files
+- File name, size, and upload date displayed
+- Click to download or preview
+
+**Deleting Attachments:**
+1. Click **Delete** icon next to file
+2. Confirm deletion
+3. Activity log records file removal
+
+**Moving Attachments:**
+Some attachments can be moved to permanent storage:
+1. Click **Move to System** option
+2. Select entity type (project, order, etc.)
+3. File is transferred and linked
+4. Original remains in task until deleted
+
+### Attachment Best Practices
+
+1. **Use descriptive names** - Rename files before uploading
+2. **Organize by type** - Group related files together
+3. **Add context** - Comment when uploading to explain file purpose
+4. **Clean up completed tasks** - Archive or delete unnecessary files
+5. **Use external links** - For very large files, link to cloud storage
+
+## Task Filtering and Search
+
+### Search Bar
+
+Find tasks quickly by keywords:
+
+1. Use search bar at top of task list
+2. Type search terms (matches title and description)
+3. Results update in real-time
+4. Clear search to see all tasks
+
+**Search Tips:**
+- Use specific terms for better results
+- Search supports partial matches
+- Case-insensitive search
+- Searches across title and description fields
+
+### Filter Options
+
+Narrow down task list with filters:
+
+#### Status Filter
+- **All Statuses** - Show everything
+- **To Do** - Only unstarted tasks
+- **In Progress** - Only active tasks
+- **Completed** - Only finished tasks
+- **Cancelled** - Only abandoned tasks
+
+#### Priority Filter
+- **All Priorities** - Show everything
+- **High Priority** - Critical tasks only
+- **Medium Priority** - Standard priority
+- **Low Priority** - Lower priority tasks
+
+#### Department Filter
+- **All Departments** - Show everything
+- **Admin** - Administrative tasks
+- **Production** - Manufacturing/operations
+- **Design** - Creative/design work
+- **Sales** - Sales and business development
+
+#### Additional Filters
+- **Assigned To Me** - Your tasks only (My Tasks view)
+- **Created By Me** - Tasks you created
+- **Watching** - Tasks you're following
+- **Has Due Date** - Tasks with deadlines
+- **Overdue** - Past due date
+
+### Combining Filters
+
+Filters work together for precise results:
+
+**Example: High-priority production tasks**
+- Status: In Progress
+- Priority: High
+- Department: Production
+- Result: Active critical production tasks
+
+**Example: My overdue tasks**
+- View: My Tasks
+- Status: To Do OR In Progress
+- Filter: Overdue
+- Result: Your tasks past deadline
+
+### Sorting Options
+
+Organize task list by different criteria:
+
+- **Created At** - Newest or oldest first (default)
+- **Due Date** - Soonest or latest deadline
+- **Priority** - High to low or low to high
+- **Status** - Grouped by workflow stage
+- **Title** - Alphabetical order
+
+**Changing Sort:**
+1. Click column header to sort by that field
+2. Click again to reverse sort order
+3. Icon indicates current sort direction
+
+## Kanban Board View
+
+### Accessing Kanban View
+
+Switch from list to visual board:
+
+1. Click **Kanban View** button in task header
+2. Board displays tasks in columns by status
+3. Drag and drop to change status
+
+### Board Layout
+
+Four columns represent workflow stages:
+
+```
+┌──────────┬──────────────┬────────────┬───────────┐
+│  To Do   │ In Progress  │ Completed  │ Cancelled │
+├──────────┼──────────────┼────────────┼───────────┤
+│ [Task 1] │   [Task 4]   │  [Task 7]  │ [Task 10] │
+│ [Task 2] │   [Task 5]   │  [Task 8]  │           │
+│ [Task 3] │   [Task 6]   │  [Task 9]  │           │
+└──────────┴──────────────┴────────────┴───────────┘
+```
+
+### Task Cards
+
+Each card displays:
+
+- **Title** - Task name
+- **Priority badge** - Color-coded importance
+- **Assigned users** - Avatar images
+- **Due date** - Relative time (e.g., "in 3 days")
+- **Project icon** - If linked to project
+
+### Drag and Drop
+
+Change task status by dragging:
+
+1. Click and hold task card
+2. Drag to target column
+3. Drop in desired position
+4. Status updates automatically
+5. Activity log records change
+
+**Ordering Within Columns:**
+- Drag up/down to reorder
+- Position is saved automatically
+- Manual order overrides default sort
+
+### Kanban Features
+
+- **Column counts** - Number of tasks per status
+- **Quick actions** - Click card for dropdown menu
+- **Priority sorting** - High priority floats to top
+- **Filter persistence** - Applied filters affect board
+- **Responsive design** - Horizontal scroll on mobile
+
+### When to Use Kanban
+
+**Best for:**
+- Visual workflow management
+- Sprint planning and tracking
+- Team standups and daily reviews
+- Identifying bottlenecks
+- Quick status updates
+
+**Use List View for:**
+- Detailed task information
+- Bulk operations
+- Advanced filtering and search
+- Reporting and analysis
+- Timeline-based planning
+
+## Task Dependencies
+
+### Types of Relationships
+
+#### Depends On
+- Current task cannot start until dependency completes
+- Example: "Deploy to production" depends on "Pass QA testing"
+- Dependency must complete before work can begin
+
+#### Blocks
+- Current task prevents another task from starting
+- Example: "Database migration" blocks "Feature development"
+- Completing this task unblocks dependent tasks
+
+#### Related
+- Tasks are connected but not dependent
+- Example: Related design and development tasks
+- Informational relationship only
+
+### Adding Dependencies
+
+**From Task Detail Page:**
+
+1. Navigate to **Dependencies** tab
+2. Click **+ Add Dependency**
+3. Select relationship type:
+   - **This task depends on** - Select prerequisite tasks
+   - **This task blocks** - Select waiting tasks
+4. Search for and select task(s)
+5. Save relationship
+
+**Dependency Chain Example:**
+```
+[Research requirements]
+    ↓ (blocks)
+[Create design mockups]
+    ↓ (blocks)
+[Develop feature]
+    ↓ (blocks)
+[QA testing]
+    ↓ (blocks)
+[Deploy to production]
+```
+
+### Managing Dependencies
+
+**Viewing Dependencies:**
+- Dependencies tab shows all relationships
+- Visual graph displays dependency chain
+- Blocked tasks show warning indicator
+- Dependency completion percentage displayed
+
+**Removing Dependencies:**
+1. Go to Dependencies tab
+2. Click **Remove** next to relationship
+3. Confirm removal
+4. Relationship is deleted
+
+**Circular Dependencies:**
+- System prevents circular dependencies (A depends on B depends on A)
+- Warning shown if circular relationship detected
+- Must break cycle before saving
+
+### Dependency Workflows
+
+**Starting Dependent Work:**
+1. Check "Depends On" list before starting task
+2. Verify all prerequisites are completed
+3. If blocked, contact assignees of blocking tasks
+4. Update status only when dependencies met
+
+**Completing Blocking Work:**
+1. When completing task, check "Blocks" list
+2. Notify assignees of unblocked tasks
+3. Unblocked tasks automatically available
+4. Activity log records unblock event
+
+## Time Tracking
+
+### Logging Time
+
+Track hours worked on tasks:
+
+1. Open task detail page
+2. Navigate to **Time Tracking** tab
+3. Click **+ Add Time Entry**
+4. Fill out entry details:
+   - **Start Time** - When work began
+   - **End Time** - When work ended (or leave blank for ongoing)
+   - **Duration** - Auto-calculated or manual entry (in minutes)
+   - **Description** - What was accomplished
+5. Click **Save Entry**
+
+**Entry Types:**
+
+**Completed Entry:**
+- Start and end time specified
+- Duration calculated automatically
+- Used for past work
+
+**Ongoing Entry:**
+- Start time only
+- End time left blank
+- Duration updates in real-time
+- Click "Stop" to finalize
+
+### Time Entry Features
+
+**Manual Duration:**
+- Enter duration directly if times are unknown
+- Useful for retrospective logging
+- Duration stored in minutes
+
+**Editing Entries:**
+1. Click **Edit** on time entry
+2. Modify times or description
+3. Save changes
+4. Updated timestamp recorded
+
+**Deleting Entries:**
+1. Click **Delete** on time entry
+2. Confirm deletion
+3. Time removed from totals
+
+### Time Reporting
+
+**Task-Level Reports:**
+- **Estimated Hours** - Projected time to complete
+- **Actual Hours** - Sum of all time entries
+- **Remaining Hours** - Estimated minus actual
+- **Variance** - Over/under estimate percentage
+
+**Viewing Time Summary:**
+1. Task detail page shows totals
+2. Time Tracking tab lists all entries
+3. Entries grouped by user
+4. Date range filtering available
+
+**User Time Reports:**
+- Access from My Tasks view
+- Shows all time logged across tasks
+- Export to CSV for payroll/billing
+- Filter by date range, project, or department
+
+### Time Tracking Best Practices
+
+1. **Log daily** - Record time at end of each day
+2. **Be specific** - Add descriptions explaining work done
+3. **Use estimates** - Set estimated hours for planning
+4. **Review variance** - Check actual vs. estimated regularly
+5. **Bill accurately** - Export time logs for client billing
+
+## Entity Linking
+
+### Linkable Entities
+
+Connect tasks to other records in the system:
+
+- **Clients** - Link customer-related tasks
+- **Projects** - Associate with project work
+- **Orders** - Track order fulfillment tasks
+- **Collections** - Product collection tasks
+- **Items** - Individual product/SKU tasks
+- **Designers** - Designer collaboration tasks
+- **Manufacturers** - Supplier/vendor tasks
+- **Partners** - Partner relationship tasks
+
+### Adding Entity Links
+
+1. Open task detail page
+2. Navigate to **Links** tab
+3. Click **+ Add Link**
+4. Select entity type from dropdown
+5. Search for specific record
+6. Choose link type:
+   - **Related** - General association
+   - **Blocks** - Task blocks entity progress
+   - **Depends On** - Task requires entity
+7. Click **Add Link**
+
+**Link Display:**
+- Entity type icon
+- Entity name/identifier
+- Link type badge
+- Quick navigation button
+
+### Using Entity Links
+
+**Navigation:**
+- Click linked entity to open detail page
+- Return to task via breadcrumb or back button
+
+**Cross-Reference:**
+- Linked entities show associated tasks
+- Bidirectional relationship
+- Updates appear in both records' activity feeds
+
+**Filtering:**
+- Filter tasks by linked entity
+- View all tasks for a client/project/order
+- Useful for entity-specific reporting
+
+### Link Management
+
+**Removing Links:**
+1. Go to Links tab
+2. Click **Remove** next to link
+3. Confirm removal
+4. Relationship deleted from both records
+
+**Link History:**
+- Activity log records link creation
+- Deletion also logged with timestamp
+- Who created/removed link tracked
+
+### Entity Linking Use Cases
+
+**Client Tasks:**
+```
+Client: Acme Corporation
+Linked Tasks:
+- Send welcome packet (To Do)
+- Schedule kickoff call (Completed)
+- Review requirements (In Progress)
+```
+
+**Project Tasks:**
+```
+Project: Q4 Product Launch
+Linked Tasks:
+- Create marketing materials (In Progress)
+- Update website (To Do)
+- Train sales team (To Do)
+```
+
+**Order Tasks:**
+```
+Order: #12345
+Linked Tasks:
+- Quality inspection (Completed)
+- Package for shipping (In Progress)
+- Generate shipping label (To Do)
+```
+
+## Task Templates
+
+### Using Templates
+
+Standardize recurring task creation:
+
+1. Click **Templates** in task header
+2. Browse template categories:
+   - Onboarding checklists
+   - Quality control procedures
+   - Project kickoff tasks
+   - Review processes
+   - Compliance checklists
+3. Click template to preview
+4. Click **Use Template** to create task
+5. Customize pre-filled fields
+6. Save new task
+
+### Template Features
+
+**Pre-filled Fields:**
+- Title and description
+- Default priority and status
+- Department assignment
+- Estimated hours
+- Tags and visibility
+- Custom task type
+
+**Template Benefits:**
+- Consistency across recurring work
+- Faster task creation
+- Standardized processes
+- Training tool for new users
+- Best practice documentation
+
+### Template Categories
+
+**Onboarding:**
+- Client welcome sequences
+- Employee onboarding steps
+- Vendor setup checklists
+
+**Quality:**
+- Inspection procedures
+- Review processes
+- Approval workflows
+
+**Project Management:**
+- Project kickoff tasks
+- Sprint planning checklists
+- Release procedures
+
+**Sales:**
+- Lead follow-up sequences
+- Proposal creation steps
+- Contract review processes
+
+### Creating Custom Templates
+
+Contact system administrator to create organization-specific templates:
+
+1. Identify recurring task patterns
+2. Document standard steps and requirements
+3. Define default values and assignments
+4. Request template creation
+5. Test and refine template
+6. Train team on template usage
+
+## Best Practices
+
+### Task Creation
+
+1. **Write clear titles** - Use action verbs (e.g., "Review," "Create," "Update")
+2. **Add context** - Include why the task is needed in description
+3. **Set realistic estimates** - Base estimates on historical data
+4. **Assign appropriately** - One owner for accountability
+5. **Link related entities** - Connect to projects, clients, orders
+6. **Use tags** - Categorize for easy filtering and reporting
+7. **Set due dates** - Every task should have a deadline
+
+### Task Management
+
+1. **Update status regularly** - Keep workflow current
+2. **Log time daily** - Record hours worked consistently
+3. **Comment on progress** - Provide updates for stakeholders
+4. **Review dependencies** - Check for blockers frequently
+5. **Prioritize ruthlessly** - Not everything can be high priority
+6. **Archive completed tasks** - Keep active list manageable
+7. **Use templates** - Standardize recurring work
+
+### Collaboration
+
+1. **@Mention sparingly** - Avoid notification fatigue
+2. **Provide context** - Explain updates in comments
+3. **Respond promptly** - Check notifications daily
+4. **Watch strategically** - Only follow relevant tasks
+5. **Update assignees** - Communicate changes clearly
+6. **Share files** - Attach documentation as needed
+7. **Close the loop** - Mark resolved when complete
+
+### Team Coordination
+
+1. **Daily standup** - Review Kanban board as team
+2. **Workload balancing** - Monitor assigned task counts
+3. **Bottleneck resolution** - Address blocked tasks quickly
+4. **Consistent workflows** - Use standard status transitions
+5. **Clear ownership** - One primary assignee per task
+6. **Regular grooming** - Clean up old tasks weekly
+7. **Metrics review** - Track completion rates monthly
+
+### Reporting and Analytics
+
+1. **Track velocity** - Measure tasks completed per week/sprint
+2. **Monitor estimates** - Compare estimated vs. actual hours
+3. **Identify patterns** - Which tasks take longest?
+4. **Workload distribution** - Are tasks evenly assigned?
+5. **Completion rates** - What percentage of tasks finish on time?
+6. **Priority distribution** - Too many high-priority tasks?
+7. **Department metrics** - Which teams need support?
+
+## Common Workflows
+
+### Individual Task Completion
+
+```
+1. Receive assignment notification
+2. Review task details and dependencies
+3. Start work and update status to "In Progress"
+4. Log time as work progresses
+5. Upload deliverables as attachments
+6. Complete work and update status to "Completed"
+7. Add completion comment with summary
+```
+
+### Team Project Workflow
+
+```
+1. Project manager creates project
+2. Break down work into individual tasks
+3. Link tasks to project entity
+4. Set up task dependencies
+5. Assign tasks to team members
+6. Team works through tasks in priority order
+7. Daily standup using Kanban view
+8. Mark tasks complete as finished
+9. Review metrics at project completion
+```
+
+### Client Request Handling
+
+```
+1. Support receives client request
+2. Create task from template
+3. Link task to client entity
+4. Assign to appropriate department
+5. Set priority based on SLA
+6. Work task through to completion
+7. Update client via comments/email
+8. Mark complete and request feedback
+```
+
+### Quality Control Process
+
+```
+1. QC inspector creates task for item
+2. Link task to order or product
+3. Add inspection checklist in description
+4. Attach photos of issues found
+5. Assign to production for fixes
+6. Production updates and reassigns to QC
+7. QC verifies fixes and marks complete
+8. Activity log serves as audit trail
+```
+
+### Sprint Planning
+
+```
+1. Product owner creates backlog tasks
+2. Team reviews and estimates hours
+3. Select tasks for upcoming sprint
+4. Set start and due dates
+5. Assign to team members
+6. Move to Kanban board
+7. Daily updates on progress
+8. Review completed tasks at sprint end
+```
+
+## Troubleshooting
+
+### Task Not Appearing
+
+**Problem:** Created task doesn't show in list
+
+**Solutions:**
+1. Check active filters - clear all filters to see all tasks
+2. Verify visibility setting - task may be private
+3. Check department filter - task may be in different department
+4. Refresh page - force reload to fetch latest data
+5. Check archive status - archived tasks hidden by default
+
+### Cannot Change Status
+
+**Problem:** Status dropdown disabled or not saving
+
+**Solutions:**
+1. Check permissions - ensure you have edit access
+2. Verify task not archived - archived tasks read-only
+3. Check dependencies - may need to complete prerequisites
+4. Try refreshing page - clear stale cache
+5. Contact admin if permissions issue
+
+### File Upload Failing
+
+**Problem:** Attachment won't upload
+
+**Solutions:**
+1. Check file size - must be under 50MB
+2. Verify file type - some extensions blocked
+3. Check internet connection - upload may timeout
+4. Try smaller file - compress if possible
+5. Use external link - for very large files
+
+### Notifications Not Received
+
+**Problem:** Missing assignment or mention notifications
+
+**Solutions:**
+1. Check notification settings - verify email notifications enabled
+2. Check spam folder - notifications may be filtered
+3. Verify email address - ensure profile email correct
+4. Check "Do Not Disturb" - may be temporarily disabled
+5. Contact admin - server issues possible
+
+### Dependency Warning
+
+**Problem:** Cannot complete task due to dependency
+
+**Solutions:**
+1. View Dependencies tab - identify blocking tasks
+2. Check prerequisite status - verify dependencies complete
+3. Contact blocking task assignees - ask for ETA
+4. Request dependency removal - if no longer needed
+5. Create workaround - if urgent and unblock not possible
+
+### Time Entry Error
+
+**Problem:** Cannot save time entry
+
+**Solutions:**
+1. Check time format - ensure valid start/end times
+2. Verify end after start - end time must be later
+3. Check duration - if manual, must be positive number
+4. Try different browser - compatibility issue possible
+5. Contact support - database issue possible
+
+### Bulk Operation Failed
+
+**Problem:** Bulk status update or archive failed
+
+**Solutions:**
+1. Check selection - verify tasks selected
+2. Reduce batch size - try smaller groups
+3. Verify permissions - must have edit access to all
+4. Check for archived - cannot bulk edit archived tasks
+5. Try individual updates - isolate problem task
+
+## Tips & Tricks
+
+### Keyboard Shortcuts
+
+- **N** - Create new task (when on tasks page)
+- **/** - Focus search bar
+- **Esc** - Close dialogs/modals
+- **Ctrl/Cmd + Enter** - Submit forms
+- **Ctrl/Cmd + K** - Quick command menu
+
+### Quick Actions
+
+**Fast Status Updates:**
+- Click status badge in list view for dropdown
+- Change status without opening task
+- Keyboard: Click badge, use arrow keys, press Enter
+
+**Rapid Task Creation:**
+- Use templates for recurring task types
+- Duplicate similar tasks (coming soon)
+- Bulk create from CSV import (admin only)
+
+**Efficient Navigation:**
+- Use breadcrumbs to return to previous pages
+- Middle-click to open tasks in new tab
+- Browser back button works throughout
+
+### Power User Features
+
+**Advanced Search:**
+- Combine filters for precise results
+- Save filter combinations as bookmarks
+- Use tags strategically for custom categories
+
+**Bulk Operations:**
+- Select multiple tasks with checkboxes
+- Bulk status updates for efficiency
+- Bulk archive for cleanup
+
+**My Tasks Optimization:**
+- Set default sort by due date
+- Use "Include Watching" for comprehensive view
+- Create browser bookmark for quick access
+
+### Mobile Usage
+
+**Responsive Design:**
+- Full functionality on mobile devices
+- Swipe gestures on Kanban board
+- Optimized forms for touch input
+
+**Mobile Best Practices:**
+- Use mobile app for notifications
+- Comment via mobile for quick updates
+- Upload photos directly from camera
+- Voice-to-text for descriptions
+
+### Integration Tips
+
+**Email Integration:**
+- Forward emails to create tasks (if configured)
+- Email replies add comments (if configured)
+- Daily task digest emails available
+
+**Calendar Integration:**
+- Subscribe to task calendar feed
+- Due dates appear in calendar app
+- iCal/Google Calendar support
+
+**API Access:**
+- Automate task creation via API
+- Export data for external reporting
+- Integrate with other tools
+
+## Frequently Asked Questions
+
+### General Questions
+
+**Q: Can I assign a task to multiple people?**
+A: Yes, select multiple users in the "Assigned To" field. All assignees receive notifications and see the task in their "My Tasks" view.
+
+**Q: What's the difference between assigned users and watchers?**
+A: Assigned users are responsible for completing the task. Watchers receive notifications but aren't responsible. Use watchers for managers, stakeholders, or interested parties.
+
+**Q: Can I recover a deleted task?**
+A: Deleted tasks cannot be recovered. Use the "Cancelled" status instead of deletion for tasks you may need to reference later. Contact support immediately if critical task was deleted.
+
+**Q: How do I hide completed tasks?**
+A: Use the status filter and deselect "Completed". Completed tasks are shown by default but can be filtered out. Consider archiving old completed tasks for cleaner lists.
+
+**Q: Can I create subtasks?**
+A: While there's no formal subtask feature, use task dependencies and linking to create parent-child relationships. Alternatively, use checklist items in task descriptions.
+
+### Permissions
+
+**Q: Who can see my private tasks?**
+A: Private tasks are visible only to the creator, assigned users, and system administrators. They don't appear in department or company-wide views.
+
+**Q: Can I edit someone else's task?**
+A: Yes, if you have appropriate permissions. Generally, all team members can edit tasks in their department. Admins can edit all tasks.
+
+**Q: Who receives notifications when I comment?**
+A: All assigned users, watchers, @mentioned users, and the task creator receive comment notifications (unless they've opted out).
+
+### Workflow
+
+**Q: Can I create custom task statuses?**
+A: No, the four standard statuses (To Do, In Progress, Completed, Cancelled) are fixed. Use tags or task types for custom categorization.
+
+**Q: Should I use tags or task types?**
+A: Use task types for broad categories (e.g., "Bug", "Feature", "Documentation") and tags for flexible filtering (e.g., "urgent", "client-request", "Q4-2024").
+
+**Q: How do I handle recurring tasks?**
+A: Use templates for consistent recurring work. Create a new task from the template each time. Automation rules can create tasks automatically based on triggers (admin configuration).
+
+### Time Tracking
+
+**Q: Is time tracking mandatory?**
+A: Time tracking is optional but recommended. It helps with project estimation, billing, and workload planning. Your organization's policy may require it.
+
+**Q: Can I edit time entries after saving?**
+A: Yes, click "Edit" on any time entry to modify times or descriptions. Changes are logged in the activity feed.
+
+**Q: How accurate do time estimates need to be?**
+A: Estimates are planning tools, not commitments. Aim for reasonable accuracy. Review actual vs. estimated hours over time to improve estimation skills.
+
+### Reporting
+
+**Q: Can I export task lists?**
+A: Yes, use the export button to download task lists as CSV or Excel files. Filters and sort order are applied to exports.
+
+**Q: How do I see my team's workload?**
+A: Filter by department and view assigned tasks. Use the Kanban board for visual overview. Managers have access to team workload reports.
+
+**Q: Where can I see task metrics?**
+A: The tasks dashboard shows key metrics including completion rates, average resolution time, tasks by status, and overdue tasks. Custom reports available to admins.
+
+### Best Practices
+
+**Q: How many tasks should I have active at once?**
+A: Limit to 3-5 active tasks per person to maintain focus. More than 10 active tasks indicates work needs to be prioritized or redistributed.
+
+**Q: When should I use high priority?**
+A: Reserve high priority for urgent, time-sensitive, or blocking tasks. If everything is high priority, nothing is. Aim for less than 20% high-priority tasks.
+
+**Q: How long should tasks remain open?**
+A: Most tasks should complete within 1-2 weeks. Tasks open longer than 30 days should be reviewed - may need to be broken down, deprioritized, or cancelled.
+
+**Q: Should I update task descriptions or comment?**
+A: Use comments for progress updates, questions, and discussions. Edit descriptions only to clarify requirements or correct errors. Comments preserve timeline better.
+
+## Conclusion
+
+The Tasks module is a powerful tool for organizing work, managing projects, and coordinating teams. By following the best practices outlined in this guide and leveraging features like time tracking, dependencies, and entity linking, your organization can improve productivity, transparency, and collaboration.
+
+**Key Takeaways:**
+
+1. **Clear ownership** - Always assign tasks with specific responsibility
+2. **Regular updates** - Keep status and progress current
+3. **Good communication** - Use comments and @mentions effectively
+4. **Realistic planning** - Set achievable deadlines and estimates
+5. **Consistent processes** - Use templates and workflows
+6. **Data-driven decisions** - Track time and metrics for improvement
+
+**Next Steps:**
+
+- Create your first task to familiarize yourself with the interface
+- Set up your "My Tasks" view with preferred filters
+- Explore the Kanban board for visual workflow management
+- Try time tracking on a few tasks to understand reporting
+- Ask your manager about team-specific task workflows
+
+For additional help or feature requests, contact your system administrator or IT support team.
+
+---
+
+**Last Updated:** November 2025
+**Version:** 1.0
+**Feedback:** Help us improve this documentation by sending suggestions to support@limnsystems.com
