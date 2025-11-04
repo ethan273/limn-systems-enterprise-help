@@ -1,34 +1,1612 @@
 # External Portals
 
-Self-service portals for customers, designers, factories, and QC teams.
+The External Portals module is a comprehensive self-service system that enables customers, designers, factories, and QC inspectors to access relevant data, track progress, manage documents, and collaborate with your team—all through secure, role-specific portal interfaces. Each portal type provides tailored functionality based on user roles while maintaining strict data isolation and granular module-level permissions.
+
+## Key Benefits
+
+1. **Self-Service Access**: External stakeholders can view orders, projects, documents, and quality reports without requiring admin assistance
+2. **Reduced Support Burden**: Customers and partners access information directly, reducing email inquiries and phone calls
+3. **Enhanced Collaboration**: Designers submit deliverables, factories update shipping status, and QC inspectors upload inspection photos—all in real-time
+4. **Data Security**: Strict data isolation ensures customers only see their own data, with module-level permissions controlling feature access
+5. **Streamlined Communication**: Centralized document sharing, order tracking, and status updates reduce miscommunication
+6. **Improved Transparency**: Real-time visibility into order status, shipment tracking, and quality metrics builds trust
+7. **Mobile-Responsive**: All portal pages work seamlessly on desktop, tablet, and mobile devices
 
 ## Overview
 
-The portal system provides secure, role-based access for external partners including customers, designers, factories, and QC teams. Each portal type has customized features and modules.
+The portal system provides **four distinct portal types**:
+
+- **Customer Portal**: For end customers to track orders, view invoices, manage documents, and monitor shipments
+- **Designer Portal**: For design partners to manage projects, submit deliverables, view quality reports, and access project documents
+- **Factory Portal**: For manufacturing partners to view production orders, update shipping information, track quality metrics, and manage documents
+- **QC Portal**: For quality control inspectors to conduct inspections, upload photos, view inspection history, and access quality reports
+
+Each portal enforces **module-level permissions**, allowing administrators to grant access to specific features within a portal type. For example, a customer might have access to "orders" and "documents" modules, but not "financials" or "shipping" modules.
 
 ## Portal Types
 
-- **Customer Portal** - Self-service for customers
-- **Designer Portal** - Collaboration portal for designers
-- **Factory Portal** - Production portal for manufacturers
-- **QC Portal** - Quality control inspection portal
+### Customer Portal
 
-## Key Features
+**Purpose**: Self-service portal for end customers to track their orders, manage payments, view documents, and monitor shipments.
 
-- Role-based portal access
-- Customizable module access
-- Document sharing
-- Order and project visibility
-- Quality reports and inspections
-- Secure authentication
-- Mobile-responsive design
+**Available Modules**:
+- `orders`: View order history, track status, and see order details
+- `documents`: Upload and download project-related documents
+- `financials`: View invoices, payment history, and make payments
+- `shipping`: Track shipments, view carriers, and monitor delivery status
+- `profile`: Manage customer profile and contact information
 
-## Portal Management
+**Key Features**:
 
-- **Portal Access** - Grant and manage portal access
-- **Portal Modules** - Configure available modules per user
-- **Invitations** - Send portal invitations to partners
+**Dashboard**:
+- Active orders count
+- Pending payments count
+- Recent shipments (last 30 days)
+- Available documents count
+- Quick action buttons for common tasks
 
-## Getting Started
+**Orders Management**:
+- View all orders with filtering by status
+- See order details including item name, quantity, pricing
+- Track order progress through production stages
+- Download order-related documents
+- View estimated delivery dates
 
-Learn how to grant portal access, configure modules, and enable partners to collaborate effectively.
+**Financial Management**:
+- View all invoices with payment status
+- Download invoices as PDFs
+- See payment history and outstanding balances
+- Track deposit and balance due amounts
+- Filter by payment status (paid, pending, overdue)
+
+**Document Center**:
+- Upload contracts, photos, and other project files
+- Download shared documents from admin team
+- Organize by document type (contracts, invoices, shop drawings, photos)
+- Search and filter documents
+- Link documents to specific projects
+
+**Shipping Tracker**:
+- View all shipments with tracking numbers
+- See carrier information and shipping dates
+- Monitor estimated delivery dates
+- Track shipment status
+- Filter by delivery status
+
+**Data Isolation**: Customers can ONLY access their own orders, invoices, documents, and shipments. The system enforces strict row-level security based on the `customer_id` linked to their portal access.
+
+---
+
+### Designer Portal
+
+**Purpose**: Portal for design partners to manage their assigned projects, submit deliverables, track quality feedback, and collaborate on design work.
+
+**Available Modules**:
+- `projects`: View assigned design projects and project details
+- `submissions`: Submit design deliverables (concepts, sketches, renders, final designs)
+- `documents`: Access project documents and design specifications
+- `quality`: View quality reports and feedback on submitted designs
+- `settings`: Manage designer profile and preferences
+
+**Key Features**:
+
+**Dashboard**:
+- Active projects count
+- Pending reviews count
+- Completed projects count
+- Quick access to recent projects
+
+**Project Management**:
+- View all assigned design projects
+- See project status (concept, sketching, rendering, revisions, approved)
+- Track project deadlines
+- View project descriptions and requirements
+- Access project-specific documents
+
+**Deliverable Submissions**:
+- Upload design files (concepts, sketches, renders, technical drawings)
+- Select deliverable type (concept, sketch, render, final_design, technical_drawing, other)
+- Add notes and descriptions to submissions
+- Track submission status (pending, approved, rejected)
+- View submission history with timestamps
+- Resubmit revisions when needed
+
+**Quality Reports**:
+- View quality feedback on submitted designs
+- See approval/rejection status
+- Track defects or issues identified
+- Access historical quality metrics
+
+**Document Access**:
+- Download project specifications
+- Access reference materials
+- View client requirements
+- Download approved designs
+
+**Data Isolation**: Designers can ONLY access projects assigned to their partner ID. The system enforces strict filtering based on the `partner_id` linked to their portal access.
+
+---
+
+### Factory Portal
+
+**Purpose**: Portal for manufacturing partners to view production orders, update shipping information, track quality metrics, and manage production-related documents.
+
+**Available Modules**:
+- `orders`: View assigned production orders and order details
+- `documents`: Access production documents and specifications
+- `quality`: View quality metrics and inspection results
+- `shipping`: Update shipping information and mark orders as shipped
+- `settings`: Manage factory profile and preferences
+
+**Key Features**:
+
+**Dashboard**:
+- Active orders count
+- Production orders pending shipment
+- Quality metrics overview
+- Recent shipments count
+
+**Production Orders**:
+- View all assigned production orders
+- See order status (pending, in_production, ready_to_ship, shipped)
+- Track order details (item name, quantity, pricing)
+- View production deadlines
+- Access order-specific documents
+
+**Shipping Management**:
+- Mark orders as "ready to ship"
+- Update tracking numbers
+- Enter carrier information (FedEx, UPS, DHL, USPS, Other)
+- Set shipping dates
+- Add shipping notes
+- Track shipment history
+
+**Quality Tracking**:
+- View quality inspection results
+- See defects identified per order
+- Track quality metrics over time
+- Access quality reports
+
+**Document Management**:
+- Download production specifications
+- Access technical drawings
+- View shop drawings
+- Upload progress photos
+
+**Data Isolation**: Factories can ONLY access production orders assigned to their partner ID. The system enforces strict filtering based on the `partner_id` linked to their portal access.
+
+---
+
+### QC Portal
+
+**Purpose**: Portal for quality control inspectors to conduct inspections, upload documentation photos, track inspection history, and manage quality reports.
+
+**Available Modules**:
+- `inspections`: Conduct quality inspections and view inspection details
+- `history`: View past inspection results and trends
+- `upload`: Upload inspection photos and documentation
+- `documents`: Access quality standards and inspection checklists
+- `settings`: Manage QC inspector profile
+
+**Key Features**:
+
+**Dashboard**:
+- Pending inspections count
+- Recent inspections (last 30 days)
+- Pass/fail rate statistics
+- Defects identified count
+
+**Inspection Management**:
+- View all assigned inspections
+- Conduct inspections with pass/fail status
+- Record defects found count
+- Add inspector notes
+- Link inspections to projects
+- Track inspection dates
+
+**Photo Upload System**:
+- Upload multiple photos per inspection
+- Link photos to specific projects
+- Add descriptions to photos
+- Organize by inspection type
+- Bulk upload capability
+- Preview uploaded photos
+
+**Inspection History**:
+- View historical inspection results
+- Filter by status (pending, passed, failed)
+- Search by project or inspector name
+- Track trends over time
+- Export inspection reports
+
+**Quality Documents**:
+- Access inspection checklists
+- Download quality standards
+- View project specifications
+- Access reference materials
+
+**Real-Time Updates**: The QC portal uses real-time subscriptions to automatically refresh inspection data when changes occur, ensuring inspectors always see the latest information.
+
+**Data Isolation**: QC inspectors can access inspections assigned to their partner ID. The system enforces strict filtering based on the `partner_id` linked to their portal access.
+
+## Portal Access Management
+
+### Granting Portal Access
+
+Portal access is managed through the **Admin Portal Access Management** interface at `/admin/portal-access`.
+
+**Process**:
+1. Admin approves a user request (via Approval Dashboard)
+2. During approval, admin selects:
+   - Portal type (customer, designer, factory, qc)
+   - Allowed modules (checkboxes for each module)
+   - Entity linkage (customer_id or partner_id)
+3. User receives magic link email
+4. User clicks magic link to establish session
+5. System creates `portal_access` record with granted permissions
+6. User can now access their portal with specified modules
+
+**Post-Approval Management**:
+Admins can modify portal access after initial approval:
+- **Update Modules**: Add or remove module permissions
+- **Revoke Access**: Deactivate portal access (soft delete)
+- **Reactivate Access**: Restore previously revoked access
+- **Delete Access**: Permanently remove access record (use with caution)
+- **View History**: See grant date, granted by, last accessed, revocation details
+
+### Module Permissions Configuration
+
+Each portal type has specific modules that can be enabled or disabled:
+
+**Customer Portal Modules**:
+- `orders`: Order tracking and history
+- `documents`: Document upload/download
+- `financials`: Invoice viewing and payments
+- `shipping`: Shipment tracking
+- `profile`: Profile management
+
+**Designer Portal Modules**:
+- `projects`: Project viewing and management
+- `submissions`: Deliverable submissions
+- `documents`: Document access
+- `quality`: Quality report viewing
+- `settings`: Profile settings
+
+**Factory Portal Modules**:
+- `orders`: Production order viewing
+- `quality`: Quality metrics viewing
+- `shipping`: Shipping updates
+- `documents`: Document access
+- `settings`: Profile settings
+
+**QC Portal Modules**:
+- `inspections`: Inspection management
+- `history`: Historical inspection data
+- `upload`: Photo upload capability
+- `documents`: Quality document access
+- `settings`: Profile settings
+
+**Configuration Best Practices**:
+- Grant only necessary modules based on user role
+- Start with minimal permissions and expand as needed
+- Review module access quarterly
+- Document reasons for granting specific modules
+- Use consistent module configurations for similar user types
+
+### Portal Invitations
+
+Portal access is initiated through the **user approval workflow**:
+
+1. **User Request**: External user submits access request via public form
+2. **Admin Review**: Admin reviews request in Approval Dashboard (`/admin/approvals`)
+3. **Configuration**: Admin selects portal type and modules during approval
+4. **Magic Link**: System sends magic link email to user's email address
+5. **Account Creation**: User clicks link, creates password, establishes session
+6. **Portal Access Created**: System creates `portal_access` record with permissions
+7. **Login**: User can subsequently log in at `/portal/login`
+
+**Magic Link Security**:
+- Single-use tokens (expire after first use)
+- Time-limited (expire after 24 hours)
+- Cryptographically secure random tokens
+- Tracked in database for audit purposes
+
+### Access Activation and Deactivation
+
+**Activation**:
+- Portal access is automatically activated when user clicks magic link
+- `is_active` field set to `true`
+- `granted_at` timestamp recorded
+- `granted_by` field tracks approving admin
+- `last_accessed_at` updated on first login
+
+**Deactivation (Revocation)**:
+- Admin clicks "Revoke Access" in Portal Access Management
+- `is_active` field set to `false`
+- `revoked_at` timestamp recorded
+- `revoked_by` field tracks revoking admin
+- User immediately loses portal access
+- Optionally record revocation reason in metadata
+
+**Reactivation**:
+- Admin clicks "Reactivate Access" in Portal Access Management
+- `is_active` field set back to `true`
+- `revoked_at` and `revoked_by` cleared
+- User regains portal access immediately
+- No need to send new magic link
+
+**Soft Delete vs Hard Delete**:
+- **Revoke** (Soft Delete): Recommended - preserves audit trail, can be reversed
+- **Delete** (Hard Delete): Permanent - removes all records, cannot be undone, requires confirmation
+
+### Multi-Portal Access
+
+Users can have access to **multiple portal types** simultaneously. For example:
+- A designer partner who also provides QC services can have both `designer` and `qc` portal access
+- A customer who also manufactures certain components can have both `customer` and `factory` portal access
+
+**Implementation**:
+- Each portal access is stored as a separate `portal_access` record
+- User sees all granted portals on login page
+- Navigation shows all accessible portals
+- Middleware enforces permissions per portal type
+- Each portal maintains separate module permissions
+
+**Management**:
+- Add additional portal access via "Add Portal Access" button
+- Each portal access managed independently
+- Can revoke one portal while keeping others active
+- Module permissions configured separately per portal type
+
+## Authentication & Security
+
+### Magic Link Authentication
+
+**How It Works**:
+1. User clicks magic link from email
+2. System validates token (not expired, not used, matches user)
+3. User creates password (first time) or logs in (subsequent times)
+4. Session established with Supabase Auth
+5. Portal access record created/updated
+6. User redirected to appropriate portal dashboard
+
+**Security Features**:
+- Tokens are cryptographically secure (generated with `crypto.randomBytes`)
+- Single-use tokens (marked as used after first click)
+- Time-limited expiration (24 hours)
+- HTTPS-only transmission
+- Secure session cookies (httpOnly, sameSite)
+
+### Session Management
+
+**Session Lifecycle**:
+1. User logs in at `/portal/login`
+2. Supabase Auth creates session (JWT tokens)
+3. Session stored in httpOnly cookies
+4. Middleware validates session on every request
+5. Session refreshed automatically before expiration
+6. User logs out → session destroyed
+
+**Session Security**:
+- JWT tokens signed with secret key
+- httpOnly cookies prevent XSS attacks
+- sameSite cookies prevent CSRF attacks
+- Automatic token refresh (no re-login needed)
+- Session timeout after inactivity (configurable)
+
+**Session Tracking**:
+- `last_accessed_at` field updated on portal access
+- Activity logs track user actions (optional)
+- Failed login attempts tracked (for security monitoring)
+
+### Data Isolation
+
+**Customer Portal Isolation**:
+```typescript
+// Customers can ONLY access their own data
+const enforcePortalAccess = async (ctx: Context) => {
+  const portalAccess = await ctx.db.portal_access.findUnique({
+    where: { user_id: ctx.session.user.id, is_active: true }
+  });
+  return { customerId: portalAccess.customer_id };
+};
+
+// All queries filtered by customerId
+const orders = await ctx.db.orders.findMany({
+  where: { customer_id: customerId } // Enforced
+});
+```
+
+**Designer/Factory/QC Portal Isolation**:
+```typescript
+// Partners can ONLY access their assigned projects/orders
+const enforcePortalAccessByType = async (ctx: Context, requiredType: string) => {
+  const portalAccess = await ctx.db.portal_access.findUnique({
+    where: { user_id: ctx.session.user.id, portal_type: requiredType }
+  });
+  return { partnerId: portalAccess.partner_id };
+};
+
+// All queries filtered by partnerId
+const projects = await ctx.db.projects.findMany({
+  where: { designer_id: partnerId } // Enforced
+});
+```
+
+**Database Row-Level Security (RLS)**:
+- RLS policies on `portal_access` table prevent users from seeing other users' access
+- RLS policies on entity tables (orders, projects, documents) enforce data isolation
+- Even if client-side code is modified, database prevents unauthorized access
+
+### Module-Level Permissions
+
+**Middleware Enforcement**:
+The Next.js middleware (`src/middleware.ts`) enforces module permissions at the route level:
+
+```typescript
+// Example: /portal/customer/orders
+// Step 1: Verify user has 'customer' portal access
+// Step 2: Verify 'orders' is in allowed_modules array
+// Step 3: Allow request OR redirect to portal home with error
+
+if (!allowedModules.includes('orders')) {
+  redirect(`/portal/customer?error=unauthorized_module&module=orders`);
+}
+```
+
+**Two-Level Security**:
+1. **Route-level**: Middleware blocks unauthorized routes before page loads
+2. **API-level**: tRPC procedures validate permissions before executing queries
+
+**Permission Checks**:
+- Performed on EVERY request (no caching of permissions)
+- Based on live `portal_access` table data
+- Revoked access takes effect immediately (no session refresh needed)
+- Module permissions cannot be bypassed client-side
+
+### Activity Logging and Audit Trail
+
+**What Gets Logged**:
+- Portal access granted (who, when, by whom)
+- Portal access revoked (who, when, by whom, reason)
+- Module permissions updated (what changed, when, by whom)
+- User login events (timestamp, IP address)
+- Failed login attempts (for security monitoring)
+
+**Audit Fields**:
+- `granted_by`: Admin user ID who granted access
+- `granted_at`: Timestamp when access was granted
+- `revoked_by`: Admin user ID who revoked access
+- `revoked_at`: Timestamp when access was revoked
+- `last_accessed_at`: Last time user accessed portal
+- `metadata`: JSON field for additional context (revocation reasons, notes)
+
+**Compliance**:
+- Audit trail supports compliance requirements (SOC 2, ISO 27001)
+- Immutable logs (no editing of historical records)
+- Admin actions are always attributed (no anonymous changes)
+- Timestamps use UTC for consistency
+
+## Module Features
+
+### Documents: Upload, Download, Sharing
+
+**Upload Capabilities**:
+- Supported file types: PDF, DOC, DOCX, JPG, PNG, GIF
+- Maximum file size: 10MB per file
+- Drag-and-drop interface (desktop)
+- File type auto-detection based on extension
+- Optional project linking
+- Optional description field
+- Multiple file upload (one at a time)
+
+**Document Types**:
+- `contract`: Purchase orders, agreements, contracts
+- `invoice`: Billing documents, invoices
+- `shop_drawing`: Technical drawings, CAD files, specifications
+- `photo`: Product images, reference photos, progress photos
+- `other`: Miscellaneous project files
+
+**Storage**:
+- Supabase Storage bucket: `documents`
+- File path: `customer-documents/{timestamp}-{filename}`
+- Automatic deduplication (timestamp prevents collisions)
+- Secure signed URLs for downloads (expire after 1 hour)
+- No direct public access (authentication required)
+
+**Download Process**:
+1. User clicks download button
+2. System generates signed URL from Supabase Storage
+3. Signed URL valid for 1 hour
+4. File opens in new tab or downloads automatically
+5. URL expires after use
+
+**Sharing Between Admin and Portal Users**:
+- Admins upload documents via main application
+- Documents linked to customer_id or partner_id
+- Portal users see only their own documents
+- Real-time updates (new documents appear immediately)
+
+**Search and Filter**:
+- Search by document name, type, or description
+- Filter by document type (contracts, invoices, etc.)
+- Sort by upload date, file size, name
+- Group by document type for easier browsing
+
+### Orders: View Orders, Track Status, Download Invoices
+
+**Customer Portal Order Features**:
+- **Order List**: View all orders with status badges
+- **Order Details**: Click order to see full details (item name, quantity, pricing, notes)
+- **Status Tracking**: Visual status badges (pending, in_production, ready_to_ship, shipped, delivered)
+- **Timeline**: Ordered date and estimated delivery date
+- **Invoice Download**: Download invoices as PDFs (when available)
+- **Filtering**: Filter by status (all, pending, in_production, shipped, delivered)
+- **Search**: Search by order number or item name
+
+**Factory Portal Order Features**:
+- **Production Orders**: View assigned production orders
+- **Order Status**: Track production progress
+- **Shipping Updates**: Mark orders as "ready to ship" or "shipped"
+- **Quality Metrics**: View quality inspection results per order
+- **Document Access**: Download production specs and technical drawings
+
+**Order Status Flow**:
+1. `pending`: Order received, awaiting deposit
+2. `pending_deposit`: Awaiting customer deposit payment
+3. `in_production`: Manufacturing in progress
+4. `ready_to_ship`: Production complete, ready for shipment
+5. `shipped`: Order shipped to customer
+6. `delivered`: Order delivered to customer
+
+**Real-Time Updates**:
+- Order status changes reflect immediately
+- No page refresh needed (React Query cache invalidation)
+- Notifications for status changes (optional)
+
+### Quality: Submit Reports, Upload Photos, View Metrics
+
+**Designer Portal Quality Features**:
+- **Submission Feedback**: View approval/rejection status on submitted deliverables
+- **Quality Reports**: See detailed feedback on designs
+- **Defect Tracking**: View issues identified in designs
+- **Historical Metrics**: Track quality trends over time
+
+**Factory Portal Quality Features**:
+- **Inspection Results**: View QC inspection results per order
+- **Defects Summary**: See defects identified during inspections
+- **Pass/Fail Rates**: Track quality metrics over time
+- **Improvement Trends**: Monitor quality improvements
+
+**QC Portal Quality Features**:
+- **Conduct Inspections**: Record pass/fail status
+- **Defect Counting**: Enter number of defects found
+- **Inspector Notes**: Add detailed notes per inspection
+- **Photo Upload**: Upload inspection photos (multiple per inspection)
+- **Photo Organization**: Link photos to specific inspections
+- **Bulk Upload**: Upload multiple photos at once
+- **Photo Descriptions**: Add captions to photos
+
+**Photo Upload Process** (QC Portal):
+1. Navigate to `/portal/qc/upload`
+2. Select project from dropdown
+3. Choose multiple files (JPG, PNG, GIF)
+4. Add optional descriptions
+5. Click "Upload Photos"
+6. Files uploaded to `qc-inspection-photos/{timestamp}-{filename}`
+7. Photos linked to selected project
+8. Real-time preview before upload
+
+**Quality Metrics Dashboard**:
+- Total inspections conducted
+- Pass/fail rate percentage
+- Average defects per inspection
+- Trend charts (optional)
+- Filter by date range
+
+### Shipping: Track Shipments, View Carriers, Delivery Confirmation
+
+**Customer Portal Shipping Features**:
+- **Shipment List**: View all shipments with tracking numbers
+- **Carrier Information**: See carrier (FedEx, UPS, DHL, USPS, Other)
+- **Tracking Numbers**: Copy tracking numbers for carrier website lookup
+- **Shipping Dates**: See when order was shipped
+- **Estimated Delivery**: View estimated delivery dates
+- **Status Tracking**: Monitor shipment status (in_transit, delivered)
+- **Filtering**: Filter by delivery status
+
+**Factory Portal Shipping Features**:
+- **Mark as Shipped**: Update order status to "shipped"
+- **Enter Tracking**: Add tracking number via dialog form
+- **Select Carrier**: Choose from carrier dropdown
+- **Shipping Date**: Set shipping date (defaults to today)
+- **Shipping Notes**: Add optional notes (handling instructions, package details)
+- **Bulk Update**: Mark multiple orders as shipped (future enhancement)
+
+**Shipping Update Workflow** (Factory Portal):
+1. Navigate to `/portal/factory/shipping`
+2. Find order with status "ready_to_ship"
+3. Click "Mark as Shipped"
+4. Dialog opens with form
+5. Enter tracking number (required)
+6. Select carrier from dropdown
+7. Set shipping date (defaults to today)
+8. Add optional notes
+9. Click "Submit"
+10. Order status updated to "shipped"
+11. Customer sees shipment in their portal immediately
+
+**Carrier Options**:
+- FedEx
+- UPS
+- DHL
+- USPS
+- Other (with text field for custom carrier)
+
+**Real-Time Synchronization**:
+- Factory updates shipping → customer sees update immediately
+- No email notifications needed (info available in portal)
+- Reduces "Where is my order?" support inquiries
+
+### Projects: View Project Details, Submit Deliverables (Designer)
+
+**Designer Portal Project Features**:
+- **Project List**: View all assigned design projects
+- **Project Status**: Track status (concept, sketching, rendering, revisions, approved)
+- **Project Details**: See project name, description, requirements
+- **Deadline Tracking**: View project deadlines
+- **Document Access**: Download project specifications and reference materials
+
+**Deliverable Submission Workflow**:
+1. Navigate to `/portal/designer/submissions`
+2. Click "Submit Deliverable"
+3. Select project from dropdown
+4. Choose deliverable type (concept, sketch, render, final_design, technical_drawing, other)
+5. Upload file (PDF, AI, PSD, JPG, PNG, etc.)
+6. Add optional notes
+7. Click "Submit"
+8. File uploaded to `design-deliverables/{timestamp}-{filename}`
+9. Submission record created with status "pending"
+10. Admin reviews submission
+11. Designer sees approval/rejection status
+
+**Deliverable Types**:
+- `concept`: Initial concept designs
+- `sketch`: Hand sketches or rough drafts
+- `render`: 3D renders or visualizations
+- `final_design`: Final approved design files
+- `technical_drawing`: CAD files, technical specifications
+- `other`: Miscellaneous design files
+
+**Submission Status**:
+- `pending`: Awaiting admin review
+- `approved`: Design approved by admin
+- `rejected`: Design rejected, needs revision
+
+**Version History**:
+- All submissions tracked with timestamps
+- Resubmit revisions (creates new submission record)
+- View submission history per project
+- Track approval/rejection feedback
+
+### Inspections: Conduct QC Checks, Photo Documentation (QC)
+
+**Inspection Workflow**:
+1. Navigate to `/portal/qc/inspections`
+2. Click on assigned inspection
+3. View inspection details (project, order, previous notes)
+4. Conduct physical inspection
+5. Update inspection record:
+   - Pass/Fail status
+   - Defects found count
+   - Inspector notes
+6. Upload photos (via `/portal/qc/upload`)
+7. Link photos to inspection
+8. Save inspection
+9. Admin and factory see results immediately
+
+**Inspection Details Page** (`/portal/qc/inspections/[id]`):
+- Project information
+- Order details
+- Previous inspection history
+- Current inspection status
+- Defects summary
+- Inspector notes
+- Uploaded photos (gallery view)
+- Timestamp trail (when conducted, by whom)
+
+**Photo Upload Integration**:
+- Upload photos during or after inspection
+- Link photos to inspection ID
+- Multiple photos per inspection
+- Photo captions/descriptions
+- Gallery view with thumbnails
+- Full-size preview on click
+
+**Real-Time Updates**:
+- Inspection results appear immediately in factory portal
+- Admin dashboard shows latest inspection status
+- No delay between QC update and factory visibility
+
+## Common Workflows
+
+### Workflow 1: Customer Accessing Order and Downloading Invoice
+
+**Scenario**: Customer wants to check order status and download invoice for accounting department.
+
+**Steps**:
+1. Customer logs in at `/portal/login`
+2. Redirected to `/portal/customer` (dashboard)
+3. Dashboard shows "5 Active Orders"
+4. Customer clicks "View All" button in Recent Orders card
+5. Navigated to `/portal/customer/orders`
+6. Order list displays all orders with status badges
+7. Customer finds order #12345 with status "Shipped"
+8. Customer clicks on order row
+9. Navigated to `/portal/customer/orders/12345`
+10. Order details page shows:
+    - Order number, item name, quantity
+    - Status: Shipped
+    - Total cost: $5,250.00
+    - Shipping info with tracking number
+11. Customer clicks "Download Invoice" button
+12. PDF invoice opens in new tab
+13. Customer saves invoice for accounting
+
+**Benefits**:
+- No need to email admin for invoice
+- Real-time order status visibility
+- Self-service reduces support burden
+- Customer can access 24/7
+
+---
+
+### Workflow 2: Designer Submitting Project Deliverables
+
+**Scenario**: Designer completes concept designs and needs to submit for client approval.
+
+**Steps**:
+1. Designer logs in at `/portal/login`
+2. Redirected to `/portal/designer` (dashboard)
+3. Dashboard shows "3 Active Projects"
+4. Designer clicks "Projects" in navigation
+5. Navigated to `/portal/designer/projects`
+6. Designer finds "Hotel Lobby Redesign" project
+7. Designer clicks on project row
+8. Project details page shows requirements and deadline
+9. Designer clicks "Submit Deliverable" button (or navigates to `/portal/designer/submissions`)
+10. Upload dialog opens
+11. Designer selects "Hotel Lobby Redesign" from project dropdown
+12. Designer selects "Concept" as deliverable type
+13. Designer uploads `lobby-concept-v1.pdf` (5MB file)
+14. Designer adds notes: "Initial concept with three color scheme options"
+15. Designer clicks "Submit"
+16. File uploads to Supabase Storage
+17. Submission record created with status "Pending"
+18. Success message appears
+19. Designer sees submission in submissions list with "Pending" badge
+20. Admin receives notification (optional)
+21. Admin reviews and approves
+22. Designer sees "Approved" status next time they check
+
+**Benefits**:
+- Streamlined deliverable submission
+- No email attachments (files too large)
+- Version history tracking
+- Clear approval status
+- Reduces back-and-forth emails
+
+---
+
+### Workflow 3: Factory Marking Order as Shipped
+
+**Scenario**: Factory completes production and ships order to customer. Factory needs to update shipping information.
+
+**Steps**:
+1. Factory user logs in at `/portal/login`
+2. Redirected to `/portal/factory` (dashboard)
+3. Dashboard shows "12 Orders Ready to Ship"
+4. Factory user clicks "Shipping" in navigation
+5. Navigated to `/portal/factory/shipping`
+6. Shipping page shows orders with status "Ready to Ship"
+7. Factory user finds Order #12345 for "Custom Chair - 50 units"
+8. Factory user clicks "Mark as Shipped" button
+9. Shipping dialog opens with form fields:
+    - Tracking Number (required)
+    - Carrier (dropdown)
+    - Shipping Date (date picker, defaults to today)
+    - Notes (optional)
+10. Factory user enters:
+    - Tracking: 1Z9999999999999999
+    - Carrier: UPS
+    - Date: 2025-11-03
+    - Notes: "Fragile - Handle with care. 5 boxes total."
+11. Factory user clicks "Submit"
+12. System updates order status to "Shipped"
+13. System saves shipping information
+14. Success message: "Shipping information updated successfully"
+15. Order moves from "Ready to Ship" to "Shipped" section
+16. Customer sees shipment in their portal immediately
+17. Customer can copy tracking number and track on UPS website
+
+**Benefits**:
+- Real-time shipment visibility for customers
+- Reduces "Where's my order?" inquiries
+- Centralized shipping records
+- No need to send separate shipping notifications
+
+---
+
+### Workflow 4: QC Inspector Conducting Inspection with Photo Uploads
+
+**Scenario**: QC inspector conducts on-site quality inspection of finished products and needs to document findings with photos.
+
+**Steps**:
+1. QC inspector logs in at `/portal/login` (on tablet at factory site)
+2. Redirected to `/portal/qc` (dashboard)
+3. Dashboard shows "5 Pending Inspections"
+4. QC inspector clicks "Inspections" in navigation
+5. Navigated to `/portal/qc/inspections`
+6. QC inspector finds inspection for "Custom Chair - Batch #5"
+7. QC inspector clicks on inspection row
+8. Navigated to `/portal/qc/inspections/[id]`
+9. Inspection details page shows project info and previous notes
+10. QC inspector conducts physical inspection (off-system)
+11. QC inspector takes 15 photos with tablet camera
+12. QC inspector updates inspection:
+    - Pass/Fail: Failed
+    - Defects Found: 3
+    - Notes: "Found 3 chairs with uneven staining on armrests. Photos uploaded for reference."
+13. QC inspector clicks "Save Inspection"
+14. QC inspector navigates to `/portal/qc/upload`
+15. QC inspector selects "Custom Chair - Batch #5" from project dropdown
+16. QC inspector clicks "Upload Photos"
+17. QC inspector selects 15 photos from tablet
+18. QC inspector adds descriptions:
+    - Photo 1: "Close-up of staining defect on armrest #1"
+    - Photo 2: "Overview of defective chair #2"
+    - (continues for all 15 photos)
+19. QC inspector clicks "Upload All"
+20. Photos upload to `qc-inspection-photos/` bucket
+21. Photos linked to inspection
+22. Success message: "15 photos uploaded successfully"
+23. Factory portal shows updated inspection status immediately
+24. Admin dashboard shows inspection failure with photo documentation
+
+**Benefits**:
+- Mobile-friendly inspection workflow
+- Photo documentation reduces miscommunication
+- Real-time visibility for factory and admin
+- Historical photo archive for quality trends
+- Reduces need for physical site visits by admin
+
+---
+
+### Workflow 5: Admin Granting New Portal Access with Module Configuration
+
+**Scenario**: Admin approves a new customer's access request and configures specific module permissions.
+
+**Steps**:
+1. Customer submits access request via public form at `/request-access`
+2. Admin logs in to main application
+3. Admin navigates to `/admin/approvals` (Approval Dashboard)
+4. Admin sees new pending request from "john@acmecorp.com"
+5. Admin reviews request details:
+   - Name: John Smith
+   - Email: john@acmecorp.com
+   - Company: Acme Corporation
+   - Request Type: Customer Portal Access
+6. Admin clicks "Approve" button
+7. Approval dialog opens with configuration options:
+   - Portal Type: (dropdown) - Admin selects "Customer"
+   - Allowed Modules: (checkboxes)
+     - ☑ Orders
+     - ☑ Documents
+     - ☐ Financials (unchecked - customer doesn't need payment access yet)
+     - ☑ Shipping
+     - ☑ Profile
+8. Admin clicks "Approve & Send Invite"
+9. System:
+   - Creates user record in `users` table
+   - Stores portal configuration in `pending_user_requests.portal_type` and `portal_modules`
+   - Generates magic link token
+   - Sends email to john@acmecorp.com with magic link
+10. Email contains:
+    - Subject: "Your Limn Portal Access Has Been Approved"
+    - Body: "Click here to set up your account: https://app.limn.us.com/auth/magic-link?token=..."
+11. John clicks magic link
+12. Navigated to `/auth/magic-link?token=...`
+13. System validates token
+14. John sees password setup form
+15. John enters password
+16. System:
+    - Creates Supabase Auth user
+    - Creates `portal_access` record with:
+      - `user_id`: John's user ID
+      - `portal_type`: 'customer'
+      - `allowed_modules`: ['orders', 'documents', 'shipping', 'profile']
+      - `customer_id`: Acme Corporation's customer ID
+      - `is_active`: true
+      - `granted_by`: Admin's user ID
+      - `granted_at`: 2025-11-03 10:30:00
+17. John redirected to `/portal/customer` (dashboard)
+18. John sees only allowed modules in navigation:
+    - ✅ Orders
+    - ✅ Documents
+    - ❌ Financials (hidden - not in allowed_modules)
+    - ✅ Shipping
+    - ✅ Profile
+
+**Post-Approval Management**:
+1. Admin navigates to `/admin/portal-access`
+2. Admin finds John's access record
+3. Admin decides to add "Financials" module
+4. Admin clicks "Edit Modules"
+5. Admin checks "Financials" checkbox
+6. Admin clicks "Save"
+7. John's `allowed_modules` updated to `['orders', 'documents', 'financials', 'shipping', 'profile']`
+8. Next time John logs in, "Financials" appears in navigation
+
+**Benefits**:
+- Granular control over feature access
+- Easy to add/remove modules without recreating access
+- Audit trail of permission changes
+- Users only see features relevant to them
+- Reduces confusion and support burden
+
+## Best Practices
+
+### Portal Access Management
+
+1. **Principle of Least Privilege**: Grant only the modules absolutely necessary for the user's role. You can always add more later.
+2. **Use Templates**: Create standard module configurations for common roles (e.g., "Standard Customer" = orders + documents + shipping).
+3. **Review Quarterly**: Audit portal access quarterly to remove unused accounts and update permissions.
+4. **Document Reasons**: Use the `metadata` field to document why specific modules were granted or revoked.
+5. **Revoke, Don't Delete**: Use "Revoke" (soft delete) instead of "Delete" to preserve audit trail. Only use "Delete" for spam/test accounts.
+6. **Monitor Last Access**: Check `last_accessed_at` field to identify inactive accounts for cleanup.
+7. **Use Consistent Naming**: Name customers/partners consistently to make access management easier.
+8. **Link Correctly**: Always link customer portal access to `customer_id` and partner portal access to `partner_id`.
+9. **Test Before Granting**: Test new module configurations with a test account before granting to real users.
+10. **Notify Users**: Send email notification when modules are added or access is revoked (courtesy, not automated).
+
+### Security Best Practices
+
+11. **Never Share Passwords**: Each user must have their own account. Never share credentials between users.
+12. **Enforce Strong Passwords**: Require minimum 8 characters, mixed case, numbers, and symbols (enforced by Supabase Auth).
+13. **Monitor Failed Logins**: Check for repeated failed login attempts (may indicate brute force attack).
+14. **Use HTTPS Only**: Portal MUST be accessed via HTTPS in production (enforced by Vercel).
+15. **Rotate Secrets**: Rotate Supabase service keys and JWT secrets annually.
+16. **Enable 2FA for Admins**: Admins who manage portal access should use 2FA (Supabase Auth supports TOTP).
+17. **Audit Regularly**: Review `portal_access` table monthly for unexpected changes.
+18. **No Shared Entities**: Each customer/partner should have their own entity record (no sharing customer_id between companies).
+19. **Validate Email Domains**: For factory/designer portals, verify email domain matches company domain before approval.
+20. **IP Whitelisting** (Optional): For high-security clients, restrict portal access to specific IP ranges (requires custom middleware).
+
+### Module Configuration Guidelines
+
+21. **Customer Portal Defaults**: Most customers need `orders`, `documents`, and `shipping`. Add `financials` only if they handle payments. Add `profile` for self-service info updates.
+22. **Designer Portal Defaults**: All designers need `projects` and `submissions`. Add `documents` for reference materials. Add `quality` to see feedback.
+23. **Factory Portal Defaults**: All factories need `orders` and `shipping`. Add `quality` if they track metrics. Add `documents` for specifications.
+24. **QC Portal Defaults**: All QC inspectors need `inspections` and `upload`. Add `history` for trend analysis. Add `documents` for checklists.
+25. **Progressive Disclosure**: Start with minimal modules and add based on user requests. Don't overwhelm with too many options.
+26. **Role-Based Configs**: Create standard configurations per role (e.g., "Basic Customer", "Premium Customer", "Designer Partner").
+27. **Module Dependencies**: Some modules depend on others (e.g., `financials` requires `orders` to see invoice links). Document dependencies.
+28. **Test Module Combinations**: Test that all module combinations work correctly before granting to users.
+
+### Document Organization Tips
+
+29. **Naming Conventions**: Encourage consistent file naming (e.g., `OrderNumber_DocumentType_Date.pdf`).
+30. **File Size Limits**: Enforce 10MB limit to prevent storage bloat. Encourage compression for large images.
+31. **Document Types**: Train users to select correct document type (contract, invoice, photo, etc.) for easier filtering.
+32. **Project Linking**: Always link documents to projects when applicable for better organization.
+33. **Descriptions**: Encourage users to add descriptions to documents for easier searching.
+34. **Retention Policy**: Define document retention policy (e.g., keep for 7 years) and communicate to users.
+35. **Backup Documents**: Ensure Supabase Storage has automated backups enabled.
+
+## Troubleshooting
+
+### Portal Access Issues
+
+**Problem**: User cannot see portal type after logging in.
+
+**Solution**:
+1. Verify `portal_access` record exists for user: `SELECT * FROM portal_access WHERE user_id = 'USER_ID' AND is_active = true;`
+2. Check `portal_type` is set correctly ('customer', 'designer', 'factory', or 'qc')
+3. Verify `is_active = true` and `revoked_at IS NULL`
+4. If record missing, re-approve user via Approval Dashboard
+5. If record exists but still not working, check middleware logs for security blocks
+
+**Problem**: User sees "You do not have access to this portal type" error.
+
+**Solution**:
+1. User is trying to access wrong portal type (e.g., customer trying to access factory portal)
+2. Check `portal_access.portal_type` matches URL (e.g., `/portal/customer` requires `portal_type = 'customer'`)
+3. If multi-portal user, ensure they selected correct portal on login page
+4. If record missing, grant access via `/admin/portal-access`
+
+**Problem**: User was revoked but can still access portal.
+
+**Solution**:
+1. Check `portal_access.is_active` field (should be `false`)
+2. Check `portal_access.revoked_at` field (should be set)
+3. If fields correct but user still has access, user may be using old session
+4. Force logout: User must log out and back in for revocation to take effect
+5. Alternatively, delete session from `auth.sessions` table (last resort)
+
+---
+
+### Login Problems
+
+**Problem**: User clicks magic link and sees "Invalid or expired token" error.
+
+**Solution**:
+1. Check if token was already used: `SELECT * FROM pending_user_requests WHERE magic_link_token = 'TOKEN' AND magic_link_used = true;`
+2. Check if token expired: `SELECT * FROM pending_user_requests WHERE magic_link_token = 'TOKEN' AND magic_link_expires_at < NOW();`
+3. If expired or used, admin must re-approve user to send new magic link
+4. If neither, check if token exists at all (may indicate email delivery issue)
+
+**Problem**: User enters correct password but login fails.
+
+**Solution**:
+1. Check Supabase Auth user exists: Query `auth.users` table for user email
+2. Verify email is confirmed: `email_confirmed_at` should be set
+3. Check for too many failed attempts: May be rate-limited by Supabase Auth (wait 1 hour)
+4. Verify password meets requirements (min 8 chars, mixed case, numbers)
+5. Try password reset via "Forgot Password" link
+
+**Problem**: User logs in successfully but immediately redirected back to login page.
+
+**Solution**:
+1. Check session cookie is being set (inspect browser cookies for `sb-access-token`)
+2. Verify domain matches cookie domain (e.g., localhost vs 127.0.0.1 mismatch)
+3. Check browser allows cookies (may be blocked by privacy settings)
+4. Check Supabase JWT secret is configured correctly in environment variables
+5. Check middleware is not blocking authenticated requests (review middleware logs)
+
+---
+
+### Document Upload Failures
+
+**Problem**: Document upload fails with "Storage error" message.
+
+**Solution**:
+1. Check Supabase Storage bucket exists: `documents` bucket must exist
+2. Verify bucket permissions: Bucket must allow authenticated uploads
+3. Check file size: Must be under 10MB limit
+4. Check file type: Only PDF, DOC, DOCX, JPG, PNG, GIF allowed
+5. Verify user has `documents` module permission
+6. Check Supabase Storage quota (may be full)
+
+**Problem**: Document uploads but user sees "Document not found" when trying to download.
+
+**Solution**:
+1. Check file actually uploaded: Query Supabase Storage for file path
+2. Verify `documents` table record created: `SELECT * FROM documents WHERE id = 'DOC_ID';`
+3. Check `file_url` or `storage_path` is set correctly
+4. Verify signed URL generation is working (may be expired)
+5. Check user has permission to view document (data isolation may block)
+
+**Problem**: Document upload hangs or times out.
+
+**Solution**:
+1. Check internet connection (slow upload speed)
+2. Reduce file size (compress images, optimize PDFs)
+3. Try different browser (may be browser-specific issue)
+4. Check Supabase Storage status (may be experiencing outage)
+5. Check Vercel function timeout (default 10 seconds, may need increase for large files)
+
+---
+
+### Module Visibility Issues
+
+**Problem**: User cannot see module they should have access to.
+
+**Solution**:
+1. Check `portal_access.allowed_modules` array: `SELECT allowed_modules FROM portal_access WHERE user_id = 'USER_ID';`
+2. Verify module name matches exactly (case-sensitive: 'orders' not 'Orders')
+3. Check array syntax is correct (PostgreSQL array: `{orders,documents,shipping}`)
+4. If module missing, admin must update via `/admin/portal-access` → "Edit Modules"
+5. User must log out and back in to see updated modules (or invalidate React Query cache)
+
+**Problem**: User sees module in navigation but gets error when clicking.
+
+**Solution**:
+1. Module may be in `allowed_modules` but middleware block may be inconsistent
+2. Check middleware logs for "SECURITY BLOCK" messages
+3. Verify route matches module name (e.g., `/portal/customer/orders` → `orders` module)
+4. Check for typos in route or module name
+5. Review middleware code at `src/middleware.ts:508-577` for logic errors
+
+**Problem**: Admin updated modules but user still sees old navigation.
+
+**Solution**:
+1. User must refresh page or log out and back in
+2. React Query cache may be stale (invalidate with browser refresh)
+3. Check that `updated_at` field was updated in `portal_access` table
+4. Verify admin saved changes (may have cancelled accidentally)
+5. Check browser cache (hard refresh with Ctrl+Shift+R)
+
+---
+
+### Permission Errors
+
+**Problem**: User sees "You do not have permission to access this module" error.
+
+**Solution**:
+1. Module not in `allowed_modules` array
+2. Admin must grant module via `/admin/portal-access` → "Edit Modules"
+3. User must log out and back in to refresh permissions
+4. Check middleware logs for exact module name being blocked
+
+**Problem**: Customer sees other customers' orders/documents.
+
+**Solution**:
+1. **CRITICAL SECURITY ISSUE** - Immediately investigate
+2. Check `portal_access.customer_id` is set correctly
+3. Verify tRPC procedures filter by `customerId` in WHERE clause
+4. Check for SQL injection vulnerabilities in custom queries
+5. Review all queries in `src/server/api/routers/portal.ts` for missing filters
+6. Enable RLS policies on all customer-related tables
+7. Contact support immediately if data leak confirmed
+
+**Problem**: Designer sees projects not assigned to them.
+
+**Solution**:
+1. **SECURITY ISSUE** - Investigate immediately
+2. Check `portal_access.partner_id` is set correctly
+3. Verify tRPC procedures filter by `partnerId` in WHERE clause
+4. Check project assignment: `SELECT * FROM projects WHERE designer_id = 'PARTNER_ID';`
+5. Review queries for missing `WHERE designer_id = partnerId` filters
+
+## Tips & Tricks
+
+### Efficient Portal Management
+
+1. **Bulk Approval**: When approving multiple users for same role, create a module template (e.g., "Standard Customer") and reuse configuration.
+2. **Keyboard Shortcuts**: Use browser search (Ctrl+F) to quickly find users in Portal Access Management table.
+3. **Quick Filters**: Use status filters ("Active Only", "Revoked Only") to focus on relevant records.
+4. **Export Data**: Use browser dev tools to export `portal_access` table data for auditing (run query in Supabase SQL editor).
+5. **Monitor Last Access**: Sort by `last_accessed_at` to identify inactive accounts for cleanup.
+6. **Use Metadata**: Store approval notes in `metadata` field for future reference (e.g., `{"approved_by": "Sales Team", "reason": "Premium customer"}`).
+7. **Batch Revocations**: When offboarding partners, filter by `partner_id` and revoke all users at once.
+8. **Test Accounts**: Create test accounts for each portal type to verify functionality before granting to real users.
+9. **Permission Matrix**: Maintain a spreadsheet mapping roles to modules for documentation.
+10. **Automated Reports**: Set up weekly email reports of new portal access grants (via automation workflows).
+
+### Module Configuration Strategies
+
+11. **Start Minimal**: Grant only essential modules initially. Users will request more if needed.
+12. **Progressive Unlocking**: Add modules as users demonstrate need (e.g., add `financials` when customer requests payment access).
+13. **Role Templates**: Create 3-4 standard configurations per portal type (e.g., "Basic", "Standard", "Premium").
+14. **Module Dependencies**: Document which modules depend on others (e.g., `shipping` usually requires `orders`).
+15. **Seasonal Access**: For seasonal partners (e.g., holiday contractors), grant access with expiration notes in metadata.
+16. **Trial Periods**: Grant all modules for 30 days, then reduce based on actual usage patterns.
+17. **Custom Modules**: Plan for custom modules per client (e.g., `custom_reports` for enterprise customers).
+18. **Module Metrics**: Track which modules are most/least used to inform future configurations.
+
+### Communication Workflows
+
+19. **Welcome Emails**: Send personalized welcome email after granting portal access with module overview.
+20. **Training Materials**: Create portal user guides per portal type (PDF or video tutorials).
+21. **Announcement System**: Use portal banner to announce new features or maintenance windows.
+22. **Support Contact**: Include support contact info in portal footer for easy access.
+23. **FAQ Link**: Link to portal FAQ from navigation for self-service support.
+24. **Feature Requests**: Add feedback form to portal for users to request new features or modules.
+25. **Status Updates**: Use portal dashboard to show system status (e.g., "All systems operational").
+
+### Document Organization Tips
+
+26. **Folder Structure**: Encourage users to use consistent naming (e.g., `ProjectName_DocumentType_Date.pdf`).
+27. **Auto-Tagging**: Use document type field to auto-tag files for easier filtering.
+28. **Search Training**: Train users to use search bar effectively (search by name, type, description).
+29. **Bulk Downloads**: Implement "Download All" feature for downloading multiple documents at once (future enhancement).
+30. **Version Control**: Encourage users to include version numbers in file names (e.g., `Design_v2.pdf`).
+31. **Thumbnail Previews**: Enable image thumbnails for faster browsing (already implemented for photos).
+32. **Archive Old Files**: Implement archive feature to hide old documents without deleting (future enhancement).
+
+## FAQ
+
+### Portal Types and Differences
+
+**Q: What is the difference between Customer Portal and Factory Portal?**
+
+A: The Customer Portal is for end customers who purchase products. They track orders, view invoices, and monitor shipments. The Factory Portal is for manufacturing partners who produce the products. They view production orders, update shipping information, and track quality metrics. Completely different user bases and features.
+
+---
+
+**Q: Can one user have access to multiple portal types?**
+
+A: Yes! A user can have multiple `portal_access` records, each with a different `portal_type`. For example, a company that both purchases products (customer) and manufactures products (factory) can have both portal types. Each portal has separate module permissions.
+
+---
+
+**Q: Which portal type should I use for a designer who also does QC inspections?**
+
+A: Grant both `designer` and `qc` portal access. The user will see both options on the login page and can switch between portals. Configure modules independently for each portal type.
+
+---
+
+**Q: What's the difference between portal_type and user_type?**
+
+A: `user_type` is for internal users (employee, admin, super_admin). `portal_type` is for external users (customer, designer, factory, qc). Internal users access the main application at `/dashboard`. External users access portals at `/portal/{type}`. Completely separate systems.
+
+---
+
+**Q: Can I create a custom portal type for a specific client?**
+
+A: Not without code changes. The system supports 4 portal types: customer, designer, factory, qc. For custom needs, use module permissions to control access. For enterprise clients with unique requirements, contact development team to discuss custom portal type implementation.
+
+---
+
+### Access Management
+
+**Q: How do I grant portal access to a new customer?**
+
+A:
+1. Customer submits access request via `/request-access`
+2. Navigate to `/admin/approvals`
+3. Find their pending request
+4. Click "Approve"
+5. Select portal type "Customer" and check appropriate modules (orders, documents, shipping, profile)
+6. Click "Approve & Send Invite"
+7. Customer receives magic link email
+8. Customer clicks link, sets password, and gains access
+
+---
+
+**Q: Can I temporarily disable a user's portal access without deleting their account?**
+
+A: Yes! Use the "Revoke Access" feature:
+1. Navigate to `/admin/portal-access`
+2. Find the user's access record
+3. Click "Revoke Access"
+4. Optionally enter revocation reason
+5. User loses access immediately but account remains (can be reactivated later)
+
+To restore access, click "Reactivate Access" on the same record.
+
+---
+
+**Q: How do I remove portal access permanently?**
+
+A: Use the "Delete Access" feature (use with caution):
+1. Navigate to `/admin/portal-access`
+2. Find the user's access record
+3. Click "Delete Access"
+4. Confirm deletion (requires clicking confirmation checkbox)
+5. Record permanently deleted (cannot be undone)
+
+**Best Practice**: Use "Revoke" instead of "Delete" to preserve audit trail.
+
+---
+
+**Q: What happens if I revoke access while the user is logged in?**
+
+A: The user's access is revoked immediately at the database level. However, their active session may still allow access until they log out or session expires. For immediate effect, the user should log out and try to log back in (they will be denied).
+
+---
+
+**Q: Can I see when a user last accessed the portal?**
+
+A: Yes! The `portal_access.last_accessed_at` field tracks the last time the user logged in to the portal. View this in the Portal Access Management table at `/admin/portal-access`.
+
+---
+
+### Module Permissions
+
+**Q: What modules should I grant to a typical customer?**
+
+A: Standard customer configuration:
+- ✅ `orders` (track order status)
+- ✅ `documents` (upload contracts, download invoices)
+- ✅ `shipping` (track shipments)
+- ✅ `profile` (update contact info)
+- ⚠️ `financials` (only if they handle payments directly)
+
+Most customers need orders, documents, shipping, and profile. Add financials only for customers who pay invoices directly (not via 3rd party accounting).
+
+---
+
+**Q: Can I add modules after initial approval?**
+
+A: Yes! Module permissions can be updated at any time:
+1. Navigate to `/admin/portal-access`
+2. Find the user's access record
+3. Click "Edit Modules"
+4. Check/uncheck modules
+5. Click "Save"
+6. Changes take effect immediately (user may need to refresh page)
+
+---
+
+**Q: What happens if I remove a module that the user is currently using?**
+
+A: The user will lose access immediately. If they're on that module's page when you revoke it, they'll see an "Unauthorized" error when they try to perform any action. They'll need to navigate to a different module they still have access to.
+
+---
+
+**Q: Do I need to grant all modules at once?**
+
+A: No! Best practice is to start with minimal modules and add more based on user requests. This follows the "principle of least privilege" security model. You can always add modules later.
+
+---
+
+**Q: Can I grant module access on a temporary basis?**
+
+A: Yes, but not automated. You can:
+1. Grant modules now
+2. Set calendar reminder to revoke modules later
+3. Add note in `metadata` field: `{"expires": "2025-12-31", "reason": "Trial period"}`
+4. Manually revoke modules on expiration date
+
+For automated expiration, contact development team about implementing time-based module permissions (future enhancement).
+
+---
+
+### Security and Data Isolation
+
+**Q: Can customers see each other's orders?**
+
+A: No! The system enforces strict data isolation. Every query filters by `customer_id`, ensuring customers can ONLY see their own data. This is enforced at both the middleware level (route protection) and API level (database queries).
+
+---
+
+**Q: Can a designer see projects assigned to other designers?**
+
+A: No! Designers can ONLY see projects assigned to their `partner_id`. The system filters all queries by `designer_id = partner_id`, ensuring complete data isolation between partner accounts.
+
+---
+
+**Q: What happens if I link the wrong customer_id to a portal access?**
+
+A: The user will see the wrong customer's data! This is a configuration error. To fix:
+1. Navigate to `/admin/portal-access`
+2. Find the incorrect access record
+3. Click "Revoke Access" immediately
+4. Create new access record with correct `customer_id`
+5. Send new magic link to user
+
+**Prevention**: Always verify customer_id before approving access. Double-check company name matches.
+
+---
+
+**Q: How are passwords stored? Are they secure?**
+
+A: Passwords are managed by Supabase Auth and are:
+- Hashed with bcrypt (industry-standard algorithm)
+- Salted (unique salt per password)
+- Never stored in plain text
+- Never visible to admins
+- Never transmitted over unencrypted connections (HTTPS only)
+
+Admins cannot see user passwords. Users must use "Forgot Password" to reset.
+
+---
+
+**Q: What if a user shares their login credentials with others?**
+
+A: This violates security policy. If detected:
+1. Revoke access immediately
+2. Contact user to explain violation
+3. Require password reset before reactivating
+4. Consider adding IP whitelisting for this user (if supported)
+5. Monitor `last_accessed_at` for unusual patterns
+
+**Prevention**: Include "No Credential Sharing" clause in portal terms of service.
+
+---
+
+### Feature-Specific Questions
+
+**Q: Can customers upload any file type to Documents?**
+
+A: No. Supported file types are: PDF, DOC, DOCX, JPG, PNG, GIF. Maximum file size is 10MB. This prevents malware uploads and storage bloat.
+
+---
+
+**Q: How long are document download links valid?**
+
+A: Signed URLs for document downloads are valid for 1 hour. After 1 hour, the user must re-generate the link by clicking the download button again. This prevents link sharing and unauthorized access.
+
+---
+
+**Q: Can designers resubmit deliverables if rejected?**
+
+A: Yes! Designers can submit multiple deliverables per project. Each submission creates a new record with version history. When a deliverable is rejected, the designer simply submits a new version with revisions.
+
+---
+
+**Q: Can factories edit orders or only view them?**
+
+A: Factories can only VIEW production orders. They cannot edit order details (quantity, pricing, etc.). However, they CAN update shipping information (tracking number, carrier, shipping date) for orders with status "ready_to_ship".
+
+---
+
+**Q: Can QC inspectors delete or edit past inspections?**
+
+A: Currently, QC inspectors can view past inspections but cannot edit them. This preserves audit trail integrity. If an inspection was recorded incorrectly, contact an admin to manually update the database (rare case).
+
+---
+
+**Q: What happens to portal access when a customer is deleted?**
+
+A: When a customer is deleted from the main system, their `portal_access` records remain (due to foreign key constraints with ON DELETE RESTRICT). Admin must manually revoke or delete portal access records before deleting the customer entity.
+
+**Best Practice**: Always revoke portal access before deleting customer records.
+
+---
+
+**Q: Can I export portal access data for auditing?**
+
+A: Yes! Navigate to Supabase SQL editor and run:
+```sql
+SELECT
+  pa.id,
+  u.email AS user_email,
+  pa.portal_type,
+  pa.allowed_modules,
+  pa.is_active,
+  pa.granted_at,
+  pa.granted_by,
+  pa.revoked_at,
+  c.company_name AS customer_name,
+  p.company_name AS partner_name
+FROM portal_access pa
+LEFT JOIN users u ON pa.user_id = u.id
+LEFT JOIN customers c ON pa.customer_id = c.id
+LEFT JOIN partners p ON pa.partner_id = p.id
+ORDER BY pa.granted_at DESC;
+```
+
+Export results as CSV for auditing.
+
+---
+
+**Q: Can portal users see admin users or other portal users?**
+
+A: No! Portal users can only see their own data and cannot query other users. The `users` table is protected by row-level security policies, and portal users have no access to admin user data.
+
+---
+
+**Q: What's the difference between 'customer' and 'customers' (plural)?**
+
+A: In the database schema:
+- `customers` (plural) is the table name containing customer records (company info, contact details)
+- `customer_id` (singular) is a foreign key referencing the `customers` table
+- `portal_access.customer_id` links a user to their customer record
+
+It's a standard SQL naming convention: tables are plural, foreign keys are singular.
+
+---
+
+**Q: Can I customize the portal branding per customer?**
+
+A: Not currently. All portals use the same branding (Limn logo, colors, layout). For white-label or custom branding, contact the development team about enterprise customization options.
+
+---
+
+**Q: How do I know if a portal user is currently logged in?**
+
+A: Check the `auth.sessions` table in Supabase for active sessions:
+```sql
+SELECT * FROM auth.sessions WHERE user_id = 'USER_ID' AND expires_at > NOW();
+```
+
+If a session exists with future expiration, the user has an active session.
+
+---
+
+**Q: Can portal users access the main application at /dashboard?**
+
+A: No! Portal users are restricted to `/portal/*` routes only. The middleware blocks access to `/dashboard`, `/admin`, and other internal routes. Portal users have a completely separate authentication context.
+
+---
+
+**Q: What happens if a user tries to access a module they don't have permission for?**
+
+A: The middleware intercepts the request and redirects them to their portal home page with an error message: "You do not have permission to access this module." The error message includes the module name for clarity.
+
+---
+
+**Q: Can I grant access retroactively (e.g., for orders placed before portal access was granted)?**
+
+A: Yes! When you grant portal access and link it to a `customer_id`, the user immediately sees ALL historical orders, documents, and shipments for that customer. There's no time-based restriction. Portal access is entity-based, not time-based.
+
+---
+
+**Q: How do I troubleshoot "Access denied" errors?**
+
+A: Follow this checklist:
+1. Verify `portal_access` record exists for user
+2. Check `is_active = true` and `revoked_at IS NULL`
+3. Verify `portal_type` matches requested route (e.g., `/portal/customer` requires `portal_type = 'customer'`)
+4. Check `allowed_modules` includes the module being accessed
+5. Review middleware logs for specific error messages
+6. Verify user is logged in (check session exists)
+7. Try logging out and back in (session may be stale)
+
+If all checks pass and error persists, contact development team.
+
+---
+
+**Q: Can I see which admin granted portal access to a user?**
+
+A: Yes! The `portal_access.granted_by` field contains the admin user ID who approved the access. You can join with `users` table to see admin email:
+```sql
+SELECT
+  u1.email AS portal_user,
+  u2.email AS granted_by_admin,
+  pa.granted_at
+FROM portal_access pa
+JOIN users u1 ON pa.user_id = u1.id
+JOIN users u2 ON pa.granted_by = u2.id
+WHERE pa.id = 'ACCESS_ID';
+```
+
+---
+
+**Q: Can portal access expire automatically?**
+
+A: Not currently. Portal access remains active until manually revoked by an admin. For time-limited access, set a calendar reminder to revoke access on expiration date. For automated expiration, contact development team about implementing expiration dates (future enhancement).
+
+---
+
+**Q: What's the maximum number of portal users supported?**
+
+A: There's no hard limit. The system scales with your database and Supabase plan. For reference:
+- Supabase Free Tier: 500 MB database, unlimited API requests
+- Supabase Pro Tier: 8 GB database, unlimited API requests
+- Each `portal_access` record is ~1 KB, so 500 MB supports ~500,000 portal users
+
+Performance remains fast with proper database indexing (already implemented).
+
+---
+
+## Support
+
+### Contact Information
+
+For portal access management questions or technical issues:
+
+- **Email**: support@limn.us.com
+- **Phone**: (555) 123-4567
+- **Portal Help Desk**: Available Monday-Friday, 9 AM - 5 PM PST
+- **Emergency Support**: For critical security issues, contact admin team immediately
+
+### Portal-Specific Help Resources
+
+- **Portal User Guides**: `/help/portals` (this page)
+- **Video Tutorials**: Available in portal welcome email
+- **FAQ**: See above for 30+ common questions and answers
+- **Admin Training**: Contact training team for portal admin certification course
+- **API Documentation**: For developers integrating with portal APIs (contact dev team)
+
+### Reporting Issues
+
+When reporting a portal access issue, please include:
+1. User email address
+2. Portal type (customer, designer, factory, qc)
+3. Module causing issue (if applicable)
+4. Error message (exact text or screenshot)
+5. Steps to reproduce
+6. Timestamp of issue
+7. Browser and device (desktop, mobile, tablet)
+
+This information helps support team diagnose and resolve issues quickly.
+
+### Feature Requests
+
+To request new portal features or modules:
+1. Email support@limn.us.com with subject "Portal Feature Request"
+2. Describe the use case and business need
+3. Include any similar features from other systems (references helpful)
+4. Specify portal type (customer, designer, factory, qc)
+5. Indicate urgency (nice-to-have vs business-critical)
+
+Feature requests are reviewed quarterly and prioritized based on impact and feasibility.
+
+---
+
+**Last Updated**: November 3, 2025
+**Version**: 2.0
+**Maintained By**: Limn Systems Development Team
