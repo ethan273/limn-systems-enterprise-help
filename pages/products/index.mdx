@@ -1,33 +1,1341 @@
 # Product Management
 
-Manage product collections, materials, SKUs, and inventory across your catalog.
-
 ## Overview
 
-The product management system provides comprehensive tools for organizing products into collections, managing materials and their properties, tracking concepts and prototypes, and maintaining your product catalog.
+The Product Management module is the foundation of Limn Systems' product catalog, enabling comprehensive management of collections, materials, concepts, prototypes, and catalog products. This module provides:
 
-## Key Modules
+- **Collections Management** - Organize products with auto-generated unique prefixes (6 intelligent strategies)
+- **Hierarchical Materials** - 3-level material organization (parent → child → grandchild) with smart inheritance
+- **Material Categories** - Fabrics, Woods, Metals, Stones, Weaving, Carving with customizable properties
+- **Fabric Brand System** - Specialized brand-collection assignments with flexible inheritance rules
+- **Concept Tracking** - Manage product concepts from ideation through approval with workflow automation
+- **Prototype Management** - Track prototypes with milestones, feedback, versioning, and document management
+- **Catalog Products** - Full product catalog with SKUs, pricing, specifications, and dimensions
+- **Smart Collection Availability** - Flexible rules allowing materials to be available across multiple collections
+- **Hierarchy Path Generation** - Automatic path creation (e.g., "Oak/White Oak/Quarter Sawn White Oak")
+- **Delete Protection** - Prevents accidental deletion of materials with children or dependencies
+- **Integration Ready** - Seamless integration with Orders, Production, CRM, and Quality modules
 
-- **Collections** - Organize products into collections
-- **Materials** - Material library and specifications
-- **Material Properties** - Physical and technical properties
-- **Concepts** - Product concepts and development
-- **Prototypes** - Prototype tracking and testing
-- **Product Catalog** - Complete product catalog
-- **SKU Management** - Stock keeping unit management
-- **Specifications** - Product specifications and details
-- **Inventory** - Inventory tracking and management
+## Collections
 
-## Key Features
+### Creating Collections
 
-- Material database with properties
-- Collection-based organization
-- SKU generation and management
-- Product specifications
-- Prototype tracking
-- Inventory management
-- Integration with orders and production
+Collections are the primary organizational unit for products and materials. Each collection represents a product line or themed grouping.
 
-## Getting Started
+**To create a collection:**
 
-Learn how to organize and manage your product catalog, materials, and inventory.
+1. Navigate to **Products > Collections**
+2. Click **"New Collection"**
+3. Enter collection details:
+   - **Name** - Full collection name (e.g., "Modern Minimalist")
+   - **Description** - Detailed description of the collection
+   - **Prefix** - Auto-generated or custom prefix (see Collection Prefixes below)
+   - **Status** - Active or Inactive
+4. Click **"Create Collection"**
+
+**Key Features:**
+- Auto-generated unique prefixes ensure no conflicts
+- Material counts by type (Fabrics, Woods, Metals, etc.)
+- Active/inactive status for lifecycle management
+- Aggregated material counts for quick overview
+
+### Collection Prefixes
+
+Collection prefixes are used throughout the system for SKU generation, material identification, and organizational clarity. The system employs **6 intelligent strategies** to generate unique prefixes:
+
+**Strategy 1: First Two Letters**
+- Takes first 2 letters of collection name
+- Example: "Modern" → "MO"
+
+**Strategy 2: First + Last Word**
+- Takes first letter of first word + first letter of last word
+- Example: "Modern Minimalist" → "MM"
+
+**Strategy 3: First + Second Word**
+- Takes first letter of first word + first letter of second word
+- Example: "Modern Luxury" → "ML"
+
+**Strategy 4: Consonants Only**
+- Extracts consonants from collection name
+- Example: "Vintage" → "VNTG"
+
+**Strategy 5: Numeric Suffix**
+- Adds incrementing number to base prefix
+- Example: "MO", "MO2", "MO3", etc.
+
+**Strategy 6: Random Alphanumeric**
+- Generates random 4-character code as fallback
+- Example: "X7K9"
+
+**System Behavior:**
+- Tries strategies 1-4 first
+- Falls back to strategy 5 (numeric suffix) if conflicts exist
+- Uses strategy 6 (random) only if all else fails
+- Validates uniqueness across entire collection table
+- Case-insensitive matching to prevent "mo" vs "MO" conflicts
+
+### Collection Management
+
+**Viewing Collections:**
+- **All Collections** - Shows all collections with material counts
+- **Active Collections** - Filters to active collections only
+- **Material Breakdown** - Shows counts by material type (Fabrics, Woods, Metals, Stones, Weaving, Carving)
+
+**Updating Collections:**
+1. Navigate to collection detail page
+2. Click **"Edit Collection"**
+3. Modify name, description, prefix, or status
+4. Click **"Save Changes"**
+
+**Archiving Collections:**
+- Set status to "Inactive" to archive
+- Inactive collections remain in system but are hidden from default views
+- Materials linked to inactive collections are not affected
+
+**Deleting Collections:**
+- Only possible if no materials are assigned
+- System prevents deletion if materials exist
+- Use archiving (inactive status) instead for collections with materials
+
+### Material Counts
+
+Each collection displays aggregated material counts by type:
+
+- **Fabrics** - Fabric brands, collections, and colors
+- **Woods** - Wood species and finishes
+- **Metals** - Metal types and finishes
+- **Stones** - Stone types and finishes
+- **Weaving** - Weaving materials and patterns
+- **Carving** - Carving materials and patterns
+
+**Count Updates:**
+- Automatically recalculated when materials are added/removed
+- Real-time updates via React Query invalidation
+- Includes all hierarchy levels (parent, child, grandchild)
+
+## Materials
+
+### Material Hierarchy
+
+Materials are organized in a **3-level hierarchy**:
+
+**Level 1: Parent Materials**
+- Top-level categories (e.g., "Oak", "Leather", "Brass")
+- Can have multiple child materials
+- No parent themselves (`parent_id` is null)
+
+**Level 2: Child Materials**
+- Sub-categories (e.g., "White Oak", "Full-Grain Leather", "Brushed Brass")
+- Have a parent material
+- Can have their own children (grandchildren)
+
+**Level 3: Grandchild Materials**
+- Specific variants (e.g., "Quarter Sawn White Oak", "Italian Full-Grain Leather")
+- Have a parent (Level 2 material)
+- Cannot have children (max 3 levels enforced)
+
+**Hierarchy Path:**
+The system automatically generates a full path for each material:
+- Parent: "Oak"
+- Child: "Oak/White Oak"
+- Grandchild: "Oak/White Oak/Quarter Sawn White Oak"
+
+### Material Categories
+
+Six primary material categories with distinct properties:
+
+**Fabrics:**
+- Fabric Brands (Level 1)
+- Fabric Collections (Level 2)
+- Fabric Colors (Level 3)
+- Properties: color SKU, swatch URL, supplier
+- Special inheritance rules (see Fabric-Specific Inheritance)
+
+**Woods:**
+- Species → Variants → Specific Finishes
+- Properties: cost per unit, supplier, finish type
+
+**Metals:**
+- Base Metal → Finish Type → Specific Variant
+- Properties: cost per unit, supplier, finish description
+
+**Stones:**
+- Stone Type → Finish → Specific Cut
+- Properties: cost per unit, supplier, finish description
+
+**Weaving:**
+- Weave Pattern → Material → Specific Variant
+- Properties: cost per unit, supplier, pattern details
+
+**Carving:**
+- Carving Style → Material → Specific Design
+- Properties: cost per unit, supplier, design details
+
+**Managing Categories:**
+1. Navigate to **Products > Material Categories**
+2. View all categories with sort order
+3. Click **"Edit Category"** to modify:
+   - Category name
+   - Sort order (controls display order)
+   - Active/inactive status
+4. Inactive categories are hidden from material creation
+
+### Creating Materials
+
+**To create a parent material:**
+
+1. Navigate to **Products > Materials**
+2. Click **"New Material"**
+3. Select **Material Category** (Fabrics, Woods, Metals, etc.)
+4. Enter material details:
+   - **Name** - Material name
+   - **Description** - Detailed description
+   - **Cost Per Unit** - Unit cost
+   - **Unit of Measure** - Unit type (e.g., "yard", "square foot")
+   - **Supplier** - Supplier name (optional)
+   - **Color SKU** - SKU for color (optional, mainly for fabrics)
+   - **Swatch URL** - URL to swatch image (optional)
+5. Select **Collections** - Choose one or more collections where this material is available
+6. Click **"Create Material"**
+
+**To create a child material:**
+
+1. Navigate to parent material detail page
+2. Click **"Add Child Material"**
+3. Follow same steps as parent material creation
+4. Collection availability rules apply (see Collection Availability Rules)
+
+**To create a grandchild material:**
+
+1. Navigate to child material detail page
+2. Click **"Add Child Material"**
+3. Follow same steps as child material creation
+4. Collection availability rules apply
+5. Note: Grandchildren cannot have children (max 3 levels)
+
+### Collection Availability Rules
+
+Materials can be available in multiple collections, with smart inheritance rules:
+
+**Standard Inheritance (Woods, Metals, Stones, Weaving, Carving):**
+- **Parent Material** - Can be assigned to any collections
+- **Child Material** - Automatically inherits parent's collections PLUS can have additional collections
+- **Grandchild Material** - Automatically inherits parent's (child's) collections PLUS can have additional collections
+
+**Example (Wood):**
+- Parent "Oak" → Collections: [Modern, Vintage]
+- Child "White Oak" → Inherits [Modern, Vintage], can add [Rustic]
+- Grandchild "Quarter Sawn White Oak" → Inherits [Modern, Vintage, Rustic], can add [Luxury]
+
+**Rule:** Children are always available in at least their parent's collections but can be available in MORE collections.
+
+### Fabric-Specific Inheritance
+
+Fabrics have **special inheritance rules** that differ from other materials:
+
+**Level 1: Fabric Brands**
+- Can be assigned to any collections
+- Example: "Kravet" → Collections: [Modern, Luxury]
+
+**Level 2: Fabric Collections**
+- **Do NOT inherit** parent brand collections
+- Can have completely independent collection assignments
+- Example: "Kravet/Modern Linen" → Collections: [Rustic, Coastal] (different from parent)
+
+**Level 3: Fabric Colors**
+- **MUST inherit** parent collection collections
+- Can have additional collections beyond parent
+- Example: "Kravet/Modern Linen/Navy" → Inherits [Rustic, Coastal], can add [Nautical]
+
+**Why This Design?**
+- Fabric Brands (e.g., "Kravet", "Schumacher") are often used across multiple product lines
+- Fabric Collections (e.g., "Modern Linen") within a brand may be targeted to specific product lines
+- Fabric Colors within a collection should stay with their collection's target product lines
+
+**Example Flow:**
+```
+Kravet (Brand) → [Modern, Luxury]
+  └─ Modern Linen (Collection) → [Rustic, Coastal] (independent)
+       ├─ Navy (Color) → [Rustic, Coastal, Nautical] (inherits + adds)
+       └─ Cream (Color) → [Rustic, Coastal] (inherits)
+```
+
+### Hierarchy Path
+
+The system automatically generates a full hierarchy path for each material:
+
+**Format:** `Parent/Child/Grandchild`
+
+**Examples:**
+- Parent: "Oak"
+- Child: "Oak/White Oak"
+- Grandchild: "Oak/White Oak/Quarter Sawn White Oak"
+
+**Usage:**
+- Displayed in material detail pages
+- Used in search and filtering
+- Helps identify material lineage at a glance
+- Automatically updated when parent names change
+
+**Path Generation:**
+- Calculated on-the-fly during queries
+- Includes parent name lookup via JOIN
+- Handles null parents (Level 1 materials show just their name)
+
+### Material Properties
+
+Each material has detailed properties:
+
+**Core Properties:**
+- **Name** - Material name
+- **Description** - Detailed description
+- **Material Category** - Fabrics, Woods, Metals, Stones, Weaving, Carving
+- **Cost Per Unit** - Unit cost for pricing calculations
+- **Unit of Measure** - Unit type (e.g., "yard", "square foot", "each")
+
+**Supplier Information:**
+- **Supplier** - Supplier name
+- **Supplier Contact** - Contact information (optional)
+- **Lead Time** - Expected lead time for orders (optional)
+
+**Fabric-Specific Properties:**
+- **Color SKU** - SKU for specific color
+- **Swatch URL** - URL to swatch image
+- **Fabric Brand** - Associated fabric brand (Level 1 fabrics)
+
+**Organization Properties:**
+- **Collections** - Collections where material is available
+- **Hierarchy Path** - Full path from parent to current material
+- **Parent Material** - Link to parent material (if child or grandchild)
+- **Children Count** - Number of child materials
+
+**Metadata:**
+- **Created At** - Creation timestamp
+- **Updated At** - Last update timestamp
+- **Created By** - User who created the material
+- **Updated By** - User who last updated the material
+
+### Child Materials Management
+
+**Viewing Children:**
+1. Navigate to material detail page
+2. Scroll to **"Child Materials"** section
+3. View all direct children with:
+   - Child name
+   - Description
+   - Collections available
+   - Cost per unit
+   - Actions (View, Edit, Delete)
+
+**Adding Children:**
+1. Click **"Add Child Material"** on parent detail page
+2. Complete material creation form
+3. Note: Child automatically links to parent
+4. Collection availability rules apply
+
+**Editing Children:**
+1. Click **"Edit"** on child material
+2. Modify properties as needed
+3. Collection changes must respect inheritance rules
+4. Click **"Save Changes"**
+
+**Deleting Children:**
+- Only possible if child has no children (grandchildren)
+- Click **"Delete"** on child material
+- Confirm deletion
+- System prevents deletion if child has children
+
+**Delete Protection:**
+The system enforces strict delete protection:
+- **Cannot delete parent** if it has children
+- **Cannot delete child** if it has grandchildren
+- **Can delete grandchild** (max level, no children possible)
+- Error message: "Cannot delete material with children. Delete or reassign children first."
+
+## Fabric Brands
+
+### Fabric Brand Management
+
+Fabric brands are specialized Level 1 fabric materials that represent manufacturers or brand lines.
+
+**Creating Fabric Brands:**
+1. Navigate to **Products > Fabric Brands**
+2. Click **"New Fabric Brand"**
+3. Enter brand details:
+   - **Brand Name** - Manufacturer name (e.g., "Kravet", "Schumacher")
+   - **Description** - Brand description
+   - **Collections** - Select collections where brand fabrics are available
+4. Click **"Create Brand"**
+
+**Brand-Collection Assignments:**
+- Brands can be assigned to multiple collections
+- Assignments cascade to fabric colors (Level 3) but NOT fabric collections (Level 2)
+- See Fabric-Specific Inheritance for rules
+
+**Managing Brand Collections:**
+1. Navigate to brand detail page
+2. Click **"Manage Collections"**
+3. Add or remove collection assignments
+4. Changes affect:
+   - Brand availability in collection filters
+   - Fabric color (Level 3) inheritance
+   - Not affect fabric collections (Level 2) - they have independent assignments
+
+**Viewing Brand Hierarchy:**
+- Brands show all fabric collections (Level 2)
+- Fabric collections show all fabric colors (Level 3)
+- Full tree view available on brand detail page
+
+## Concepts
+
+### Creating Concepts
+
+Concepts are product ideas in early development stages, tracked from ideation through approval.
+
+**To create a concept:**
+
+1. Navigate to **Products > Concepts**
+2. Click **"New Concept"**
+3. Enter concept details:
+   - **Concept Number** - Auto-generated (e.g., "CON-2024-001")
+   - **Name** - Concept name
+   - **Description** - Detailed description
+   - **Designer** - Assigned designer
+   - **Collection** - Target collection
+   - **Status** - Ideation, Under Review, Approved, In Development, On Hold, Rejected
+   - **Priority** - Low, Medium, High, Critical
+   - **Target Price** - Target retail price
+   - **Estimated Cost** - Estimated manufacturing cost
+   - **Tags** - Searchable tags (JSON array)
+   - **Specifications** - Technical specifications (JSON object)
+4. Click **"Create Concept"**
+
+**Concept Numbering:**
+- Format: `CON-YYYY-###`
+- Auto-generated based on creation year
+- Sequential numbering within year
+- Example: CON-2024-001, CON-2024-002, etc.
+
+### Concept Workflow
+
+Concepts follow a structured workflow:
+
+**1. Ideation**
+- Initial concept creation
+- Brainstorming phase
+- No approvals required
+- Can add notes, sketches, initial specs
+
+**2. Under Review**
+- Submitted for review
+- Design team evaluation
+- Feasibility assessment
+- Cost analysis
+
+**3. Approved**
+- Concept approved for development
+- Ready to create prototype
+- Budget allocated
+- Timeline established
+
+**4. In Development**
+- Prototype creation in progress
+- Active development work
+- Linked to prototype records
+- Milestone tracking
+
+**5. On Hold**
+- Temporarily paused
+- Waiting for resources, decisions, or external factors
+- Can be resumed later
+- Reason for hold documented
+
+**6. Rejected**
+- Concept not moving forward
+- Reason for rejection documented
+- Archived but retained for reference
+- Can be reconsidered in future
+
+**Status Transitions:**
+- Ideation → Under Review → Approved → In Development
+- Any status → On Hold
+- Under Review → Rejected
+- On Hold → Any previous status
+
+### Concept Details
+
+**Core Information:**
+- Concept number (auto-generated)
+- Name and description
+- Designer assignment
+- Collection targeting
+- Current status and priority
+
+**Pricing:**
+- **Target Price** - Desired retail price point
+- **Estimated Cost** - Manufacturing cost estimate
+- **Margin Analysis** - Automatic calculation of margin percentage
+- **Cost History** - Track cost estimate changes over time
+
+**Technical Details:**
+- **Tags** - Searchable keywords (e.g., "modern", "sustainable", "luxury")
+- **Specifications** - JSON object with technical specs
+  ```json
+  {
+    "dimensions": "24\"W x 36\"H x 18\"D",
+    "materials": ["Oak", "Brass", "Leather"],
+    "finish": "Natural oil",
+    "weight": "45 lbs"
+  }
+  ```
+
+**Document Attachments:**
+- Sketches and drawings
+- Mood boards
+- Material samples
+- Research documents
+- Stored in Supabase Storage (`concepts` bucket)
+
+**Prototype Links:**
+- Link to prototypes created from this concept
+- Track progression from concept to prototype
+- View prototype status and feedback
+
+### Concept-to-Prototype Flow
+
+**Converting Concept to Prototype:**
+
+1. Navigate to approved concept
+2. Click **"Create Prototype"**
+3. System pre-fills prototype form:
+   - Prototype number (auto-generated)
+   - Name (copied from concept)
+   - Description (copied from concept)
+   - Designer (copied from concept)
+   - Collection (copied from concept)
+   - Target price (copied from concept)
+   - Estimated cost (copied from concept)
+4. Add prototype-specific details:
+   - Prototype type
+   - Manufacturer assignment
+   - Milestones
+   - Testing requirements
+5. Click **"Create Prototype"**
+6. Concept status updates to "In Development"
+7. Concept-prototype link established
+
+**Tracking:**
+- Concepts can link to multiple prototypes (iterations)
+- Prototypes always link back to originating concept
+- View full concept-to-production flow
+- Track time from ideation to prototype
+
+## Prototypes
+
+### Creating Prototypes
+
+Prototypes are physical samples or models created to test and validate product concepts.
+
+**To create a prototype:**
+
+1. Navigate to **Products > Prototypes**
+2. Click **"New Prototype"**
+3. Enter prototype details:
+   - **Prototype Number** - Auto-generated (e.g., "PROTO-2024-001")
+   - **Name** - Prototype name
+   - **Description** - Detailed description
+   - **Prototype Type** - Functional, Visual, Full-Scale, Proof of Concept, Pre-Production
+   - **Designer** - Assigned designer
+   - **Manufacturer** - Assigned manufacturer
+   - **Collection** - Target collection
+   - **Status** - Planning, In Progress, Testing, Approved, Rejected
+   - **Priority** - Low, Medium, High, Critical
+   - **Client Specific** - Is this for a specific client? (checkbox)
+   - **Catalog Candidate** - Is this a catalog candidate? (checkbox)
+   - **Target Price** - Target retail price
+   - **Estimated Cost** - Manufacturing cost estimate
+   - **Tags** - Searchable tags (JSON array)
+   - **Specifications** - Technical specifications (JSON object)
+4. Optionally link to concept
+5. Click **"Create Prototype"**
+
+**Prototype Numbering:**
+- Format: `PROTO-YYYY-###`
+- Auto-generated based on creation year
+- Sequential numbering within year
+- Example: PROTO-2024-001, PROTO-2024-002, etc.
+
+**Prototype Types:**
+- **Functional** - Tests functionality and mechanics
+- **Visual** - Tests appearance and aesthetics
+- **Full-Scale** - Full-size model for evaluation
+- **Proof of Concept** - Validates core concept viability
+- **Pre-Production** - Final prototype before production
+
+### Prototype Workflow
+
+Prototypes follow a structured workflow:
+
+**1. Planning**
+- Initial planning phase
+- Requirements gathering
+- Material sourcing
+- Timeline establishment
+- Milestone definition
+
+**2. In Progress**
+- Active fabrication
+- Manufacturer working on prototype
+- Regular status updates
+- Milestone tracking
+
+**3. Testing**
+- Prototype complete
+- Undergoing testing and evaluation
+- Feedback collection
+- Quality assessment
+
+**4. Approved**
+- Testing complete
+- Prototype approved for production
+- Ready to create catalog product
+- Production specifications finalized
+
+**5. Rejected**
+- Prototype does not meet requirements
+- Issues identified during testing
+- Reason for rejection documented
+- May create new iteration
+
+**Status Transitions:**
+- Planning → In Progress → Testing → Approved
+- Testing → Rejected
+- Rejected → Planning (new iteration)
+- Any status can be updated based on findings
+
+### Prototype Details
+
+**Core Information:**
+- Prototype number (auto-generated)
+- Name and description
+- Prototype type
+- Designer and manufacturer assignments
+- Collection targeting
+- Current status and priority
+
+**Client & Catalog Flags:**
+- **Client Specific** - Indicates prototype is for specific client needs
+- **Catalog Candidate** - Marks prototype as potential catalog product
+- Both flags can be true (client-specific that may become catalog)
+
+**Pricing:**
+- **Target Price** - Desired retail price point
+- **Estimated Cost** - Manufacturing cost estimate
+- **Actual Cost** - Final prototype cost (after completion)
+- **Margin Analysis** - Automatic calculation of margin percentage
+
+**Technical Details:**
+- **Tags** - Searchable keywords
+- **Specifications** - JSON object with technical specs
+- Same format as concepts (see Concept Details)
+
+**Concept Link:**
+- Link to originating concept
+- View concept history and evolution
+- Track concept-to-prototype progression
+
+### Milestones
+
+Prototypes include milestone tracking for project management:
+
+**Creating Milestones:**
+1. Navigate to prototype detail page
+2. Click **"Add Milestone"**
+3. Enter milestone details:
+   - **Name** - Milestone name (e.g., "Material Sourcing", "First Build", "Testing Complete")
+   - **Description** - Milestone description
+   - **Planned Date** - Target completion date
+   - **Actual Date** - Actual completion date (set when complete)
+   - **Status** - Not Started, In Progress, Completed, Delayed
+4. Click **"Save Milestone"**
+
+**Milestone Tracking:**
+- View all milestones on prototype detail page
+- See planned vs actual dates
+- Track delays and identify bottlenecks
+- Update status as work progresses
+
+**Milestone Status:**
+- **Not Started** - Milestone not yet begun
+- **In Progress** - Active work on milestone
+- **Completed** - Milestone achieved (actual date set)
+- **Delayed** - Milestone past planned date
+
+**Milestone Analytics:**
+- Count of total milestones
+- Count of completed milestones
+- Percentage complete
+- Average delay (actual vs planned)
+- Critical path identification
+
+### Feedback System
+
+Comprehensive feedback system for prototype evaluation:
+
+**Creating Feedback:**
+1. Navigate to prototype detail page
+2. Click **"Add Feedback"**
+3. Enter feedback details:
+   - **Feedback Type** - Positive, Negative, Neutral, Revision Request
+   - **Category** - Design, Function, Quality, Cost, Timeline
+   - **Description** - Detailed feedback
+   - **Submitted By** - User submitting feedback
+   - **Priority** - Low, Medium, High, Critical
+   - **Actionable** - Is action required? (checkbox)
+4. Click **"Submit Feedback"**
+
+**Feedback Types:**
+- **Positive** - What's working well
+- **Negative** - Issues and problems
+- **Neutral** - Observations and notes
+- **Revision Request** - Specific changes needed
+
+**Feedback Categories:**
+- **Design** - Aesthetic and visual feedback
+- **Function** - Functionality and usability feedback
+- **Quality** - Build quality and craftsmanship feedback
+- **Cost** - Pricing and cost-related feedback
+- **Timeline** - Schedule and timing feedback
+
+**Feedback Management:**
+- View all feedback on prototype detail page
+- Filter by type, category, priority
+- Mark feedback as addressed
+- Track actionable items
+- Export feedback reports
+
+**Feedback Analytics:**
+- Count by type (positive, negative, neutral, revision)
+- Count by category
+- Actionable items count
+- Average time to address
+- Feedback trends over time
+
+### Document Management
+
+Prototypes include robust document management with versioning:
+
+**Uploading Documents:**
+1. Navigate to prototype detail page
+2. Click **"Upload Document"**
+3. Select file and enter details:
+   - **Document Type** - Drawing, Specification, Photo, Test Result, Report
+   - **Version** - Version number (e.g., "1.0", "2.1")
+   - **Description** - Document description
+   - **Tags** - Searchable tags
+4. Click **"Upload"**
+5. File stored in Supabase Storage (`prototypes` bucket)
+
+**Document Types:**
+- **Drawing** - CAD drawings, sketches, technical drawings
+- **Specification** - Technical specifications, material specs
+- **Photo** - Photos of prototype at various stages
+- **Test Result** - Testing reports and results
+- **Report** - Status reports, progress updates
+
+**Version Control:**
+- Each document has version number
+- Upload new version of existing document
+- View version history
+- Compare versions
+- Revert to previous version if needed
+
+**Document Operations:**
+- **View** - Preview document in browser
+- **Download** - Download document file
+- **Share** - Generate shareable link
+- **Delete** - Remove document (with confirmation)
+- **Update** - Edit document metadata
+
+**Document Search:**
+- Search by document type
+- Search by version
+- Search by tags
+- Search by date range
+- Full-text search in descriptions
+
+## Catalog Products
+
+### Product Listing
+
+**Viewing Products:**
+1. Navigate to **Products > Catalog**
+2. View product list with:
+   - Product name
+   - SKU
+   - Category
+   - Base price
+   - Unit of measure
+   - Dimensions and weight
+   - Status (Active, Discontinued)
+
+**Cursor-Based Pagination:**
+- Fast pagination for large product catalogs
+- 50 products per page default
+- Next/Previous page navigation
+- Performance optimized with indexed queries
+
+**Search:**
+- Search by product name
+- Search by SKU
+- Search by description
+- Real-time search results
+- Debounced input for performance
+
+**Filtering:**
+- Filter by category
+- Filter by status (Active, Discontinued)
+- Filter by price range
+- Filter by collection
+- Combine multiple filters
+
+### Product Details
+
+**Core Information:**
+- **SKU** - Unique product identifier
+- **Name** - Product name
+- **Description** - Detailed product description
+- **Category** - Product category
+- **Base Price** - Starting price (before options/customizations)
+
+**Physical Properties:**
+- **Unit of Measure** - Each, Set, Pair, etc.
+- **Weight** - Product weight
+- **Dimensions** - Length x Width x Height
+- **Shipping Dimensions** - Packaged dimensions (if different)
+
+**Product Specifications:**
+- Materials used
+- Finish options
+- Color options
+- Customization availability
+- Care instructions
+- Warranty information
+
+**Pricing:**
+- Base price
+- Option pricing (materials, finishes)
+- Volume discounts
+- Trade pricing
+- MSRP (if different from base price)
+
+**Inventory:**
+- Stock level
+- Lead time
+- Availability by warehouse
+- Reorder point
+- Supplier information
+
+### Creating Products
+
+**To create a catalog product:**
+
+1. Navigate to **Products > Catalog**
+2. Click **"New Product"**
+3. Enter product details:
+   - SKU (auto-generated or custom)
+   - Name
+   - Description
+   - Category
+   - Base price
+   - Unit of measure
+   - Weight and dimensions
+   - Specifications
+4. Select materials and finishes
+5. Add product images
+6. Configure pricing options
+7. Set inventory levels
+8. Click **"Create Product"**
+
+**Product Images:**
+- Upload multiple images
+- Set primary image
+- Image optimization automatic
+- Stored in Supabase Storage
+- Support for 360° views
+
+**Material Options:**
+- Link to materials from Materials module
+- Configure available materials per product
+- Set pricing for each material option
+- Show material swatches in product detail
+
+## Integration
+
+### Orders Integration
+
+**Material Selection:**
+- Orders can specify materials from Materials module
+- Collection-based filtering in material selection
+- Hierarchy path displayed for clarity
+- Cost per unit used in order pricing calculations
+
+**Prototype Orders:**
+- Link orders to specific prototypes
+- Track prototype testing through order fulfillment
+- Prototype feedback informs production orders
+
+**Product Orders:**
+- Select catalog products in order creation
+- Product specifications auto-populate
+- Pricing pulled from catalog
+- Material options available per product configuration
+
+### Production Integration
+
+**Bill of Materials (BOM):**
+- Materials from Materials module populate BOM
+- Quantities calculated based on product specifications
+- Cost rollup from material costs
+- Supplier information available for procurement
+
+**Production Orders:**
+- Link to prototypes for first production runs
+- Link to catalog products for repeat production
+- Material availability checked before production start
+- Prototype specifications used for production setup
+
+### CRM Integration
+
+**Concept Collaboration:**
+- Assign designers from user profiles
+- Track concept ownership and responsibility
+- Designer workload visibility
+- Performance metrics (concepts approved, time to prototype)
+
+**Client Concepts:**
+- Link concepts to specific clients
+- Client-specific pricing and specifications
+- Track client feedback on concepts
+- Convert approved concepts to client orders
+
+**Collection Preferences:**
+- Track client collection preferences
+- Recommend products from preferred collections
+- Material suggestions based on client history
+- Personalized catalog views
+
+### Quality Integration
+
+**Prototype Testing:**
+- Quality inspections linked to prototypes
+- Test results inform prototype approval decisions
+- Defect tracking and resolution
+- Quality metrics influence production readiness
+
+**Material Quality:**
+- Track material quality issues
+- Supplier quality ratings
+- Material substitution recommendations
+- Quality specifications in material records
+
+## Common Workflows
+
+### Workflow 1: Concept to Production
+
+**Step 1: Create Concept**
+1. Designer creates new concept with initial specs
+2. Status: Ideation
+3. Add sketches, mood boards, initial cost estimates
+4. Assign to collection
+
+**Step 2: Review and Approval**
+1. Submit concept for review (Status: Under Review)
+2. Design team evaluates feasibility
+3. Cost analysis performed
+4. Decision: Approve or Reject
+5. If approved, Status: Approved
+
+**Step 3: Create Prototype**
+1. Click "Create Prototype" from approved concept
+2. System pre-fills prototype details from concept
+3. Add prototype-specific info:
+   - Manufacturer assignment
+   - Prototype type
+   - Milestones
+4. Status: Planning
+
+**Step 4: Build Prototype**
+1. Update status to In Progress
+2. Track milestones as work progresses
+3. Upload photos and documents during build
+4. Update actual costs and timeline
+
+**Step 5: Test and Evaluate**
+1. Update status to Testing
+2. Collect feedback from stakeholders
+3. Document test results
+4. Identify revisions needed
+
+**Step 6: Finalize or Iterate**
+1. If approved: Status → Approved
+2. If issues found: Create new prototype iteration
+3. Approved prototypes ready for catalog
+
+**Step 7: Create Catalog Product**
+1. Create catalog product from approved prototype
+2. Use prototype specifications
+3. Set up material options
+4. Configure pricing
+5. Add to product catalog
+
+### Workflow 2: Collection Material Setup
+
+**Step 1: Create Collection**
+1. Create new collection with unique prefix
+2. Set collection status to Active
+3. Add collection description
+
+**Step 2: Add Parent Materials**
+1. Create parent materials (Level 1) for each category needed:
+   - Woods (e.g., "Oak", "Walnut", "Maple")
+   - Metals (e.g., "Brass", "Steel", "Bronze")
+   - Fabrics - Create as Fabric Brands
+   - Stones (e.g., "Marble", "Granite")
+2. Assign parent materials to collection
+
+**Step 3: Add Child Materials**
+1. For each parent, create child materials (Level 2):
+   - Woods: "White Oak", "Red Oak"
+   - Metals: "Brushed Brass", "Polished Brass"
+   - Fabrics: Create as Fabric Collections under brands
+   - Stones: "Carrara Marble", "Calacatta Marble"
+2. Children inherit parent collections (except Fabric Collections)
+
+**Step 4: Add Grandchild Materials**
+1. For specific variants, create grandchildren (Level 3):
+   - Woods: "Quarter Sawn White Oak"
+   - Metals: "Antique Brushed Brass"
+   - Fabrics: Create as Fabric Colors under collections
+   - Stones: "Polished Carrara Marble"
+2. Grandchildren inherit parent (child) collections
+
+**Step 5: Verify Collection Material Counts**
+1. View collection detail page
+2. Check material counts by category
+3. Verify all materials show correct hierarchy paths
+4. Test material selection in order creation
+
+### Workflow 3: Fabric Brand and Collection Setup
+
+**Step 1: Create Fabric Brand**
+1. Navigate to Products > Fabric Brands
+2. Create brand (e.g., "Kravet")
+3. Assign to collections (e.g., [Modern, Luxury])
+4. Brand is now Level 1 parent material
+
+**Step 2: Create Fabric Collections**
+1. Navigate to brand detail page
+2. Click "Add Fabric Collection"
+3. Create collections under brand (e.g., "Modern Linen")
+4. **Important:** Assign independent collections (e.g., [Rustic, Coastal])
+5. Collections are Level 2 child materials
+6. Collections do NOT inherit brand collections
+
+**Step 3: Create Fabric Colors**
+1. Navigate to fabric collection detail page
+2. Click "Add Fabric Color"
+3. Create colors under collection (e.g., "Navy", "Cream")
+4. **Important:** Colors automatically inherit collection's collections
+5. Colors can have additional collections beyond parent
+6. Add color SKU and swatch URL
+7. Colors are Level 3 grandchild materials
+
+**Step 4: Verify Inheritance**
+1. View fabric color detail page
+2. Check "Collections" section
+3. Verify color shows parent collection's collections
+4. Verify any additional collections are also shown
+5. Test that color cannot be created without parent's collections
+
+**Example:**
+```
+Kravet (Brand) → [Modern, Luxury]
+  ├─ Modern Linen (Collection) → [Rustic, Coastal] (independent from brand)
+  │    ├─ Navy (Color) → [Rustic, Coastal, Nautical] (inherits + adds Nautical)
+  │    └─ Cream (Color) → [Rustic, Coastal] (inherits only)
+  └─ Velvet Luxe (Collection) → [Luxury] (independent from brand)
+       └─ Emerald (Color) → [Luxury, Modern] (inherits + adds Modern)
+```
+
+### Workflow 4: Prototype Feedback and Iteration
+
+**Step 1: Initial Prototype Creation**
+1. Create prototype from approved concept
+2. Set status to Planning
+3. Define milestones with target dates
+4. Assign manufacturer
+
+**Step 2: Build and Document**
+1. Update status to In Progress
+2. Upload progress photos weekly
+3. Update milestone statuses as achieved
+4. Track actual costs vs estimates
+
+**Step 3: Testing Phase**
+1. Update status to Testing
+2. Conduct functionality tests
+3. Conduct quality inspections
+4. Conduct user testing (if applicable)
+
+**Step 4: Collect Feedback**
+1. Team members submit feedback
+2. Categories: Design, Function, Quality, Cost, Timeline
+3. Mark critical issues as high priority
+4. Flag actionable items
+
+**Step 5: Evaluate Feedback**
+1. Review all feedback entries
+2. Identify common themes
+3. Prioritize revisions needed
+4. Assess if revision requires new prototype or can be addressed in production
+
+**Step 6: Decision Point**
+- **If Approved:**
+  - Status → Approved
+  - Document final specifications
+  - Create catalog product
+  - Close feedback loop
+
+- **If Rejected (Major Issues):**
+  - Status → Rejected
+  - Document reasons
+  - Create new prototype iteration
+  - Apply learnings to new iteration
+
+- **If Minor Revisions Needed:**
+  - Keep status as Testing
+  - Address feedback items
+  - Re-test after revisions
+  - Repeat evaluation
+
+**Step 7: Iteration (if needed)**
+1. Create new prototype (PROTO-2024-002)
+2. Link to previous prototype
+3. Document what changed and why
+4. Reference feedback from previous iteration
+5. Repeat build, test, feedback cycle
+
+### Workflow 5: Material Cost Analysis
+
+**Step 1: Identify Materials Needing Review**
+1. Navigate to Products > Materials
+2. Filter by collection or category
+3. Sort by last updated date
+4. Identify materials not updated recently
+
+**Step 2: Gather Current Pricing**
+1. Contact suppliers for current pricing
+2. Note lead times and minimum orders
+3. Document any price changes
+4. Check for alternative suppliers
+
+**Step 3: Update Material Costs**
+1. For each material, click "Edit"
+2. Update "Cost Per Unit" field
+3. Update supplier information if changed
+4. Add notes about pricing source and date
+5. Save changes
+
+**Step 4: Assess Impact on Products**
+1. View products using updated materials
+2. Check prototype cost estimates
+3. Check catalog product pricing
+4. Identify products needing price adjustments
+
+**Step 5: Adjust Product Pricing (if needed)**
+1. For affected catalog products, click "Edit"
+2. Recalculate base price with new material costs
+3. Consider maintaining margins
+4. Update pricing effective date
+5. Save changes
+
+**Step 6: Document Changes**
+1. Create summary of cost changes
+2. Note products affected
+3. Document new pricing
+4. Communicate to sales team
+5. Update website/catalog if applicable
+
+## Best Practices
+
+1. **Use Descriptive Names** - Material and product names should be clear and unambiguous
+2. **Maintain Hierarchy Discipline** - Always use 3-level hierarchy (parent → child → grandchild), never skip levels
+3. **Collection Prefix Strategy** - Review auto-generated prefixes; customize if needed for brand consistency
+4. **Document Material Costs** - Always include cost per unit for accurate pricing and margin analysis
+5. **Keep Supplier Info Updated** - Maintain current supplier contacts and lead times
+6. **Use Concept Stage Early** - Create concepts for all new product ideas, even if informal
+7. **Prototype Before Production** - Never skip prototype phase for new products
+8. **Comprehensive Milestones** - Break prototype work into 5-10 milestones for accurate tracking
+9. **Encourage Feedback** - Collect feedback from all stakeholders (designers, manufacturers, sales, clients)
+10. **Version Everything** - Use version numbers for all prototype documents and specifications
+11. **Link Concepts to Prototypes** - Always link prototypes back to originating concepts
+12. **Mark Client-Specific Clearly** - Flag client-specific prototypes to avoid catalog confusion
+13. **Update Statuses Promptly** - Keep concept and prototype statuses current for accurate reporting
+14. **Use Tags Liberally** - Tag concepts and prototypes for easy discovery and reporting
+15. **Upload Photos Regularly** - Document prototype progression with photos at each milestone
+16. **Track Actual vs Planned** - Always record actual milestone dates for future estimation
+17. **Centralize Specifications** - Use JSON specifications for consistent, queryable technical details
+18. **Review Material Counts** - Check collection material counts regularly to ensure proper linking
+19. **Archive, Don't Delete** - Set status to Inactive rather than deleting collections or products
+20. **Respect Delete Protection** - Delete child materials before attempting to delete parents
+
+## Troubleshooting
+
+1. **Collection prefix already exists** - System tries 6 strategies; if all fail, manually enter custom prefix
+2. **Cannot delete material with children** - Delete or reassign all child materials first
+3. **Material not appearing in collection** - Check material's collection assignments; verify parent inheritance rules
+4. **Fabric color won't save without parent collections** - Fabric colors must inherit parent collection's collections (intentional)
+5. **Hierarchy path not showing** - Ensure parent relationships are correctly set; path generates on-the-fly
+6. **Material costs not calculating in product pricing** - Verify cost per unit is set on all materials used
+7. **Concept won't move to "In Development"** - Create prototype first; status updates automatically on prototype creation
+8. **Prototype feedback not appearing** - Check that feedback is marked as "Actionable" to show in action items
+9. **Milestone dates not tracking** - Set planned date first; actual date only appears after status set to "Completed"
+10. **Document upload failing** - Check file size (max 50MB); verify file type is allowed; ensure storage bucket exists
+11. **Product search returning no results** - Search is case-sensitive; try partial matches; check filters aren't too restrictive
+12. **Material hierarchy showing wrong path** - Parent relationships may have circular reference; check parent_id values
+13. **Collection material count incorrect** - Counts cache for performance; force refresh by editing collection
+14. **Fabric brand collections not showing in filters** - Check brand status is Active; verify collection assignments
+15. **Prototype number not auto-generating** - Check database sequence; may need to reset sequence in rare cases
+
+## Tips & Tricks
+
+1. **Bulk Material Import** - Use CSV import for large material lists (Contact support for template)
+2. **Collection Prefix Patterns** - Use 2-letter prefixes for short collections, 3-4 letters for longer names
+3. **Material Search Shortcuts** - Search hierarchy path (e.g., "Oak/White") to find specific variants quickly
+4. **Fabric Organization** - Create brands first, then collections, then colors for fastest setup
+5. **Concept Templates** - Duplicate similar concepts to save time on repetitive fields
+6. **Prototype Milestone Templates** - Create standard milestone sets for common prototype types
+7. **Feedback Categories** - Standardize feedback categories across team for easier analysis
+8. **Document Naming Convention** - Use format: `[Type]-[Version]-[Date]-[Description]` (e.g., "Drawing-2.1-2024-03-15-Front-View")
+9. **Specification JSON Templates** - Create reusable JSON spec templates for common product types
+10. **Child Material Batch Creation** - Create multiple child materials at once using "Add Multiple" feature
+11. **Material Cost History** - Export material costs monthly for trend analysis
+12. **Concept Priority Scoring** - Use priority + estimated cost to calculate ROI-based prioritization
+13. **Prototype Photo Naming** - Include milestone name in photo filename for context
+14. **Collection Material Reports** - Export material lists by collection for supplier negotiations
+15. **Fabric Swatch URLs** - Use consistent URL structure for easy swatch management
+16. **Prototype Comparison** - Open multiple prototype tabs to compare iterations side-by-side
+17. **Material Substitution Lists** - Tag similar materials for easy substitution in orders
+18. **Concept-to-Production Time** - Track average time from concept creation to catalog product for planning
+19. **Feedback Response Templates** - Create standard responses for common feedback types
+20. **Milestone Time Estimates** - Use historical actual dates to improve future planned dates
+21. **Product SKU Patterns** - Use collection prefix + category code + sequence for logical SKUs
+22. **Material Package Deals** - Create child materials representing pre-configured material combinations
+23. **Prototype Success Rate** - Track approved vs rejected prototypes by designer for performance insights
+24. **Collection Refresh Tracking** - Tag collections with last refresh date for lifecycle management
+25. **Cross-Collection Products** - Use multiple collection assignments to appear in multiple catalog sections
+
+## FAQ
+
+**Q: How many collections can a material be assigned to?**
+A: Unlimited. Materials can be available in any number of collections.
+
+**Q: Can I change a material's parent after creation?**
+A: No. Parent relationships are immutable. Create a new material if hierarchy changes are needed.
+
+**Q: What happens if I change a collection prefix?**
+A: Prefix changes don't affect existing SKUs or references. Only new items will use the new prefix.
+
+**Q: Can grandchild materials have children?**
+A: No. Maximum hierarchy is 3 levels (parent → child → grandchild).
+
+**Q: Why don't fabric collections inherit brand collections?**
+A: Fabric collections are often targeted to specific product lines that differ from the brand's overall collections.
+
+**Q: Can I delete a collection that has materials?**
+A: No. Remove all material assignments first, or set collection to Inactive.
+
+**Q: How are material costs used in pricing?**
+A: Material costs aggregate in product BOMs and prototype cost estimates for margin analysis.
+
+**Q: What's the difference between concept and prototype?**
+A: Concepts are ideas/designs; prototypes are physical samples. Concepts progress to prototypes after approval.
+
+**Q: Can multiple prototypes link to one concept?**
+A: Yes. Create iterations as separate prototypes, all linked to the original concept.
+
+**Q: What happens to prototypes when concept is rejected?**
+A: Prototypes remain independent. Rejecting a concept doesn't affect linked prototypes.
+
+**Q: Can I convert a prototype directly to a production order?**
+A: Not directly. Create a catalog product first, then create production orders from the catalog product.
+
+**Q: How do I handle material substitutions?**
+A: Tag similar materials with substitution keywords; search by tag when selecting materials.
+
+**Q: Can I see which products use a specific material?**
+A: Yes. Material detail page shows all products and prototypes using that material.
+
+**Q: What's the best way to organize fabrics?**
+A: Create brands first, then collections under each brand, then colors under each collection.
+
+**Q: How do I track discontinued materials?**
+A: Set material status to Inactive; it remains in system but hidden from default views.
+
+**Q: Can I import materials from a spreadsheet?**
+A: Yes. Contact support for CSV import template and instructions.
+
+**Q: What's included in hierarchy path?**
+A: Full path from parent to current material, separated by "/" (e.g., "Oak/White Oak/Quarter Sawn").
+
+**Q: Can I reorder milestones after creation?**
+A: Yes. Drag and drop milestones to reorder; sort order saves automatically.
+
+**Q: How do I mark a milestone as delayed?**
+A: Status automatically becomes "Delayed" when current date passes planned date.
+
+**Q: What file types are supported for documents?**
+A: PDF, PNG, JPG, DOCX, XLSX, DWG, DXF, ZIP (max 50MB per file).
+
+**Q: Can I share prototype documents with external users?**
+A: Yes. Generate shareable link with expiration date; no login required for recipients.
+
+**Q: How do I track multiple prototype iterations?**
+A: Create separate prototype records; link to same concept; use naming convention (e.g., "Modern Chair v1", "v2").
+
+**Q: What's the difference between target price and estimated cost?**
+A: Target price is desired retail price; estimated cost is manufacturing cost. Margin = (target - cost) / target.
+
+**Q: Can I clone an existing prototype?**
+A: Yes. Click "Duplicate" on prototype detail page; all details copy except number and dates.
+
+**Q: How do I assign multiple designers to a prototype?**
+A: Primary designer in prototype record; additional team members via shared access or comments.
+
+**Q: Can I export concept/prototype data?**
+A: Yes. Use "Export to CSV" button on list pages; includes all fields and custom specifications.
+
+**Q: How do I handle seasonal collections?**
+A: Create separate collections for each season; use naming convention (e.g., "Spring 2024 Modern").
+
+**Q: Can I see profit margin for prototypes?**
+A: Yes. Margin calculated automatically from target price and estimated cost; shown on detail page.
+
+**Q: What happens if I archive a manufacturer?**
+A: Existing prototype assignments remain; manufacturer won't appear in dropdown for new prototypes.
+
+**Q: How do I track material availability?**
+A: Material detail shows current stock levels; low stock alerts via dashboard notifications.
+
+## Support
+
+For additional assistance with Product Management:
+
+**Technical Support**: Email support@limnsystems.com | Phone 1-800-XXX-XXXX | Hours Monday-Friday 9 AM-6 PM EST
+
+**Product Team**: products@limnsystems.com for product catalog and material questions
+
+**Documentation**: help.limnsystems.com for user guides and tutorials
+
+**Feedback**: feedback@limnsystems.com for feature requests
