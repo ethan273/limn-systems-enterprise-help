@@ -1,11 +1,14 @@
 import nextra from 'nextra'
-import rehypeSlug from 'rehype-slug'
+import rehypeSlugH2Plus from './lib/rehype-slug-h2-only.mjs'
 
 const withNextra = nextra({
   theme: 'nextra-theme-docs',
   themeConfig: './theme.config.tsx',
   mdxOptions: {
-    rehypePlugins: [rehypeSlug]
+    rehypePlugins: [
+      // Only add IDs to h2-h6 headings, excluding h1 to prevent duplicate TOC entries
+      rehypeSlugH2Plus,
+    ]
   }
 })
 
