@@ -4,5 +4,7 @@
     "type": "page"
   },
   "authentication": "Authentication",
+  "navigation": "Navigating the Platform",
+  "first-steps": "First Steps by Role",
   "user-roles": "User Roles"
 }

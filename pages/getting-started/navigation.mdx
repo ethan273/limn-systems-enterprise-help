@@ -1,0 +1,524 @@
+# Navigating the Platform
+
+Learn how to efficiently navigate Limn Systems Enterprise and find the features you need.
+
+## Overview
+
+Limn Systems Enterprise uses a multi-level navigation system designed for quick access to all features while maintaining a clean, organized interface.
+
+**Navigation Layers:**
+- **Top Bar** - Global actions, search, notifications, user menu
+- **Sidebar** - Main module navigation (12 primary modules)
+- **Dashboard Navigation** - Quick access to specialized dashboards
+- **Breadcrumbs** - Current location path
+- **Module Tabs** - Sub-navigation within each module
+
+---
+
+## Top Bar (Global Navigation)
+
+The top bar is always visible and provides access to global features.
+
+### Top Bar Elements
+
+**Left Side:**
+- **Logo** - Click to return to home dashboard
+- **Module Title** - Shows current module name
+- **Breadcrumbs** - Path to current page (Home > CRM > Leads > Detail)
+
+**Right Side:**
+- **Global Search** - Search across all modules (Cmd+K / Ctrl+K)
+- **Notifications** - Bell icon with unread count badge
+- **Help** - Quick access to this documentation
+- **User Menu** - Profile, settings, logout
+
+### Global Search (Cmd+K)
+
+**Access:** Click search icon or press `Cmd+K` (Mac) / `Ctrl+K` (Windows)
+
+**Search Capabilities:**
+- **Contacts & CRM** - Search by name, email, company
+- **Orders** - Search by order number, customer name
+- **Products** - Search by SKU, name, collection
+- **Projects** - Search by project name, customer
+- **Tasks** - Search by title, assignee, description
+- **Documents** - Search by filename, document name
+
+**Search Behavior:**
+- Real-time results as you type (300ms debounce)
+- Recent searches saved locally
+- Keyboard navigation (arrow keys + Enter to select)
+- Supports partial matches and fuzzy search
+
+**Search Tips:**
+- Use quotes for exact matches: `"order 1234"`
+- Filter by module: `@crm John Smith`
+- Filter by status: `status:active`
+- Filter by date: `created:2025-01-15`
+
+### Notifications Center
+
+**Access:** Click bell icon in top bar
+
+**Notification Types:**
+- **Task Assignments** - New tasks assigned to you
+- **Order Updates** - Status changes on your orders
+- **Production Alerts** - Manufacturing milestones reached
+- **Quality Issues** - QC inspection failures
+- **Approval Requests** - Pending approval workflows
+- **System Messages** - Maintenance, updates, announcements
+
+**Notification Actions:**
+- Mark as read (click notification)
+- Mark all as read (button at bottom)
+- Click notification to navigate to related record
+- Dismiss notification (X icon)
+
+**Notification Settings:**
+- Access via User Menu > Settings > Notifications
+- Configure which notification types you receive
+- Set quiet hours (no notifications during specified times)
+- Email digest frequency (immediate, daily, weekly, never)
+
+---
+
+## Sidebar Navigation
+
+The main sidebar provides access to all primary modules and features.
+
+### Module List (12 Primary Modules)
+
+**Order of Modules:**
+
+1. **Dashboards** - Specialized dashboard views (10 dashboards)
+2. **Tasks** - Task management and assignments
+3. **Mobile Tasks** - Offline-capable mobile task system
+4. **CRM & Sales** - Contacts, leads, customers, pipeline
+5. **Partners** - Factories, designers, sourcing agents
+6. **Design** - Design projects, boards, mood boards
+7. **Products** - Materials, collections, SKUs, inventory
+8. **Orders** - Quotes, orders, tracking
+9. **Production** - Manufacturing tracking, work orders
+10. **Shipping** - SEKO WMS, tracking, labels
+11. **Finance** - Invoicing, payments, QuickBooks integration
+12. **Documents** - Document management, approvals
+
+**Additional Sections:**
+- **HR & Employees** - Employee management, portal access
+- **Marketing** - Email campaigns, Flipbooks
+- **Automation** - Workflow engine, rules, alerts
+- **Portals** - Customer/designer/factory/QC portal access
+- **Roles & Permissions** - RBAC system, permission management
+- **Administration** - System settings, user management
+
+### Sidebar Behavior
+
+**Collapsed State:**
+- Click collapse icon (<<) to minimize sidebar
+- Shows icons only, no labels
+- Hover to see tooltips with module names
+- Click any icon to expand and navigate
+
+**Expanded State:**
+- Full module names visible
+- Submodules shown on hover (if applicable)
+- Active module highlighted with accent color
+- Scroll sidebar if content exceeds viewport height
+
+**Mobile Behavior:**
+- Sidebar hidden by default on screens < 768px
+- Hamburger menu (=) in top-left to toggle sidebar
+- Sidebar overlays content when open
+- Tap outside sidebar to close
+
+---
+
+## Dashboard Navigation
+
+Access specialized dashboards tailored to different roles and functions.
+
+### 10 Specialized Dashboards
+
+**Available Dashboards:**
+
+1. **Admin Dashboard** - System overview, user activity, alerts
+2. **Sales Dashboard** - CRM metrics, pipeline value, conversion rates
+3. **Design Dashboard** - Active projects, submissions, approvals
+4. **Production Dashboard** - Work orders, capacity, on-time delivery
+5. **Finance Dashboard** - Revenue, outstanding invoices, payments
+6. **CRM Dashboard** - Funnel analytics, lifecycle stages, activities
+7. **QC Dashboard** - Inspection metrics, defect rates, quality trends
+8. **Projects Dashboard** - Project status, timelines, budgets
+9. **Orders Dashboard** - Order status distribution, revenue by status
+10. **Tasks Dashboard** - Task assignments, completion rates, overdue tasks
+
+**Switching Dashboards:**
+- Navigate to Dashboards module in sidebar
+- Click desired dashboard from dropdown or list
+- Dashboard selection saved per user session
+- Bookmark frequently used dashboards
+
+---
+
+## Module Navigation
+
+Each module has its own internal navigation structure.
+
+### Common Module Patterns
+
+**List View:**
+- Table of records with sortable columns
+- Search bar at top for filtering
+- "New [Record]" button (top-right) to create
+- Pagination controls at bottom
+- Bulk action checkboxes (if applicable)
+
+**Detail View:**
+- Single record with all details
+- Tabs for related records (Orders, Activities, Documents)
+- Edit button (top-right) to modify
+- Delete button (three-dot menu)
+- Back button to return to list
+
+**Edit/Create View:**
+- Form with organized field groups
+- Required fields marked with red asterisk (*)
+- Save/Cancel buttons at bottom
+- Validation errors shown inline
+- Auto-save indicator (if applicable)
+
+### Module-Specific Navigation
+
+**CRM Module:**
+- Tabs: Contacts | Leads | Customers | Activities
+- Pipeline view button (kanban board)
+- Funnel analytics button
+- Conversion actions (Convert to Lead, Convert to Client)
+
+**Orders Module:**
+- Tabs: All Orders | Quotes | Active | Completed | Cancelled
+- Status filter dropdown
+- Date range picker
+- Export to CSV button
+
+**Tasks Module:**
+- Views: My Tasks | All Tasks | By Assignee | By Project
+- Filter by status (To Do | In Progress | Completed)
+- Filter by priority (Low | Medium | High | Urgent)
+- Calendar view toggle
+
+**Production Module:**
+- Tabs: Work Orders | Schedules | Capacity | Analytics
+- Filter by factory partner
+- Status workflow buttons (Start, Pause, Complete)
+- Real-time progress indicators
+
+**Documents Module:**
+- Tabs: My Documents | Shared | Pending Approval
+- Folder tree navigation (left sidebar)
+- File type filters (PDF, Images, CAD, etc.)
+- Upload button (drag-and-drop support)
+
+---
+
+## Breadcrumbs
+
+Breadcrumbs show your current location in the application hierarchy.
+
+### Breadcrumb Patterns
+
+**Format:**
+```
+Home > Module > Sub-section > Record Type > Record Name
+```
+
+**Examples:**
+- `Home > CRM > Leads > Lead Detail > John Smith`
+- `Home > Orders > Order Detail > Order #12345`
+- `Home > Products > Materials > Material Detail > Walnut Veneer`
+
+**Breadcrumb Actions:**
+- Click any breadcrumb segment to navigate back to that level
+- Last segment (current page) is not clickable
+- Breadcrumbs automatically update as you navigate
+- Truncated on mobile (shows last 2 segments + "...")
+
+---
+
+## Quick Actions & Shortcuts
+
+Improve efficiency with keyboard shortcuts and quick actions.
+
+### Keyboard Shortcuts
+
+**Global Shortcuts:**
+- `Cmd/Ctrl + K` - Open global search
+- `Cmd/Ctrl + /` - Show keyboard shortcut help
+- `Esc` - Close modal/dialog
+- `Tab` - Navigate through form fields
+
+**Navigation Shortcuts:**
+- `Cmd/Ctrl + H` - Go to home dashboard
+- `Cmd/Ctrl + N` - Create new record (context-aware)
+- `Cmd/Ctrl + S` - Save current form
+- `Cmd/Ctrl + [` - Go back
+- `Cmd/Ctrl + ]` - Go forward
+
+**List View Shortcuts:**
+- `Arrow Up/Down` - Navigate through rows
+- `Enter` - Open selected record
+- `Delete` - Delete selected record (with confirmation)
+- `Cmd/Ctrl + A` - Select all records
+
+**Search Shortcuts:**
+- `Arrow Up/Down` - Navigate search results
+- `Enter` - Go to selected result
+- `Esc` - Close search
+- `Tab` - Cycle through result categories
+
+### Quick Actions Menu
+
+**Access:** Click three-dot menu (...) on any record
+
+**Common Actions:**
+- View Details
+- Edit
+- Delete
+- Duplicate
+- Export
+- Share
+- Archive
+
+**Context-Specific Actions:**
+- **Orders:** Mark as Shipped, Generate Invoice
+- **Leads:** Convert to Client, Send Email
+- **Tasks:** Mark Complete, Change Assignee
+- **Documents:** Request Approval, Download
+
+---
+
+## User Profile Menu
+
+Access account settings and preferences from the user menu.
+
+### User Menu Options
+
+**Profile:**
+- View/Edit Profile - Update name, email, phone
+- Profile Picture - Upload custom avatar
+- Preferences - Language, timezone, date format
+
+**Settings:**
+- Notifications - Configure alert preferences
+- Security - Change password, enable MFA
+- API Keys - Generate API access tokens (admin only)
+
+**Help & Support:**
+- Documentation - This help center
+- Submit Feedback - Report bugs, request features
+- Contact Support - Email support team
+
+**Account:**
+- Switch Workspace - If you have access to multiple workspaces
+- Logout - End current session
+
+---
+
+## Mobile Navigation
+
+Navigation optimized for mobile devices (tablets and smartphones).
+
+### Mobile-Specific Behavior
+
+**Hamburger Menu:**
+- Tap three-line icon (=) in top-left to open sidebar
+- Sidebar slides in from left
+- Tap outside sidebar or X icon to close
+
+**Bottom Navigation Bar:**
+- Shows on mobile for quick access to frequently used modules
+- Typically includes: Dashboard, Tasks, Orders, CRM, More
+- Active tab highlighted with accent color
+
+**Swipe Gestures:**
+- Swipe right - Open sidebar
+- Swipe left - Close sidebar (if open)
+- Swipe left on list item - Show quick actions menu
+- Pull down to refresh list views
+
+**Search on Mobile:**
+- Tap search icon to expand full-screen search
+- Voice search supported (if device capable)
+- Recent searches shown for quick access
+
+---
+
+## Portal-Specific Navigation
+
+External users (customers, designers, factory partners) see simplified portal navigation.
+
+### Customer Portal Navigation
+
+**Main Sections:**
+- Dashboard - Order status, shipment tracking
+- Orders - View and track orders
+- Documents - Access project documents
+- Financials - View invoices, make payments
+- Shipping - Track shipments
+- Profile - Manage account details
+
+### Designer Portal Navigation
+
+**Main Sections:**
+- Dashboard - Project overview, submissions
+- Projects - View assigned design projects
+- Submissions - Submit deliverables with versioning
+- Documents - Access design files
+- Quality - View quality reports
+- Settings - Manage preferences
+
+### Factory Portal Navigation
+
+**Main Sections:**
+- Dashboard - Production overview, capacity
+- Orders - View production orders
+- Quality - View and submit QC data
+- Shipping - Manage outbound shipments
+- Documents - Access production specifications
+- Settings - Configure notifications
+
+### QC Portal Navigation
+
+**Main Sections:**
+- Dashboard - QC metrics overview
+- Inspections - Create and manage inspections
+- History - View past inspection records
+- Upload - Bulk photo upload with inspection linking
+- Status Updates - Update inspection status
+- Settings - Notification preferences
+
+---
+
+## Tips for Efficient Navigation
+
+### Best Practices
+
+1. **Use Keyboard Shortcuts**
+   - Learn the 5 most common shortcuts (Cmd+K, Cmd+N, Cmd+S, Cmd+H, Esc)
+   - Shortcuts save 2-3 seconds per action (adds up over time)
+
+2. **Bookmark Frequently Accessed Pages**
+   - Use browser bookmarks for daily pages
+   - Create browser bookmark folders by module
+   - Consider browser extensions for quick access
+
+3. **Use Global Search Liberally**
+   - Faster than clicking through sidebar and lists
+   - Supports fuzzy matching (forgives typos)
+   - Recent searches saved for quick re-access
+
+4. **Keep Multiple Tabs Open**
+   - Open detail pages in new tabs (Cmd/Ctrl + Click)
+   - Keep reference data in background tabs
+   - Use browser tab groups to organize by module
+
+5. **Customize Dashboard Widgets**
+   - Pin most-used widgets to top
+   - Hide widgets you don't need
+   - Rearrange via drag-and-drop (if enabled)
+
+6. **Learn Module Patterns**
+   - Most modules follow same list/detail/edit pattern
+   - Once you learn CRM, you know Orders, Products, etc.
+   - Consistent UI reduces learning curve
+
+### Time-Saving Techniques
+
+**Bulk Operations:**
+- Use checkboxes + bulk actions instead of one-at-a-time edits
+- Export to CSV, edit in Excel, re-import for large updates
+
+**Quick Create:**
+- Use Cmd/Ctrl + N to create records without navigating
+- Context-aware (creates record type based on current module)
+
+**Recent Items:**
+- Recent items shown in search results
+- Quickly access last 5 viewed records per module
+
+**Favorites/Pins:**
+- Star/pin frequently accessed records
+- Appears in "Favorites" section of module list
+
+---
+
+## Troubleshooting Navigation Issues
+
+### Common Navigation Problems
+
+**Sidebar Not Visible:**
+- Solution: Click hamburger menu (=) to toggle sidebar
+- Check if sidebar is collapsed (click expand icon)
+- Clear browser cache if sidebar appears broken
+
+**Search Not Working:**
+- Solution: Ensure you have network connection
+- Try clearing search query and starting fresh
+- Check if search results are filtered by module
+
+**Page Not Loading:**
+- Solution: Refresh browser (Cmd/Ctrl + R)
+- Check browser console for errors (F12)
+- Clear browser cache and cookies
+- Try different browser (Chrome, Firefox, Safari)
+
+**Navigation Menus Cut Off:**
+- Solution: Adjust browser zoom level (Cmd/Ctrl + 0 to reset)
+- Check if browser window is too narrow
+- Try full-screen mode (F11)
+
+**Back Button Not Working:**
+- Solution: Use browser back button instead of application back
+- Check if in modal dialog (modals don't affect browser history)
+- Use breadcrumbs to navigate back
+
+---
+
+## FAQ
+
+**Q: Can I customize the sidebar module order?**
+
+A: Not currently. Module order is determined by typical workflow progression. However, you can use bookmarks or browser favorites for custom ordering.
+
+**Q: How do I hide modules I don't use?**
+
+A: Module visibility is determined by your role and permissions. Contact your administrator to adjust your role if certain modules shouldn't be visible.
+
+**Q: Can I change the dashboard shown on login?**
+
+A: Yes. Navigate to your desired default dashboard, then go to User Menu > Settings > Preferences and set "Default Dashboard on Login".
+
+**Q: What's the difference between Cmd+K search and module search bars?**
+
+A: Cmd+K searches across all modules globally. Module search bars only search within the current module. Use Cmd+K when you're not sure which module contains the record.
+
+**Q: How do I navigate between multiple workspaces?**
+
+A: If you have access to multiple workspaces (uncommon), use User Menu > Switch Workspace. Most users only have one workspace.
+
+---
+
+## Next Steps
+
+Now that you understand navigation, learn how to get started with your specific role:
+
+- [First Steps by Role](/getting-started/first-steps) - Role-specific onboarding
+- [User Roles & Permissions](/getting-started/user-roles) - Understanding your access level
+- [Dashboard Overview](/dashboards) - Learn about specialized dashboards
+
+---
+
+**Need Help?**
+- Internal Employees: #support Slack channel
+- External Users: support@limn.us.com
+- Documentation: help.limn.us.com
