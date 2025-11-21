@@ -1,39 +1,739 @@
 # Integrations
 
-Third-party integrations and services.
+Third-party integrations and services that power Limn Systems Enterprise.
 
 ## Overview
 
-Limn Systems Enterprise integrates with leading third-party services for authentication, email, payments, logistics, and more.
+Limn Systems Enterprise integrates with leading third-party services for authentication, email, payments, logistics, and more. These integrations provide enterprise-grade functionality while maintaining seamless user experience.
 
-## Available Integrations
+**Integration Categories:**
+- **Infrastructure** - Database, hosting, caching (Supabase, Vercel, Upstash Redis)
+- **Authentication** - SSO and identity (Google Workspace, Supabase Auth)
+- **Communication** - Email delivery and campaigns (Resend)
+- **Business Operations** - Accounting and logistics (QuickBooks, SEKO WMS)
+- **Monitoring** - Error tracking and performance (Sentry)
 
-### Infrastructure & Backend
-- **Supabase** - Database, authentication, and storage
-- **Vercel** - Hosting and deployment platform
-- **Upstash Redis** - Caching and rate limiting
+---
 
-### Communication
-- **Resend** - Email delivery service
-- **Google Workspace** - SSO and email integration
+## Supabase (Database, Auth, Storage)
 
-### Business Operations
-- **QuickBooks** - Accounting and financial data sync
-- **PandaDoc** - Document generation and e-signatures
-- **SEKO Logistics** - Shipping and tracking integration
+**Purpose:** Primary database, authentication, and file storage infrastructure
 
-### Monitoring & Analytics
-- **Sentry** - Error tracking and performance monitoring
+### Capabilities
 
-## Key Features
+**PostgreSQL Database:**
+- **Scale:** 316 tables, 4,297 columns, 1,314 indexes
+- **Row Level Security (RLS):** Enabled on all tables
+- **Multi-Tenant Isolation:** customer_id foreign key pattern
+- **Audit Trails:** created_by, updated_by, created_at, updated_at on all mutation tables
+- **Performance:** 18 strategic indexes (October 2025), dashboard queries 95% faster
 
-- OAuth and SSO authentication
-- Real-time data synchronization
-- Webhook support
-- API key management
-- Integration health monitoring
-- Error handling and retry logic
+**Authentication:**
+- **OAuth 2.0:** Google Workspace SSO for @limn.us.com employees
+- **Magic Links:** Passwordless authentication for external users
+- **MFA Support:** TOTP-based (Google Authenticator, Authy)
+- **Session Management:** JWT tokens with automatic refresh
 
-## Getting Started
+**Storage:**
+- **Hybrid Architecture:** Supabase <50MB, Google Drive >=50MB
+- **5 Storage Buckets:** task-attachments, shop-drawings, shipping-labels, document-files, prototype-images
+- **RLS Policies:** Row-level security on all storage buckets
+- **Multi-Format Support:** PDF, images, CAD files, Office documents
 
-Learn how to configure and use each integration to extend platform capabilities.
+### Configuration
+
+**Database Connection:**
+- Connection managed via environment variables
+- Pooled connections via Prisma
+- Direct database URL for migrations
+
+**Authentication Setup:**
+- Configured in Supabase Dashboard > Authentication
+- OAuth providers: Google Workspace (@limn.us.com domain restriction)
+- Magic link templates customized with branding
+
+**Storage Buckets:**
+- Created via Supabase Dashboard > Storage
+- RLS policies applied for tenant isolation
+- Public URLs with signed token authentication
+
+### Usage in Application
+
+**Database Access:**
+```typescript
+// Always use ctx.db pattern (never direct PrismaClient)
+const orders = await ctx.db.orders.findMany({
+  where: { customer_id: customerId },
+  include: { line_items: true }
+});
+```
+
+**Authentication:**
+```typescript
+// Get current user
+const user = await getUser();
+if (!user) throw new TRPCError({ code: 'UNAUTHORIZED' });
+```
+
+**Storage:**
+```typescript
+// Upload file to bucket
+const { data, error } = await supabase.storage
+  .from('task-attachments')
+  .upload(`tasks/${taskId}/${filename}`, file);
+```
+
+### Monitoring & Maintenance
+
+**Performance:**
+- Query performance monitored via Supabase Dashboard
+- Slow query logs analyzed weekly
+- Indexes added based on query patterns
+
+**Backups:**
+- Daily automated backups (30-day retention)
+- Point-in-time recovery available
+- Manual backup triggers for major changes
+
+---
+
+## Google Workspace (SSO & Email)
+
+**Purpose:** Single Sign-On for internal employees and email integration
+
+### OAuth 2.0 Authentication
+
+**Employee Login Flow:**
+1. User clicks "Sign in with Google"
+2. Redirects to Google OAuth consent screen
+3. User authorizes with @limn.us.com account
+4. Google returns authorization code
+5. Exchange code for access token
+6. Create/update user record in database
+7. Check admin allowlist for auto-provisioning
+8. Establish session with JWT token
+
+**Domain Restriction:**
+- **Enforced:** Only @limn.us.com email addresses allowed
+- **Configuration:** Set in Google Cloud Console OAuth client
+- **Validation:** Server-side verification of email domain
+
+**Admin Allowlist:**
+- **Purpose:** Auto-provision admin privileges on first login
+- **Table:** admin_allowlist (email, role, granted_by, granted_at)
+- **Roles:** admin, super_admin
+- **MFA:** Required for super_admin role (mandatory)
+
+### Email Integration
+
+**Gmail API (Future):**
+- Read/send emails via Gmail API
+- Email tracking for CRM activities
+- Attachment downloads
+- Calendar integration for meetings
+
+**Current Implementation:**
+- OAuth for authentication only
+- Email sent via Resend (separate integration)
+- Calendar integration: Planned
+
+### Configuration
+
+**Google Cloud Console:**
+1. Create OAuth 2.0 Client ID
+2. Set authorized redirect URIs
+3. Configure consent screen with scopes
+4. Set domain restrictions (@limn.us.com)
+
+**Environment Variables:**
+```
+GOOGLE_CLIENT_ID=your_client_id
+GOOGLE_CLIENT_SECRET=your_client_secret
+NEXTAUTH_URL=https://your-domain.com
+```
+
+---
+
+## Resend (Email Delivery)
+
+**Purpose:** Transactional email, marketing campaigns, and Flipbooks
+
+### Email Capabilities
+
+**Transactional Emails:**
+- **Magic Links:** Passwordless authentication for external users
+- **Order Confirmations:** Sent when order status changes
+- **Invoice Notifications:** Sent when invoice is generated
+- **Task Assignments:** Notify users of new task assignments
+- **Password Resets:** Secure password reset links
+- **Welcome Emails:** Onboarding for new users
+
+**Marketing Campaigns:**
+- **Flipbooks:** Interactive PDF catalogs with page tracking
+- **Email Blasts:** Bulk emails to customer segments
+- **Newsletters:** Monthly product updates and tips
+- **Drip Campaigns:** Automated multi-email sequences
+
+**Webhook Events:**
+- **delivered:** Email successfully delivered
+- **opened:** Recipient opened email
+- **clicked:** Recipient clicked link in email
+- **bounced:** Email bounced (invalid address)
+- **complained:** Recipient marked as spam
+
+### Campaign System
+
+**Flipbook Campaigns:**
+- Upload PDF catalog (product collections, lookbooks)
+- System converts to interactive web viewer
+- Track page views, time spent, clicks
+- Send email with flipbook link
+- View engagement analytics
+
+**Rate Limiting:**
+- **Upstash Redis:** 300 emails/hour per campaign
+- **Purpose:** Prevent spam, comply with email best practices
+- **Behavior:** Queue excess emails, send over time
+
+**Unsubscribe Management:**
+- One-click unsubscribe links in all campaigns
+- Preference center for granular opt-outs
+- CAN-SPAM and GDPR compliant
+
+### Configuration
+
+**Resend Dashboard:**
+1. Create API key
+2. Verify sending domain (SPF, DKIM, DMARC)
+3. Configure webhook endpoint
+4. Set up email templates
+
+**Environment Variables:**
+```
+RESEND_API_KEY=re_xxxxx
+RESEND_WEBHOOK_SECRET=whsec_xxxxx
+```
+
+**Email Templates:**
+- Stored in `src/lib/email/templates/`
+- React Email components
+- Preview in development mode
+
+### Usage Example
+
+```typescript
+import { Resend } from 'resend';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+await resend.emails.send({
+  from: 'noreply@limn.us.com',
+  to: customer.email,
+  subject: 'Your Order Has Shipped',
+  react: OrderShippedEmail({ order }),
+});
+```
+
+---
+
+## QuickBooks Online (Accounting)
+
+**Purpose:** Bidirectional financial data synchronization
+
+### Sync Capabilities
+
+**Invoice Sync (Limn → QuickBooks):**
+- Create invoices in QuickBooks when generated in Limn
+- Sync line items, taxes, discounts, payment terms
+- Link to QuickBooks customer record
+- Update invoice status (draft, sent, paid, overdue)
+
+**Customer Sync (Bidirectional):**
+- Create customers in QuickBooks from Limn CRM
+- Sync customer details (name, email, address, terms)
+- Update existing customer records
+- Maintain customer_id mapping between systems
+
+**Payment Tracking (QuickBooks → Limn):**
+- Import payment records from QuickBooks
+- Apply payments to Limn invoices
+- Update invoice status to "paid"
+- Sync payment method and reference numbers
+
+**Chart of Accounts:**
+- Map Limn revenue categories to QuickBooks accounts
+- Automatic GL posting for invoices
+- Configurable account mappings
+
+### Sync Workflow
+
+**Manual Sync:**
+1. Navigate to Finance > Integrations > QuickBooks
+2. Click "Sync Now" button
+3. System syncs invoices created/updated since last sync
+4. Review sync status and error logs
+
+**Automatic Sync (Scheduled):**
+- Runs daily at 2 AM (configurable)
+- Syncs previous 24 hours of changes
+- Email notification on sync errors
+
+**Conflict Resolution:**
+- QuickBooks is source of truth for payments
+- Limn is source of truth for invoices
+- Manual intervention required for conflicts
+
+### Configuration
+
+**QuickBooks App Setup:**
+1. Create app in QuickBooks Developer Portal
+2. Configure OAuth 2.0 credentials
+3. Set redirect URIs
+4. Request scopes: accounting, payment
+
+**OAuth Connection:**
+1. Admin navigates to Finance > Integrations > QuickBooks
+2. Click "Connect to QuickBooks"
+3. Authorize app in QuickBooks
+4. Store access token and refresh token
+5. Token auto-refreshes every 60 days
+
+**Environment Variables:**
+```
+QUICKBOOKS_CLIENT_ID=your_client_id
+QUICKBOOKS_CLIENT_SECRET=your_client_secret
+QUICKBOOKS_REDIRECT_URI=https://your-domain.com/api/integrations/quickbooks/callback
+```
+
+### Monitoring
+
+**Sync Status:**
+- View last sync time
+- See total records synced
+- Review error logs
+
+**Health Check:**
+- Connection status (connected/disconnected)
+- Token expiry date
+- Last successful sync
+
+---
+
+## SEKO WMS (Warehouse & Logistics)
+
+**Purpose:** 7L Freight TMS integration for shipping and tracking
+
+### API Capabilities (19 Endpoints)
+
+**Quote Management:**
+- **Get Quote:** Request freight quotes with origin/destination
+- **Quote Breakdown:** 3-vendor routing (Pickup, Linehaul, Delivery)
+- **Rate Shopping:** Compare carrier rates
+- **Service Levels:** Standard, expedited, overnight
+
+**Shipment Creation:**
+- **Create Shipment:** Book shipment with carrier
+- **Schedule Pickup:** Request pickup from origin
+- **Generate Labels:** PDF, ZPL (Zebra thermal), PNG formats
+- **BOL Generation:** Bill of Lading documents
+
+**Tracking & Status:**
+- **Track Shipment:** Real-time tracking via tracking number
+- **Status Updates:** 150+ event codes via webhook
+- **Proof of Delivery:** POD documents with signatures
+- **Exception Handling:** Delay notifications, damage reports
+
+**Address Validation:**
+- **Validate Address:** Real-time validation via SEKO API
+- **Address Correction:** Suggested corrections for invalid addresses
+- **Residential Detection:** Identify residential vs commercial
+
+**Document Management:**
+- **Upload Documents:** Attach customs docs, commercial invoices
+- **Retrieve Labels:** Download labels in multiple formats
+- **Archive Access:** 90-day document retention
+
+**Reporting:**
+- **Shipment History:** Query past shipments
+- **Cost Analysis:** Total shipping costs by period
+- **Performance Metrics:** On-time delivery rates
+
+### Multi-Format Label Storage
+
+**Storage Pattern:**
+```
+shipping-labels/
+  shipments/{shipmentId}/
+    shipping.pdf      # Archive & email
+    shipping.zpl      # Thermal printers (Zebra)
+    shipping.png      # Web display
+```
+
+**Label Formats:**
+- **PDF:** 4x6 inch thermal label, suitable for archive and email
+- **ZPL:** Zebra Programming Language for thermal printers
+- **PNG:** Web display, mobile apps, quality previews
+
+**Automatic Generation:**
+```typescript
+// System automatically generates all 3 formats
+const labels = await uploadShippingLabel(shipmentId, labelData, 'PDF');
+// Converts and stores ZPL and PNG variants
+```
+
+### Tracking Timeline UI
+
+**ShipmentTrackingTimeline Component:**
+- Visual timeline with 150+ event codes
+- Color-coded by category (delivered, in_transit, arrival, departure, cleared)
+- Location details (city, state, postal code, country)
+- Timestamp with timezone conversion
+- Automatic status updates via webhook
+
+**Event Categories:**
+- **Delivered** (DLV) - Green, checkmark icon
+- **In Transit** (OTR, ITR) - Blue, truck icon
+- **Arrival** (ARV) - Primary, map pin icon
+- **Departure** (DEP) - Secondary, plane icon
+- **Cleared** (CLR, CRL) - Success, shield icon
+
+### Quote Breakdown UI
+
+**SevenLQuoteBreakdown Component:**
+- 3-vendor routing display (Pickup Agent, Linehaul, Delivery Agent)
+- Itemized charges by vendor (FRT, FSC, PU, DLV, RES, SEC, INS, LFT)
+- Total cost calculation
+- Service level and transit time
+- Origin/destination zip codes
+
+### Configuration
+
+**SEKO API Credentials:**
+```
+SEKO_API_KEY=your_api_key
+SEKO_API_SECRET=your_secret
+SEKO_ACCOUNT_NUMBER=your_account
+SEKO_ENVIRONMENT=production  # or sandbox
+```
+
+**Webhook Setup:**
+1. Configure webhook URL in SEKO portal
+2. Set secret key for verification
+3. Subscribe to tracking events
+4. Handle webhook in `/api/webhooks/seko`
+
+---
+
+## Upstash Redis (Caching & Rate Limiting)
+
+**Purpose:** Distributed caching, rate limiting, and email queue management
+
+### Use Cases
+
+**Email Rate Limiting:**
+- **Campaign Limits:** 300 emails/hour per campaign
+- **Global Limits:** Prevent abuse, comply with ESP limits
+- **Sliding Window:** Rolling 1-hour window, not fixed intervals
+- **Queue Management:** Store pending emails, process gradually
+
+**Cache Layer:**
+- **Query Caching:** Cache expensive database queries
+- **Session Storage:** Store session data for faster lookups
+- **API Response Caching:** Cache external API responses (SEKO quotes, QuickBooks data)
+
+**Job Queue:**
+- **Background Tasks:** Queue tasks for async processing
+- **Retry Logic:** Automatic retry on failure with exponential backoff
+- **Dead Letter Queue:** Failed jobs moved to DLQ for investigation
+
+### Configuration
+
+**Upstash Dashboard:**
+1. Create Redis database
+2. Copy connection string
+3. Configure eviction policy (allkeys-lru recommended)
+
+**Environment Variables:**
+```
+UPSTASH_REDIS_REST_URL=https://xxxxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=your_token
+```
+
+### Usage Example
+
+```typescript
+import { Redis } from '@upstash/redis';
+
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+// Rate limiting
+const key = `campaign:${campaignId}:hour:${currentHour}`;
+const count = await redis.incr(key);
+if (count > 300) {
+  throw new Error('Rate limit exceeded');
+}
+await redis.expire(key, 3600); // 1 hour TTL
+```
+
+---
+
+## Vercel (Hosting & Deployment)
+
+**Purpose:** Hosting, edge functions, serverless deployment
+
+### Deployment Features
+
+**Automatic Deployments:**
+- **Main Branch:** Deploy to production on push to `main`
+- **Preview Branches:** Deploy to preview URL on PR
+- **Environment Variables:** Separate for production/preview
+- **Build Caching:** Faster builds with incremental compilation
+
+**Edge Functions:**
+- **Serverless:** tRPC API routes run as serverless functions
+- **Cold Starts:** <100ms for most routes
+- **Auto-Scaling:** Scales to zero, scales to millions
+- **Regional:** Deploy to multiple regions for low latency
+
+**Performance:**
+- **CDN:** Static assets served from edge
+- **Image Optimization:** Next.js Image component with Vercel optimization
+- **Bundle Splitting:** Automatic code splitting per page
+- **Analytics:** Real User Monitoring (RUM) data
+
+### Configuration
+
+**Vercel Project Settings:**
+- Framework: Next.js 14
+- Build Command: `npm run build`
+- Output Directory: `.next`
+- Install Command: `npm install`
+
+**Environment Variables:**
+- Set in Vercel Dashboard > Settings > Environment Variables
+- Separate values for Production/Preview/Development
+- Sensitive values encrypted at rest
+
+**Domains:**
+- **Production:** limn.us.com (or your custom domain)
+- **Preview:** Auto-generated per PR (e.g., `app-git-feature-branch-team.vercel.app`)
+
+---
+
+## Sentry (Error Tracking)
+
+**Purpose:** Error tracking, performance monitoring, and release tracking
+
+### Monitoring Capabilities
+
+**Error Tracking:**
+- **Automatic Capture:** Unhandled exceptions, promise rejections
+- **Manual Capture:** `Sentry.captureException(error)` for handled errors
+- **Breadcrumbs:** User actions leading to error (navigation, clicks, API calls)
+- **Context:** User info, device info, environment variables
+- **Source Maps:** Unminified stack traces for debugging
+
+**Performance Monitoring:**
+- **Transaction Tracking:** API route response times
+- **Database Queries:** Slow query detection
+- **External API Calls:** SEKO, QuickBooks, Resend latency
+- **Frontend Performance:** Page load times, LCP, FID, CLS
+
+**Release Tracking:**
+- **Deploy Events:** Track releases via `sentry-cli`
+- **Commit SHA:** Link errors to specific code version
+- **Rollback Detection:** Alert if error rate spikes after deploy
+
+### Configuration
+
+**Sentry Dashboard:**
+1. Create project (Next.js)
+2. Copy DSN (Data Source Name)
+3. Configure release tracking
+4. Set up alerts and integrations (Slack, email)
+
+**Environment Variables:**
+```
+SENTRY_DSN=https://xxxxx@sentry.io/xxxxx
+SENTRY_ORG=your-org
+SENTRY_PROJECT=limn-systems-enterprise
+SENTRY_AUTH_TOKEN=your_auth_token
+```
+
+**Sentry Config:**
+```javascript
+// sentry.client.config.ts
+Sentry.init({
+  dsn: process.env.NEXT_PUBLIC_SENTRY_DSN,
+  environment: process.env.NODE_ENV,
+  tracesSampleRate: 0.1, // 10% of transactions
+  beforeSend(event) {
+    // Scrub sensitive data
+    if (event.request) {
+      delete event.request.cookies;
+    }
+    return event;
+  },
+});
+```
+
+---
+
+## Integration Health Monitoring
+
+### Dashboard Overview
+
+**Access:** Admin > Integrations > Health
+
+**Health Indicators:**
+
+| Integration | Status | Last Sync | Error Rate | Uptime |
+|-------------|--------|-----------|------------|--------|
+| Supabase | Healthy | Real-time | 0.01% | 99.99% |
+| QuickBooks | Healthy | 2 hours ago | 0% | 99.9% |
+| SEKO WMS | Healthy | Real-time | 0.5% | 99.5% |
+| Resend | Healthy | Real-time | 0.1% | 99.95% |
+| Sentry | Healthy | Real-time | 0% | 99.99% |
+
+**Status Levels:**
+- **Healthy** (Green) - Operating normally
+- **Degraded** (Yellow) - Elevated error rate, still functional
+- **Down** (Red) - Not operational, immediate attention required
+
+### Error Handling
+
+**Automatic Retry:**
+- Exponential backoff (1s, 2s, 4s, 8s, 16s)
+- Max 5 retries before failing
+- Dead letter queue for failed jobs
+
+**Circuit Breaker:**
+- Open circuit after 10 consecutive failures
+- Half-open after 1 minute (test with single request)
+- Close circuit on successful request
+
+**Alerting:**
+- **Slack:** #integrations-alerts channel
+- **Email:** engineering@limn.us.com
+- **PagerDuty:** Critical integrations only (Supabase, Stripe)
+
+---
+
+## Best Practices
+
+### API Key Management
+
+**Security:**
+- Store API keys in environment variables (never commit to code)
+- Rotate keys quarterly
+- Use separate keys for production/staging
+- Revoke keys immediately on employee offboarding
+
+**Organization:**
+- Name keys descriptively (e.g., `limn-prod-quickbooks-oauth`)
+- Document key purpose and owner
+- Track key expiration dates
+- Set up alerts for expiring keys
+
+### Webhook Security
+
+**Verification:**
+- Always verify webhook signatures
+- Use constant-time comparison to prevent timing attacks
+- Reject webhooks with invalid signatures
+- Log all webhook attempts (both valid and invalid)
+
+**Replay Protection:**
+- Check webhook timestamp (reject if >5 minutes old)
+- Store processed webhook IDs to prevent duplicates
+- Use idempotent handlers (safe to process same event multiple times)
+
+### Rate Limiting
+
+**Respect Limits:**
+- SEKO WMS: 100 req/min
+- QuickBooks: 500 req/min
+- Resend: 10 req/sec
+
+**Implementation:**
+- Use Upstash Redis for distributed rate limiting
+- Implement sliding window algorithm
+- Queue excess requests instead of failing
+- Provide rate limit feedback to users
+
+---
+
+## Troubleshooting
+
+### QuickBooks Sync Failures
+
+**Problem:** Invoices not syncing to QuickBooks
+
+**Solutions:**
+1. Check connection status (token may be expired)
+2. Re-authenticate via OAuth flow
+3. Review error logs for specific failures
+4. Verify customer exists in QuickBooks
+5. Check for duplicate invoice numbers
+
+### SEKO Label Generation Issues
+
+**Problem:** Labels not generating or saving
+
+**Solutions:**
+1. Verify SEKO API credentials
+2. Check shipment address validation
+3. Ensure storage bucket permissions (RLS policies)
+4. Review SEKO account status (suspended/expired)
+5. Test with sandbox environment first
+
+### Resend Email Delivery Problems
+
+**Problem:** Emails not being delivered
+
+**Solutions:**
+1. Verify domain SPF/DKIM/DMARC records
+2. Check recipient email validity
+3. Review bounce logs in Resend dashboard
+4. Verify not hitting rate limits (300/hour)
+5. Check spam complaints (may trigger blocking)
+
+---
+
+## FAQ
+
+**Q: Can I add custom integrations?**
+
+A: Yes, contact engineering team to discuss requirements. Custom integrations require API documentation, test environment, and ongoing maintenance plan.
+
+**Q: How often does QuickBooks sync run?**
+
+A: Automatically every 24 hours at 2 AM. Manual sync available anytime via Finance > Integrations > QuickBooks.
+
+**Q: Are there costs for integrations?**
+
+A: Some integrations have usage-based pricing (Resend, SEKO). Costs are monitored and budgeted. High-volume users may need enterprise pricing tiers.
+
+**Q: What happens if an integration goes down?**
+
+A: System continues operating with degraded functionality. Failed operations queued for retry. Alerts sent to engineering team immediately.
+
+---
+
+## Next Steps
+
+- [Shipping Module](/shipping) - Learn about SEKO WMS integration usage
+- [Finance Module](/finance) - Learn about QuickBooks integration usage
+- [Marketing Module](/marketing) - Learn about Resend campaigns and Flipbooks
+- [Admin Guide](/admin) - Configure and manage integrations
+
+---
+
+**Need Help?**
+- Documentation: help.limn.us.com
+- Internal Employees: #support Slack channel
+- Integration Issues: #integrations-alerts Slack channel
+- External Users: support@limn.us.com
