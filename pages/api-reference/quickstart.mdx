@@ -225,7 +225,7 @@ while (true) {
   const batch = await api.orders.list.query({ limit, offset });
   allOrders.push(...batch);
 
-  if (batch.length < limit) break; // No more results
+  if (batch.length &lt; limit) break; // No more results
   offset += limit;
 }
 ```

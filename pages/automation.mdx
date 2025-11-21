@@ -744,7 +744,7 @@ Events stored in `real_time_events` table:
 2. For each rule:
    - Calculate metric value (execution_time, failure_rate, queue_size)
    - Compare to threshold (above, below, equals)
-   - Check if cooldown active (last triggered < 15 minutes ago)
+   - Check if cooldown active (last triggered &lt; 15 minutes ago)
    - If threshold breached and cooldown expired:
      - Create `alert_triggers` entry
      - Send notifications to configured channels (email, in-app, google_chat)

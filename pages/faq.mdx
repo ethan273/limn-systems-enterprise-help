@@ -45,7 +45,7 @@ Limn Systems Enterprise is a comprehensive ERP platform designed for custom furn
 **Not Supported:**
 - Internet Explorer (any version)
 - Opera Mini
-- Older browser versions (<2 years old)
+- Older browser versions (&lt;2 years old)
 
 **Performance Note:** Chrome provides the best experience for complex dashboards and analytics.
 
@@ -522,7 +522,7 @@ These represent stages in the customer lifecycle. All contacts start as Ambassad
 
 **Lifecycle Flow:**
 ```
-Ambassador -> Contact -> Lead -> Prospect -> Client
+Ambassador to Contact to Lead to Prospect to Client
 ```
 
 **Ambassador:**
@@ -551,10 +551,10 @@ Ambassador -> Contact -> Lead -> Prospect -> Client
 - Managed in Customers module
 
 **Conversion Actions:**
-- Ambassador -> Contact: Manual conversion (verify information)
-- Contact -> Lead: Click "Convert to Lead" button
-- Lead -> Prospect: Click "Convert to Prospect" button, set temperature
-- Prospect -> Client: Click "Convert to Client" button (creates customer record)
+- Ambassador to Contact: Manual conversion (verify information)
+- Contact to Lead: Click "Convert to Lead" button
+- Lead to Prospect: Click "Convert to Prospect" button, set temperature
+- Prospect to Client: Click "Convert to Client" button (creates customer record)
 
 **Learn More:** [CRM Module](/crm)
 
@@ -562,14 +562,14 @@ Ambassador -> Contact -> Lead -> Prospect -> Client
 
 **Two-Step Process:**
 
-**Step 1: Lead -> Prospect**
+**Step 1: Lead to Prospect**
 1. Open lead detail page
 2. Click "Convert to Prospect" button (top-right)
 3. Set prospect temperature (Cold/Warm/Hot)
 4. Add notes about qualification criteria
 5. Click "Convert"
 
-**Step 2: Prospect -> Client**
+**Step 2: Prospect to Client**
 1. Open prospect detail page
 2. Click "Convert to Client" button (top-right)
 3. Fill client information:
@@ -689,9 +689,9 @@ The sales pipeline is a visual kanban board showing prospects by stage.
 
 **Funnel Metrics:**
 - Ambassador count
-- Contact -> Lead conversion rate
-- Lead -> Prospect conversion rate
-- Prospect -> Client conversion rate
+- Contact to Lead conversion rate
+- Lead to Prospect conversion rate
+- Prospect to Client conversion rate
 - Average time in each stage
 
 **Sales Metrics:**
@@ -741,7 +741,7 @@ The sales pipeline is a visual kanban board showing prospects by stage.
 
 **Workflow:**
 ```
-Quote (Draft) -> Quote (Sent) -> Quote (Accepted) -> Convert to Order -> Order (Confirmed)
+Quote (Draft) to Quote (Sent) to Quote (Accepted) to Convert to Order to Order (Confirmed)
 ```
 
 **Converting Quote to Order:**
@@ -847,7 +847,7 @@ Quote (Draft) -> Quote (Sent) -> Quote (Accepted) -> Convert to Order -> Order (
 
 **Order Status Progression:**
 ```
-Pending -> In Production -> Quality Check -> Shipped -> Delivered -> Completed
+Pending to In Production to Quality Check to Shipped to Delivered to Completed
 ```
 
 **Tracking Methods:**
@@ -969,7 +969,7 @@ Pending -> In Production -> Quality Check -> Shipped -> Delivered -> Completed
 
 **Hierarchy:**
 ```
-Materials -> Products -> Collections
+Materials to Products to Collections
 ```
 
 **Use Cases:**
@@ -1061,7 +1061,7 @@ Materials -> Products -> Collections
 - **Manual adjustment:** Admin can adjust directly
 
 **Low Stock Alerts:**
-- Notification when quantity <= reorder point
+- Notification when quantity &lt;= reorder point
 - Email sent to production manager + admin
 - "Low Stock" badge visible in product list
 - Suggested reorder quantity shown
@@ -1199,7 +1199,7 @@ Materials -> Products -> Collections
 
 **Status Progression:**
 ```
-Not Started -> In Progress -> Quality Check -> Completed
+Not Started to In Progress to Quality Check to Completed
 ```
 
 **Tracking Methods:**
@@ -1281,7 +1281,7 @@ Not Started -> In Progress -> Quality Check -> Completed
 
 **4. Customer Communication**
 - If delay > 7 days: automatic email to customer
-- If delay < 7 days: manual communication (optional)
+- If delay &lt; 7 days: manual communication (optional)
 - Email includes:
   - Delay reason (customer-friendly language)
   - New estimated delivery date
@@ -1756,7 +1756,7 @@ Limn Systems Enterprise syncs with QuickBooks Online (bidirectional sync).
 5. Click "Upload"
 
 **File Size Limits & Storage:**
-- Files < 50 MB: Uploaded to Supabase Storage (fast, integrated)
+- Files &lt; 50 MB: Uploaded to Supabase Storage (fast, integrated)
 - Files >= 50 MB: Uploaded to Google Drive (large file optimization)
 - **Supabase Buckets:**
   - `documents` - General documents

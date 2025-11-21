@@ -789,7 +789,7 @@ Post-approval management interface for updating portal user access, module permi
 **Features:**
 - View all portal users (active and inactive)
 - Edit module permissions without re-approval
-- Change portal type (e.g., customer -> factory)
+- Change portal type (e.g., customer to factory)
 - Revoke access (soft delete - reversible)
 - Reactivate revoked access
 - Delete access (hard delete - permanent)
@@ -857,7 +857,7 @@ Customer initially granted only "orders" and "documents" modules. Now they need 
 For Customer Portal:
 - [x] orders
 - [x] documents
-- [ ] financials <- Check this to add
+- [ ] financials &lt;- Check this to add
 - [x] shipping
 - [x] profile
 
@@ -902,7 +902,7 @@ User initially approved as "customer" but should be "factory" (wrong portal type
 5. Change **"Portal Type"** dropdown to "factory"
 6. Modules section updates to show factory modules
 7. Select appropriate factory modules
-8. Update entity linkage (customer_id -> partner_id)
+8. Update entity linkage (customer_id to partner_id)
 9. Click **"Save Changes"**
 
 **Effects:**
@@ -1119,7 +1119,7 @@ Each event shows:
 - Event type (icon + label)
 - Description (details)
 - Changed by (admin name)
-- Old value -> New value (for updates)
+- Old value to New value (for updates)
 - Reason (if provided)
 
 **Export History:**

@@ -35,7 +35,7 @@ Limn Systems Enterprise integrates with leading third-party services for authent
 - **Session Management:** JWT tokens with automatic refresh
 
 **Storage:**
-- **Hybrid Architecture:** Supabase <50MB, Google Drive >=50MB
+- **Hybrid Architecture:** Supabase &lt;50MB, Google Drive >=50MB
 - **5 Storage Buckets:** task-attachments, shop-drawings, shipping-labels, document-files, prototype-images
 - **RLS Policies:** Row-level security on all storage buckets
 - **Multi-Format Support:** PDF, images, CAD files, Office documents
@@ -494,7 +494,7 @@ await redis.expire(key, 3600); // 1 hour TTL
 
 **Edge Functions:**
 - **Serverless:** tRPC API routes run as serverless functions
-- **Cold Starts:** <100ms for most routes
+- **Cold Starts:** &lt;100ms for most routes
 - **Auto-Scaling:** Scales to zero, scales to millions
 - **Regional:** Deploy to multiple regions for low latency
 

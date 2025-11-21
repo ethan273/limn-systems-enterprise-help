@@ -48,8 +48,8 @@ Internal Limn Systems employees use Google OAuth with their @limn.us.com email a
 2. Redirected to Google OAuth consent screen
 3. User selects @limn.us.com Google account
 4. OAuth callback validates email domain
-5. If valid -> Create session, redirect to /dashboard
-6. If invalid -> Sign out, show error message
+5. If valid to Create session, redirect to /dashboard
+6. If invalid to Sign out, show error message
 ```
 
 **Technical Details:**
@@ -165,7 +165,7 @@ Status: Active
 1. HR adds email to allowlist with user_type = admin, role = manager
 2. Employee completes first OAuth login with @limn.us.com account
 3. System checks allowlist during user profile creation
-4. Matches email -> Assigns user_type and role automatically
+4. Matches email to Assigns user_type and role automatically
 5. Employee immediately has admin/manager access on first login
 ```
 

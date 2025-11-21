@@ -1041,7 +1041,7 @@ if (!allowedModules.includes('orders')) {
 
 **Solution**:
 1. Check if token was already used: `SELECT * FROM pending_user_requests WHERE magic_link_token = 'TOKEN' AND magic_link_used = true;`
-2. Check if token expired: `SELECT * FROM pending_user_requests WHERE magic_link_token = 'TOKEN' AND magic_link_expires_at < NOW();`
+2. Check if token expired: `SELECT * FROM pending_user_requests WHERE magic_link_token = 'TOKEN' AND magic_link_expires_at &lt; NOW();`
 3. If expired or used, admin must re-approve user to send new magic link
 4. If neither, check if token exists at all (may indicate email delivery issue)
 
