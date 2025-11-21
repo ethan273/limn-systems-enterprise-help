@@ -19,24 +19,202 @@ Comprehensive technical documentation covering the system architecture, technolo
 ## Technology Stack
 
 ### Frontend
-- Next.js 14 (App Router)
-- React 18
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
+- **Next.js 14** (App Router, React Server Components)
+- **React 18** with TypeScript
+- **Tailwind CSS** for styling
+- **shadcn/ui** component library
+- **React Query (TanStack Query)** for data fetching and caching
+- **PWA Support** - Offline-capable with service workers
+- **Mobile-First Design** - Responsive layouts for all device sizes
 
 ### Backend
-- tRPC v10
-- Prisma ORM
-- PostgreSQL
-- Supabase Auth
+- **tRPC v10** - 90+ type-safe API routers
+- **Prisma ORM** - Database client with code generation
+- **PostgreSQL 15** via Supabase
+- **Supabase Auth** - OAuth + Magic Links
+- **Zod** - Runtime schema validation
+- **Pino Logger** - Universal structured logging (1,500+ statements migrated)
 
 ### Infrastructure
-- Vercel (hosting)
-- Supabase (database, auth, storage)
-- Upstash Redis (caching, rate limiting)
-- Resend (email)
+- **Vercel** (hosting, edge functions, serverless)
+- **Supabase** (database, auth, storage, realtime)
+- **Upstash Redis** (caching, rate limiting, email queue)
+- **Resend** (transactional email, campaigns)
+- **SEKO Logistics** (WMS API, 19 endpoints)
+- **Sentry** (error tracking, performance monitoring)
+
+## Database Architecture
+
+### Scale
+- **316 Tables** with 4,297 columns
+- **1,314 Indexes** (18 strategic indexes added October 2025)
+- **150+ Functions** (custom stored procedures)
+- **59 Triggers** (audit logging, status updates)
+- **30 Views** (analytics, reporting)
+- **15 RBAC Tables** (roles, permissions, delegation)
+
+### Key Design Patterns
+- **Row Level Security (RLS)** enabled on all tables
+- **Multi-Tenant Isolation** via customer_id foreign keys
+- **Audit Trails** on all mutation operations (created_by, updated_by, created_at, updated_at)
+- **Soft Deletes** (active flags, archived_at timestamps)
+- **Optimistic Locking** via updated_at version checks
+
+### Performance Optimizations
+- **Dashboard queries**: 95% faster (60s → 3-5s) via 30-day date filters
+- **Global search**: 85% faster (2000ms → 300ms) via multi-column indexes
+- **Bundle size**: 60MB reduction (AWS SDK removed)
+- **Build time**: 50 seconds (TypeScript incremental compilation)
+
+## Storage Architecture
+
+### Hybrid Storage Strategy
+- **Supabase Storage** - Files <50MB (documents, images, labels)
+- **Google Drive** - Files >=50MB (CAD files, videos, large PDFs)
+- **Automatic Routing** - `uploadShippingLabel()` function handles format detection
+
+### Storage Buckets
+- **task-attachments** - Task photos and attachments
+- **shop-drawings** - Production technical drawings
+- **shipping-labels** - Multi-format labels (PDF, ZPL, PNG)
+- **document-files** - General document storage
+- **prototype-images** - Product prototype photos
+
+### Label Storage (SEKO WMS)
+```
+shipping-labels/
+  shipments/{shipmentId}/
+    shipping.pdf      # Archive & email
+    shipping.zpl      # Thermal printers (Zebra)
+    shipping.png      # Web display
+```
+
+## Authentication Architecture
+
+### Internal Employees
+- **OAuth 2.0** via Google Workspace
+- **Domain Restriction**: @limn.us.com only
+- **Admin Allowlist**: Auto-provisioning on first login
+- **Session Management**: Supabase Auth tokens
+
+### External Users
+- **Magic Links** (passwordless authentication)
+- **Portal-Scoped Access**: customer, designer, factory, qc
+- **Module-Level Permissions**: 7 modules for factories, 5 for designers, 6 for QC
+- **Instant Revocation**: Session invalidation on access removal
+
+### Multi-Factor Authentication (MFA)
+- Optional for all users
+- Required for super_admin role
+- TOTP-based (Google Authenticator, Authy)
+
+## API Architecture
+
+### tRPC Routers (90+)
+- **Type-Safe** - End-to-end TypeScript safety
+- **Auto-Generated** - Client types from server definitions
+- **Middleware Stack** - Auth, logging, error handling, rate limiting
+- **Zod Validation** - Runtime input validation on all endpoints
+
+### Security Patterns
+- **Mass Assignment Prevention** - Explicit Zod schemas (z.any() forbidden via ESLint)
+- **Multi-Tenant Isolation** - `getUserCustomerId()` enforced on all queries
+- **Admin Action Logging** - `logAdminAction()` required for all admin mutations
+- **Permission Checks** - `hasPermission()` before sensitive operations
+
+### Error Handling
+- **Structured Logging** - Pino logger with context metadata
+- **TRPCError Codes** - Standardized error responses
+- **Sentry Integration** - Automatic error reporting
+- **User-Friendly Messages** - Generic messages, detailed logs
+
+## Frontend Architecture
+
+### Modal-Free Design (January 2025)
+- **Eliminated ALL modal dialogs** for create/edit operations (14 files, -2,438 lines)
+- **Full-Page Routes** for editing (e.g., /products/[id], /crm/leads/new)
+- **Preserved Modals** only for: delete confirmations, previews, workflows
+- **Bookmarkable URLs** - All edit states have dedicated routes
+- **Consistent UX** - Same navigation pattern across all modules
+
+### Component Patterns
+- **Server Components** for static content and data fetching
+- **Client Components** for interactivity (forms, modals, realtime)
+- **DataTable** component (40 instances, zero data mapping issues)
+- **Inline Editors** for array fields (tags, capabilities, permissions)
+
+### State Management
+- **React Query** - Server state caching and synchronization
+- **URL State** - Search params for filters, pagination, sorting
+- **Form State** - react-hook-form with Zod validation
+- **Optimistic Updates** - Instant UI feedback with automatic rollback
+
+## PWA Architecture
+
+### Service Worker Strategy
+- **NetworkOnly** for admin routes (prevents stale data)
+- **CacheFirst** for static assets
+- **Runtime Caching** for API responses
+- **Background Sync** for offline task creation
+
+### Offline Capabilities
+- **Task Creation** - Create tasks offline, sync when online
+- **Photo Capture** - Capture photos offline, upload when online
+- **Local Storage** - IndexedDB for offline data persistence
+- **Sync Indicators** - Visual feedback for sync status
+
+## Integrations Architecture
+
+### SEKO WMS Integration
+- **19 API Endpoints** - Complete 7L Freight TMS integration
+- **Real-Time Tracking** - 150+ event codes via webhook
+- **Multi-Format Labels** - PDF, ZPL, PNG automatic generation
+- **Quote Breakdown** - Vendor routing (Pickup, Linehaul, Delivery)
+- **Address Validation** - Real-time validation via SEKO API
+
+### QuickBooks Integration
+- **Invoice Sync** - Bidirectional sync (Limn → QB)
+- **Customer Sync** - Customer creation and updates
+- **Payment Tracking** - Payment status updates
+- **Chart of Accounts** - Automatic account mapping
+
+### Resend Email Integration
+- **Campaign System** - Flipbooks, email blasts, newsletters
+- **Webhook Events** - delivered, opened, clicked, bounced, complained
+- **Rate Limiting** - Upstash Redis (300/hour per campaign)
+- **Unsubscribe Management** - One-click unsubscribe links
+
+## Recent Architectural Changes (November 2025)
+
+### Modal Removal (January 2025)
+- Eliminated all create/edit modal dialogs (14 files)
+- Reduced codebase by 2,438 lines
+- Improved UX consistency and URL bookmarkability
+
+### SEKO WMS Integration (November 2025)
+- 19 new API endpoints for freight management
+- Multi-format label storage (PDF/ZPL/PNG)
+- Tracking timeline component (150+ event codes)
+- Quote breakdown component (3-vendor routing)
+
+### Mobile Tasks System (November 2025)
+- Offline-capable PWA with service workers
+- Photo capture with IndexedDB storage
+- Background sync for task creation
+- Mobile-optimized UI components
+
+### RBAC Enhancements (November 2025)
+- Inline permission editor (grant/revoke with audit trail)
+- Permission comparison view (role vs user vs effective)
+- Customer-scoped permissions (multi-tenant)
+- Session constraints (IP, time, device)
+
+### HR Management System (November 2025)
+- OAuth authentication for @limn.us.com employees
+- Admin allowlist for auto-provisioning
+- Partner contact management (designers, factories, QC)
+- Portal access control (module-level permissions)
 
 ## Getting Started
 
-Explore the architecture documentation to understand system design and implementation details.
+Explore the architecture documentation to understand system design and implementation details. For technical support or questions about architecture decisions, contact the engineering team.
