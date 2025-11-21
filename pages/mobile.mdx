@@ -1,0 +1,1025 @@
+# Mobile Task Management
+
+## Overview
+
+The Mobile Task Management interface provides a streamlined, touch-optimized experience for managing tasks on smartphones and tablets. Designed for field work, client meetings, and on-the-go productivity, the mobile interface focuses on quick task capture and essential task management features.
+
+**Key Benefits:**
+
+- **Quick Capture** - Create tasks in seconds with minimal input
+- **Offline Support** - Work without internet connection, sync when online
+- **Touch-Optimized** - Large tap targets and swipe gestures
+- **Progressive Web App (PWA)** - Install on device home screen
+- **Lightweight** - Fast load times on mobile networks
+- **Real-Time Sync** - Automatic synchronization with desktop
+
+**Availability:** Internal employees only (requires @limn.us.com email authentication)
+
+---
+
+## Getting Started
+
+### Accessing Mobile Tasks
+
+**URL:** `https://systems.limn.us.com/mobile/tasks`
+
+**Requirements:**
+- Authenticated user with @limn.us.com email
+- Mobile device (smartphone or tablet)
+- Modern browser (Safari, Chrome, Firefox, Edge)
+- Optional: Install as PWA for better experience
+
+**First-Time Access:**
+
+1. Open mobile browser
+2. Navigate to `systems.limn.us.com/mobile/tasks`
+3. Sign in with Google Workspace SSO
+4. Allow location access (optional, for location-based tasks)
+5. Install as app (recommended) - see Installation section below
+
+---
+
+## Installing as App (PWA)
+
+The mobile tasks interface can be installed as a Progressive Web App (PWA) on your device home screen for a native app-like experience.
+
+### iOS Installation (iPhone/iPad)
+
+**Step-by-Step:**
+
+1. Open Safari browser (must use Safari on iOS)
+2. Navigate to `systems.limn.us.com/mobile/tasks`
+3. Tap the Share button (square with up arrow)
+4. Scroll down and tap **"Add to Home Screen"**
+5. Edit name if desired (default: "Mobile Tasks")
+6. Tap **"Add"** in top right corner
+7. App icon appears on home screen
+
+**Benefits:**
+- Standalone app experience (no browser UI)
+- Faster launch time
+- Offline mode enabled automatically
+- Background sync when online
+- Push notifications (if enabled)
+
+**Icon:**
+The app will display the Limn Systems logo on your home screen.
+
+### Android Installation
+
+**Step-by-Step:**
+
+1. Open Chrome browser
+2. Navigate to `systems.limn.us.com/mobile/tasks`
+3. Tap the menu button (three dots)
+4. Select **"Install app"** or **"Add to Home screen"**
+5. Confirm by tapping **"Install"**
+6. App icon appears on home screen
+
+**Alternative Method:**
+- Look for the install banner that appears automatically at bottom of screen
+- Tap **"Install"** on the banner
+
+**Benefits:**
+- Standalone app experience
+- Faster launch time
+- Offline mode enabled
+- Background sync
+- Push notifications (if enabled)
+
+---
+
+## Quick Task Capture
+
+The Quick Capture card is prominently displayed at the top of the mobile interface for instant task creation.
+
+### Basic Task Creation
+
+**Minimum Required:**
+- Task title only
+
+**Process:**
+
+1. Tap the title input field
+2. Type task name (e.g., "Follow up with client")
+3. Tap **"Create Task"** button
+4. Task created with default settings:
+   - Priority: Medium
+   - Assignee: You
+   - Status: To Do
+   - Due date: None
+
+**Time to Create:** 5-10 seconds
+
+### Advanced Task Creation
+
+**Optional Fields:**
+
+To access optional fields, tap the **"Show more options"** toggle (chevron down icon).
+
+**Available Fields:**
+
+**1. Priority** (Tap to select)
+- Low (blue indicator)
+- Medium (yellow indicator) - Default
+- High (red indicator)
+
+**2. Due Date** (Calendar picker)
+- Tap calendar icon
+- Select date from picker
+- Time defaults to 11:59 PM
+- Clear with "X" button
+
+**3. Description** (Expandable text area)
+- Multi-line text support
+- Markdown formatting (optional)
+- Keyboard auto-expands
+- Up to 5,000 characters
+
+**Process:**
+
+1. Tap title field, enter task name
+2. Tap **"Show more options"**
+3. Optional fields expand
+4. Set priority (tap priority button)
+5. Set due date (tap calendar icon, select date)
+6. Add description (tap description field, type details)
+7. Tap **"Create Task"**
+8. Task created with all specified details
+
+**Time to Create:** 15-30 seconds (with optional fields)
+
+### Offline Task Capture
+
+**How It Works:**
+
+When offline (no internet connection), tasks are queued locally on your device and automatically synced when connection is restored.
+
+**Offline Indicators:**
+
+- Browser status bar shows "No connection"
+- Toast notification: "Task queued for sync when online"
+- Task appears in list with sync icon indicator
+
+**Queue Management:**
+
+- Tasks stored in IndexedDB (persistent browser storage)
+- Queue survives browser restarts
+- Maximum queue size: 50 tasks
+- Auto-sync on connection restore (background)
+- Manual sync available in settings
+
+**Sync Process:**
+
+1. Device regains internet connection
+2. Background sync triggers automatically
+3. Queued tasks uploaded to server in order
+4. Server returns task IDs
+5. Local task records updated with server IDs
+6. Toast notification: "X tasks synced"
+
+**Conflict Resolution:**
+
+If a task was modified on another device while offline, the system uses "last write wins" strategy. Your offline changes take precedence.
+
+---
+
+## Task List & Filtering
+
+### Task List View
+
+**Display:**
+
+- Card-based layout (one task per card)
+- Touch-optimized spacing (44px min tap target)
+- Color-coded priority indicators (left border)
+- Due date badges (top right)
+- Status icons (checkmark for completed)
+
+**Task Card Contents:**
+
+- Task title (bold, 16px font)
+- Description preview (first 100 characters, truncated)
+- Assignee avatar (if not you)
+- Due date badge (if set)
+- Priority indicator (colored left border)
+- Tap anywhere to view details
+
+### Filtering by Status
+
+**Filter Tabs:**
+
+Located below Quick Capture card, swipe horizontally to switch.
+
+**1. All** (Default)
+- Shows all tasks assigned to you
+- Includes all statuses
+- Count badge shows total
+
+**2. To Do**
+- Tasks with status "To Do"
+- Not yet started
+- Sorted by due date (soonest first)
+
+**3. In Progress**
+- Tasks with status "In Progress"
+- Currently being worked on
+- Sorted by last update (most recent first)
+
+**4. Done**
+- Tasks with status "Completed"
+- Marked complete
+- Sorted by completion date (newest first)
+- Auto-archived after 30 days
+
+**Switching Filters:**
+
+- Tap any tab to switch instantly
+- No page reload (client-side filtering)
+- Filter preference saved for session
+
+**Empty States:**
+
+- No tasks: "No tasks found. Tap + to create one."
+- No To Do: "All caught up! No pending tasks."
+- No In Progress: "Start working on a task to see it here."
+- No Done: "Complete tasks to see them here."
+
+### Sorting Options
+
+**Available Sorts:**
+
+Within each filter tab, tasks can be sorted by:
+
+- **Due Date** (default) - Soonest first
+- **Priority** - High, Medium, Low
+- **Created Date** - Newest first
+- **Alphabetical** - A to Z by title
+
+**Changing Sort:**
+
+1. Tap sort icon (three horizontal lines) in top right
+2. Select sort option from dropdown
+3. List re-sorts instantly
+4. Sort preference saved for session
+
+---
+
+## Task Details View
+
+### Viewing Task Details
+
+**Access:**
+
+Tap any task card in the list to open details view.
+
+**Details Page Shows:**
+
+- Full task title
+- Complete description (all text, formatted)
+- Assignee name and avatar
+- Created date and time
+- Due date (if set)
+- Priority level with indicator
+- Status with colored badge
+- Project link (if associated with project)
+- Customer link (if associated with customer)
+- Comments count and preview
+- Attachments count (if any)
+
+**Actions Available:**
+
+- **Edit Task** - Tap pencil icon in top right
+- **Mark Complete** - Tap checkmark button
+- **Change Status** - Tap status badge, select new status
+- **Change Priority** - Tap priority indicator, select new level
+- **Add Comment** - Tap comment button at bottom
+- **Share Task** - Tap share icon to copy link
+- **Delete Task** - Tap trash icon (requires confirmation)
+
+### Editing Tasks
+
+**Process:**
+
+1. Open task details
+2. Tap **Edit** icon (pencil) in top right
+3. Edit form opens with all fields
+4. Modify any field
+5. Tap **Save Changes** or swipe down to cancel
+6. Changes saved immediately
+
+**Editable Fields:**
+
+- Title (tap to edit inline)
+- Description (tap to expand text area)
+- Priority (tap priority button)
+- Due date (tap calendar icon)
+- Assignee (tap to search users)
+- Status (tap status dropdown)
+- Project association (tap to search projects)
+- Customer association (tap to search customers)
+
+**Validation:**
+
+- Title required (cannot be empty)
+- Due date must be future date
+- Assignee must be active user
+- Project/Customer must exist
+
+**Save Behavior:**
+
+- Auto-save on field blur (lose focus)
+- Manual save via **Save** button
+- Changes synced to server immediately
+- Offline changes queued for sync
+
+### Marking Tasks Complete
+
+**Quick Complete (from list):**
+
+- Swipe right on task card
+- Checkmark button appears
+- Tap to mark complete
+- Card moves to "Done" tab instantly
+
+**Complete from Details:**
+
+1. Open task details
+2. Tap large **Complete** button at bottom
+3. Confirmation: "Mark as complete?"
+4. Tap **Yes** to confirm
+5. Task status changes to "Completed"
+6. Completion date/time recorded
+7. Redirected back to task list
+8. Task appears in "Done" tab
+
+**Undo Complete:**
+
+- Open completed task details
+- Tap **Reopen Task** button
+- Task status changes back to "In Progress"
+- Task returns to original filter tab
+
+---
+
+## Touch Gestures
+
+### Supported Gestures
+
+**Swipe Actions:**
+
+**Swipe Right (on task card):**
+- Reveals **Complete** button
+- Quick action to mark task done
+- Swipe back left to cancel
+
+**Swipe Left (on task card):**
+- Reveals **Delete** button
+- Quick action to remove task
+- Requires confirmation dialog
+- Swipe back right to cancel
+
+**Pull to Refresh:**
+- Pull down from top of task list
+- Releases to trigger refresh
+- Loading spinner appears
+- Fetches latest tasks from server
+- Updates list with new data
+
+**Long Press:**
+- Long press on task card (hold 500ms)
+- Opens quick actions menu
+- Options: Complete, Edit, Delete, Share
+- Tap outside menu to close
+
+### Keyboard Shortcuts
+
+When using external keyboard with tablet:
+
+- **N** - New task (opens Quick Capture)
+- **/** - Focus search field
+- **Esc** - Close open modal/form
+- **Enter** - Submit form (when input focused)
+- **Up/Down Arrows** - Navigate task list
+- **Enter** - Open selected task details
+
+---
+
+## Offline Capabilities
+
+### Offline Mode
+
+**Automatic Detection:**
+
+The app automatically detects when your device loses internet connection.
+
+**Offline Indicators:**
+
+- Yellow banner at top: "You are offline. Changes will sync when online."
+- Sync icon next to queued tasks
+- Disabled features marked with gray icon
+
+**What Works Offline:**
+
+- View all previously loaded tasks
+- Create new tasks (queued for sync)
+- Edit existing tasks (queued for sync)
+- Mark tasks complete (queued for sync)
+- Delete tasks (queued for sync)
+- Add comments (queued for sync)
+- Search local tasks (text search)
+
+**What Doesn't Work Offline:**
+
+- Load new tasks from server
+- View user profiles (not cached)
+- View projects/customers (not cached)
+- Upload attachments (requires upload)
+- Real-time collaboration (requires connection)
+
+### Queue Management
+
+**View Queued Items:**
+
+1. Tap hamburger menu icon
+2. Select **"Offline Queue"**
+3. List shows all pending changes
+4. Displays:
+   - Action type (Create, Edit, Delete)
+   - Task title
+   - Timestamp queued
+   - Retry count (if failed)
+
+**Manual Sync:**
+
+1. Open Offline Queue page
+2. Tap **"Sync Now"** button at top
+3. App attempts to upload all queued items
+4. Success: Items removed from queue
+5. Failure: Items remain in queue with error message
+
+**Queue Limits:**
+
+- Maximum 50 items in queue
+- After 50, oldest items auto-removed
+- Warning shown when approaching limit
+- Prioritize syncing to avoid data loss
+
+**Error Handling:**
+
+If sync fails (e.g., validation error on server):
+
+1. Item marked with red error icon
+2. Error message displayed
+3. Tap to view details
+4. Options: Retry, Edit, Remove from queue
+5. Manual intervention required
+
+---
+
+## Installation & Setup
+
+### System Requirements
+
+**Minimum Requirements:**
+
+- **Device:** Smartphone or tablet
+- **OS:**
+  - iOS 12.0+ (iPhone, iPad)
+  - Android 8.0+ (Oreo)
+  - iPadOS 13.0+
+- **Browser:**
+  - Safari 12+ (iOS)
+  - Chrome 80+ (Android)
+  - Firefox 75+ (Android)
+  - Edge 80+ (Android)
+- **Storage:** 50 MB free space (for PWA cache)
+- **Network:** Wi-Fi or cellular data (3G minimum, 4G/5G recommended)
+
+**Recommended:**
+
+- **Device:** Modern smartphone (2-3 years old or newer)
+- **OS:** iOS 15+ or Android 11+
+- **Browser:** Latest version
+- **Storage:** 100 MB+ free space
+- **Network:** 4G/5G or Wi-Fi
+
+**Not Supported:**
+
+- Internet Explorer (any version)
+- Safari below version 12
+- Android below version 8.0
+- Tablets below 7 inches (use desktop instead)
+
+### Browser Permissions
+
+**Required Permissions:**
+
+**1. Notifications (Optional)**
+
+Allows task reminders and updates.
+
+**How to Enable:**
+- iOS: Settings > Safari > Notifications > Allow
+- Android: Chrome > Settings > Site Settings > Notifications > Allow
+
+**2. Storage (Automatic)**
+
+Allows offline task queue and caching.
+
+**How It Works:**
+- Granted automatically when PWA installed
+- Uses IndexedDB for task queue
+- Uses Cache API for app resources
+- ~10-50 MB storage used
+
+**3. Background Sync (Automatic)**
+
+Allows queued tasks to sync when connection restored.
+
+**How It Works:**
+- Granted automatically with PWA install
+- Background Sync API used
+- Syncs even when app closed
+- No battery drain
+
+### Network Configuration
+
+**Cellular Data:**
+
+The mobile app is optimized for cellular networks.
+
+**Data Usage:**
+- Initial page load: ~500 KB
+- Task creation: ~2 KB per task
+- Task sync: ~1-5 KB per task
+- Images (if uploaded): Varies
+- Average hourly usage: ~10-50 KB
+
+**Recommendations:**
+- Enable data saver mode (Chrome) for reduced usage
+- Download app resources on Wi-Fi
+- Limit image uploads on cellular
+- Use offline mode when data is limited
+
+**Firewall/Proxy:**
+
+If using VPN or corporate proxy, ensure:
+- Allow `systems.limn.us.com` domain
+- Allow WebSocket connections (for real-time sync)
+- Allow IndexedDB storage
+- Allow Service Worker registration
+
+---
+
+## Best Practices
+
+### Efficient Task Management
+
+**1. Use Quick Capture for Speed**
+
+- Enter only title for fastest capture
+- Add details later from desktop
+- Batch similar tasks together
+- Use consistent naming (e.g., "Call: Client Name")
+
+**2. Leverage Offline Mode**
+
+- Create tasks immediately when thought occurs
+- Don't wait for connection
+- Trust queue to sync later
+- Review synced tasks daily
+
+**3. Filter Effectively**
+
+- Start day viewing "To Do" tab
+- Move tasks to "In Progress" when starting
+- Review "Done" tab weekly for accountability
+- Archive old completed tasks
+
+**4. Prioritize Correctly**
+
+- High: Urgent and important (do first)
+- Medium: Important but not urgent (schedule)
+- Low: Nice to have (do when time allows)
+- Review priorities weekly
+
+**5. Set Realistic Due Dates**
+
+- Add due date only if truly deadline
+- Don't set dates on every task (creates noise)
+- Use calendar for time-specific tasks
+- Buffer time for unexpected delays
+
+### Mobile-Specific Tips
+
+**Touch Targets:**
+
+- All buttons minimum 44px (Apple guideline)
+- Tap with thumb (one-handed use)
+- Avoid accidental taps (spacing)
+- Use haptic feedback (vibration) as confirmation
+
+**Battery Conservation:**
+
+- Close app when not in use (don't leave open)
+- Disable background sync if not needed (Settings)
+- Reduce screen brightness
+- Use Wi-Fi instead of cellular when possible
+- Disable notifications if excessive
+
+**Performance Optimization:**
+
+- Clear completed tasks regularly (reduces list size)
+- Limit task list to 50-100 items (faster rendering)
+- Avoid uploading large images (use desktop)
+- Close other apps to free memory
+- Update browser to latest version
+
+**Security:**
+
+- Lock device when not in use
+- Don't save password in public devices
+- Log out when finished
+- Enable device encryption
+- Use biometric auth if available (Face ID, Touch ID)
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+**Issue:** Tasks not syncing after coming online
+
+**Solutions:**
+1. Check network connection (Settings > Wi-Fi/Cellular)
+2. Force refresh: Pull down on task list
+3. Manually trigger sync: Menu > Offline Queue > Sync Now
+4. Check queue for errors: Menu > Offline Queue
+5. Log out and back in to re-authenticate
+6. Clear browser cache and reload page
+
+---
+
+**Issue:** PWA installation option not appearing
+
+**Solutions:**
+- **iOS:** Must use Safari browser (not Chrome/Firefox)
+- **Android:** Use Chrome browser (preferred)
+- Ensure HTTPS connection (not HTTP)
+- Check browser supports PWA (Safari 12+, Chrome 80+)
+- Clear browser cache and revisit page
+- Try different browser if still not working
+
+---
+
+**Issue:** Slow task list loading
+
+**Causes:**
+- Too many tasks (200+)
+- Slow network connection
+- Device low on memory
+- Background apps consuming resources
+
+**Solutions:**
+1. Archive old completed tasks (Settings > Archive)
+2. Filter to specific status (reduces visible tasks)
+3. Close other apps to free memory
+4. Connect to Wi-Fi instead of cellular
+5. Update browser to latest version
+6. Clear browser cache (Settings > Clear Cache)
+
+---
+
+**Issue:** Cannot edit task (fields grayed out)
+
+**Causes:**
+- Task assigned to someone else
+- Insufficient permissions
+- Task archived or deleted
+- Session expired
+
+**Solutions:**
+1. Verify task is assigned to you
+2. Check you have edit permission (contact admin)
+3. Ensure task is not archived (check status)
+4. Log out and back in to refresh session
+5. Contact administrator if issue persists
+
+---
+
+**Issue:** Offline queue not syncing
+
+**Diagnostics:**
+1. Open Offline Queue page (Menu > Offline Queue)
+2. Check items in queue
+3. Look for error icons (red X)
+4. Tap error to see details
+
+**Common Errors:**
+
+**"Validation Error"**
+- Task data invalid (e.g., empty title)
+- Edit task in queue, fix issue, retry
+
+**"Not Found"**
+- Associated project/customer deleted
+- Remove association, retry sync
+
+**"Permission Denied"**
+- No longer have permission to create/edit
+- Contact administrator, or remove from queue
+
+**"Network Timeout"**
+- Slow/unstable connection
+- Wait for better connection, retry later
+
+**"Server Error"**
+- Temporary server issue
+- Wait 5-10 minutes, retry
+
+**Last Resort:**
+If all else fails, clear queue:
+1. Menu > Offline Queue
+2. Scroll to bottom
+3. Tap **"Clear Queue"** (red button)
+4. Confirm (WARNING: Queued changes will be lost)
+
+---
+
+**Issue:** App crashes or freezes
+
+**Solutions:**
+1. Force close app, reopen
+2. Clear browser cache (Settings > Clear Cache)
+3. Update browser to latest version
+4. Restart device
+5. Reinstall PWA:
+   - Delete app from home screen
+   - Re-install following installation steps above
+6. Contact support with device details
+
+---
+
+**Issue:** Can't log in / Stuck on login page
+
+**Solutions:**
+1. Verify you have @limn.us.com email
+2. Check Google Workspace SSO is working (try Gmail)
+3. Clear browser cookies (Settings > Privacy > Clear Cookies)
+4. Try different browser
+5. Check network connection
+6. Contact IT support if issue persists
+
+---
+
+**Issue:** Due date picker not appearing
+
+**Causes:**
+- Browser doesn't support date input
+- JavaScript disabled
+- Calendar permissions denied
+
+**Solutions:**
+1. Update browser to latest version
+2. Enable JavaScript (Settings > Content Settings > JavaScript > Allow)
+3. Allow calendar access (if prompted)
+4. Use desktop interface if issue persists
+
+---
+
+**Issue:** Tasks appear duplicate
+
+**Causes:**
+- Offline sync conflict
+- Network issue during creation
+- Bug in sync logic
+
+**Solutions:**
+1. Refresh page (pull to refresh)
+2. Check task IDs (Menu > Task Details > ID)
+3. Delete duplicate task (swipe left, delete)
+4. Report to support if recurring issue
+
+---
+
+### Performance Tips
+
+**Improve Load Speed:**
+
+1. **Install as PWA** - Caches resources locally
+2. **Use Wi-Fi** - Faster than cellular
+3. **Archive old tasks** - Reduces data fetched
+4. **Close other tabs** - Frees browser memory
+5. **Update browser** - Latest version has performance improvements
+6. **Clear cache weekly** - Removes stale data
+
+**Reduce Data Usage:**
+
+1. **Enable data saver** (Chrome: Settings > Lite mode)
+2. **Disable auto-refresh** (Settings > Auto-refresh: Off)
+3. **Limit image quality** (Settings > Image Quality: Low)
+4. **Download on Wi-Fi** (install PWA on Wi-Fi, not cellular)
+5. **Use offline mode** (work offline, sync later on Wi-Fi)
+
+**Optimize Battery:**
+
+1. **Reduce screen brightness** (Device Settings > Display > Brightness)
+2. **Disable background sync** (App Settings > Background Sync: Off)
+3. **Turn off notifications** (Settings > Notifications: Off)
+4. **Close app when done** (don't leave running in background)
+5. **Enable low power mode** (iOS: Settings > Battery > Low Power Mode)
+
+---
+
+## Advanced Features
+
+### Task Templates (Coming Soon)
+
+Create reusable task templates for recurring workflows.
+
+**Use Cases:**
+- Weekly report generation
+- Client onboarding checklist
+- Quality control inspection steps
+- Design approval process
+
+**Availability:** Planned for Q2 2025
+
+### Voice Input (Coming Soon)
+
+Create tasks using voice commands.
+
+**How It Works:**
+1. Tap microphone icon in Quick Capture
+2. Speak task title and details
+3. Speech-to-text converts to task
+4. Review and create
+
+**Languages:** English (US) initially, more languages planned
+
+**Availability:** Planned for Q3 2025
+
+### Location-Based Reminders (Coming Soon)
+
+Get task reminders when arriving/leaving locations.
+
+**Use Cases:**
+- Remind to call client when arriving at office
+- Remind to pick up materials when near supplier
+- Remind to review project when at site
+
+**Availability:** Planned for Q3 2025
+
+---
+
+## Support
+
+### Getting Help
+
+**Internal Employees:**
+- Slack channel: #mobile-tasks-support
+- Email: support@limn.us.com
+- Phone: (555) 123-4567 ext. 4 (8 AM - 5 PM PST)
+
+**Response Times:**
+- Critical (app down): 1 hour
+- High (cannot work): 4 hours
+- Medium (inconvenience): 1 business day
+- Low (question): 2 business days
+
+### Reporting Bugs
+
+**Information to Include:**
+
+1. Device type and OS version (e.g., iPhone 13, iOS 15.5)
+2. Browser and version (e.g., Safari 15.5)
+3. Steps to reproduce issue
+4. Expected behavior vs actual behavior
+5. Screenshots or screen recording (if applicable)
+6. Error messages (copy exact text)
+7. Network conditions (Wi-Fi, cellular, offline)
+
+**Where to Report:**
+
+- Slack: #mobile-tasks-bugs channel
+- Email: bugs@limn.us.com (include [MOBILE] in subject)
+- In-app: Menu > Help > Report Bug
+
+### Feature Requests
+
+Have an idea to improve mobile tasks?
+
+**Submit Request:**
+
+1. Slack: #feature-requests channel
+2. Email: features@limn.us.com (include [MOBILE] in subject)
+3. In-app: Menu > Help > Suggest Feature
+
+**Include:**
+- Problem you're trying to solve
+- Proposed solution
+- How often you'd use feature
+- Screenshots/mockups (if applicable)
+
+---
+
+## Frequently Asked Questions
+
+**Q: Can I use mobile tasks without installing PWA?**
+
+A: Yes! Visit the website in your mobile browser. However, installing as PWA provides better experience (faster, offline support, no browser UI).
+
+---
+
+**Q: What happens to offline tasks if I uninstall the app?**
+
+A: Offline queue is stored in browser storage. If you uninstall PWA, the queue is deleted. Always sync before uninstalling. To preserve queue, reinstall immediately (may recover data).
+
+---
+
+**Q: Can I create tasks for other people?**
+
+A: Not yet. Mobile interface only supports creating tasks for yourself. Use desktop interface to assign tasks to others. This feature is planned for future release.
+
+---
+
+**Q: Why can't I attach files from mobile?**
+
+A: File upload is disabled on mobile to save data and storage. Use desktop interface to attach files. Mobile view allows viewing attachments uploaded from desktop.
+
+---
+
+**Q: Can I use mobile tasks on tablet?**
+
+A: Yes! Tablets (iPad, Android tablets) are fully supported. Interface adapts to larger screens with wider layout. For tablets 10 inches or larger, consider using desktop interface for more features.
+
+---
+
+**Q: How do I switch between mobile and desktop interface?**
+
+A: Mobile interface is at `/mobile/tasks`. Desktop interface is at `/dashboard` or `/tasks`. No automatic switching - manually navigate to desired interface. Bookmarks recommended.
+
+---
+
+**Q: Is my data secure on mobile?**
+
+A: Yes. All data encrypted in transit (HTTPS). Offline queue encrypted on device using IndexedDB with encryption. Authentication required for all actions. Follow device security best practices (PIN, biometric auth).
+
+---
+
+**Q: Can I customize the mobile interface?**
+
+A: Limited customization available:
+- Sort order (Settings > Default Sort)
+- Default priority (Settings > Default Priority)
+- Auto-refresh interval (Settings > Auto-refresh)
+- Notification preferences (Settings > Notifications)
+
+More customization options planned for future releases.
+
+---
+
+**Q: What's the difference between mobile and desktop task interface?**
+
+A: Mobile interface is simplified for speed and touch:
+- Quick Capture (mobile only)
+- Touch gestures (mobile only)
+- Offline queue (mobile only)
+- PWA installation (mobile only)
+- Limited to your tasks only (desktop shows all)
+- No bulk actions (desktop has bulk edit/delete)
+- No advanced filters (desktop has 10+ filters)
+- No task dependencies (desktop has task relationships)
+
+Use mobile for quick capture and status updates. Use desktop for complex task management.
+
+---
+
+## Glossary
+
+**PWA (Progressive Web App):** Web application that can be installed on device home screen like native app. Provides offline support, push notifications, and better performance.
+
+**Offline Queue:** Local storage area where tasks are saved when device has no internet connection. Tasks auto-sync when connection restored.
+
+**Quick Capture:** Simplified task creation form for fast entry. Requires only title, optional fields can be added later.
+
+**Background Sync:** Browser feature that automatically syncs queued tasks when connection restored, even if app is closed.
+
+**IndexedDB:** Browser storage API used for offline queue. Persistent storage that survives browser restarts.
+
+**Service Worker:** Background script that enables offline functionality and caching. Installed automatically with PWA.
+
+**Touch Target:** Minimum size of tappable element for comfortable touch. Apple guideline is 44x44 pixels.
+
+**Pull to Refresh:** Touch gesture where user pulls down on list to trigger data refresh from server.
+
+**Swipe Actions:** Touch gestures where user swipes left/right on item to reveal action buttons.
+
+---
+
+**Last Updated:** January 20, 2025
+**Version:** 1.0
+**Maintained By:** Limn Systems Development Team
+**Documentation URL:** help.limn.us.com/mobile
