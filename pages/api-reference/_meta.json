@@ -1,0 +1,14 @@
+{
+  "index": {
+    "title": "API Overview",
+    "type": "page"
+  },
+  "quickstart": "Quick Start",
+  "authentication": "Authentication",
+  "endpoints": "API Endpoints",
+  "rate-limits": "Rate Limits",
+  "webhooks": "Webhooks (Coming Soon)",
+  "errors": "Error Handling",
+  "sdks": "SDKs & Libraries",
+  "changelog": "Changelog"
+}

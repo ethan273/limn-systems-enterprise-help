@@ -1,0 +1,520 @@
+# API Reference
+
+Complete reference documentation for the Limn Systems Enterprise tRPC API.
+
+## Overview
+
+Limn Systems Enterprise provides a **type-safe tRPC API** for programmatic access to platform data and functionality. This API is used internally by the web application and can be accessed externally with proper authentication.
+
+**Key Features:**
+- **Type-Safe:** End-to-end TypeScript type safety with automatic type generation
+- **90+ Endpoints:** Comprehensive coverage across all modules
+- **Real-Time:** WebSocket support for real-time subscriptions
+- **Rate Limited:** 1,000 requests/hour per API key
+- **Secure:** OAuth 2.0 and API key authentication
+- **Versioned:** Semantic versioning with backward compatibility guarantees
+
+---
+
+## Quick Links
+
+- **[Quick Start](/api-reference/quickstart)** - Get started in 5 minutes
+- **[Authentication](/api-reference/authentication)** - API keys, OAuth, session management
+- **[Endpoints](/api-reference/endpoints)** - Browse all 90+ API endpoints by module
+- **[Rate Limits](/api-reference/rate-limits)** - Usage limits and best practices
+- **[Webhooks](/api-reference/webhooks)** - Event subscriptions and real-time updates
+- **[Error Handling](/api-reference/errors)** - Error codes and troubleshooting
+- **[SDKs & Libraries](/api-reference/sdks)** - Client libraries for TypeScript, Python, Ruby
+
+---
+
+## API Architecture
+
+### tRPC Protocol
+
+Limn Systems Enterprise uses **tRPC** (TypeScript Remote Procedure Call), a modern RPC framework that provides:
+
+**Type Safety:**
+```typescript
+// Client automatically knows the exact types
+const order = await api.orders.getById.query({ id: "order_123" });
+//    ^? const order: Order & { customer: Customer, lineItems: LineItem[] }
+```
+
+**No Code Generation:**
+- Types shared directly from server to client
+- No separate OpenAPI spec or code generation step
+- Types always in sync with implementation
+
+**Automatic Validation:**
+- Input validation with Zod schemas
+- Output validation (prevents data leaks)
+- TypeScript compile-time checks
+
+**Performance:**
+- Batching support (multiple requests in single HTTP call)
+- Request deduplication
+- Streaming support for large datasets
+
+### API Base URLs
+
+**Production:**
+```
+https://app.limn.us.com/api/trpc
+```
+
+**Development (Local):**
+```
+http://localhost:3000/api/trpc
+```
+
+### Transport Protocols
+
+**HTTP (Query & Mutation):**
+- GET for queries (read operations)
+- POST for mutations (write operations)
+- JSON request/response format
+
+**WebSocket (Subscriptions):**
+- Real-time data updates
+- Event streaming
+- Connection pooling
+
+---
+
+## API Modules (90+ Endpoints)
+
+### Core Business Logic (12 modules)
+
+**1. CRM & Sales (18 endpoints)**
+- Contacts, leads, customers management
+- Lifecycle stage conversions
+- Pipeline tracking
+- CRM analytics
+- **[View Endpoints](/api-reference/endpoints/crm)**
+
+**2. Orders (15 endpoints)**
+- Quote management
+- Order lifecycle (pending → shipped → delivered)
+- Line item management
+- Order analytics
+- **[View Endpoints](/api-reference/endpoints/orders)**
+
+**3. Products (12 endpoints)**
+- Product CRUD operations
+- Inventory management
+- Collection management
+- SKU generation
+- **[View Endpoints](/api-reference/endpoints/products)**
+
+**4. Production (10 endpoints)**
+- Work order management
+- Factory assignment
+- Production milestone tracking
+- Capacity planning
+- **[View Endpoints](/api-reference/endpoints/production)**
+
+**5. Shipping (8 endpoints)**
+- SEKO WMS integration
+- Shipment creation
+- Tracking updates
+- Label generation (PDF/ZPL/PNG)
+- **[View Endpoints](/api-reference/endpoints/shipping)**
+
+**6. Finance (10 endpoints)**
+- Invoice management
+- Payment recording
+- QuickBooks sync
+- Financial reports
+- **[View Endpoints](/api-reference/endpoints/finance)**
+
+**7. Documents (7 endpoints)**
+- Document upload (Supabase/Google Drive)
+- Approval workflows
+- Version control
+- Access management
+- **[View Endpoints](/api-reference/endpoints/documents)**
+
+**8. Tasks (6 endpoints)**
+- Task CRUD operations
+- Assignment management
+- Status updates
+- Mobile Tasks sync
+- **[View Endpoints](/api-reference/endpoints/tasks)**
+
+**9. Design (5 endpoints)**
+- Design project management
+- Submission tracking
+- Approval workflows
+- Designer assignments
+- **[View Endpoints](/api-reference/endpoints/design)**
+
+**10. Partners (4 endpoints)**
+- Factory partner management
+- Sourcing agent management
+- Capability tracking
+- Performance metrics
+- **[View Endpoints](/api-reference/endpoints/partners)**
+
+**11. QC (6 endpoints)**
+- Inspection management
+- Defect tracking
+- QC analytics
+- Bulk photo upload
+- **[View Endpoints](/api-reference/endpoints/qc)**
+
+**12. Marketing (4 endpoints)**
+- Email campaigns
+- Flipbooks (interactive PDFs)
+- Campaign analytics
+- Webhook management
+- **[View Endpoints](/api-reference/endpoints/marketing)**
+
+### Platform Services (8 modules)
+
+**13. Authentication (5 endpoints)**
+- Google OAuth SSO
+- Magic link generation
+- Session management
+- MFA enrollment
+- **[View Endpoints](/api-reference/endpoints/auth)**
+
+**14. User Management (8 endpoints)**
+- User CRUD operations
+- Profile management
+- Role assignments
+- User search
+- **[View Endpoints](/api-reference/endpoints/users)**
+
+**15. RBAC (7 endpoints)**
+- Role management (15 built-in roles)
+- Permission assignment
+- Customer-scoped permissions
+- Permission comparison
+- **[View Endpoints](/api-reference/endpoints/rbac)**
+
+**16. Dashboards (10 endpoints)**
+- 10 specialized dashboards
+- Widget customization
+- Data export
+- Real-time metrics
+- **[View Endpoints](/api-reference/endpoints/dashboards)**
+
+**17. Notifications (4 endpoints)**
+- Notification creation
+- Notification preferences
+- Mark as read/unread
+- Push notification management
+- **[View Endpoints](/api-reference/endpoints/notifications)**
+
+**18. Search (2 endpoints)**
+- Global search (Cmd/Ctrl+K)
+- Advanced search syntax
+- **[View Endpoints](/api-reference/endpoints/search)**
+
+**19. Automation (6 endpoints)**
+- Workflow engine
+- Rule management
+- Alert configuration
+- Execution logs
+- **[View Endpoints](/api-reference/endpoints/automation)**
+
+**20. Analytics (5 endpoints)**
+- Cross-module analytics
+- Custom reports
+- Data aggregation
+- Export capabilities
+- **[View Endpoints](/api-reference/endpoints/analytics)**
+
+---
+
+## Authentication Methods
+
+### 1. API Keys (Recommended for External Integrations)
+
+**Generation:**
+```bash
+# Admin only - generate via platform UI
+Administration > Integrations > API Keys > Generate New Key
+```
+
+**Usage:**
+```typescript
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+import type { AppRouter } from '@/server/api/root';
+
+const client = createTRPCProxyClient<AppRouter>({
+  links: [
+    httpBatchLink({
+      url: 'https://app.limn.us.com/api/trpc',
+      headers() {
+        return {
+          Authorization: `Bearer ${process.env.LIMN_API_KEY}`,
+        };
+      },
+    }),
+  ],
+});
+
+// Make API calls
+const orders = await client.orders.list.query({ status: 'pending' });
+```
+
+### 2. OAuth 2.0 (For User-Authorized Applications)
+
+**Authorization Code Flow:**
+```
+1. Redirect user to: https://app.limn.us.com/oauth/authorize?client_id=...&redirect_uri=...
+2. User authorizes application
+3. Redirect back with code: https://your-app.com/callback?code=...
+4. Exchange code for access token: POST /oauth/token
+5. Use access token in Authorization header
+```
+
+### 3. Session Cookies (For Internal Web Application)
+
+Used by the Limn Systems web application. Not recommended for external integrations.
+
+---
+
+## Rate Limits
+
+**Default Limits:**
+- **1,000 requests/hour** per API key
+- **100 requests/minute** per API key
+- **10 concurrent requests** per API key
+
+**Rate Limit Headers:**
+```http
+X-RateLimit-Limit: 1000
+X-RateLimit-Remaining: 847
+X-RateLimit-Reset: 1704067200
+```
+
+**Exceeding Limits:**
+```json
+{
+  "error": {
+    "code": "TOO_MANY_REQUESTS",
+    "message": "Rate limit exceeded. Retry after 1704067200."
+  }
+}
+```
+
+**Best Practices:**
+- Cache responses when possible
+- Use batch requests to reduce call count
+- Implement exponential backoff on rate limit errors
+- Request limit increase for high-volume use cases (contact support)
+
+**Learn More:** [Rate Limits](/api-reference/rate-limits)
+
+---
+
+## Common Use Cases
+
+### 1. Order Status Sync
+
+Sync order status to external warehouse management system:
+
+```typescript
+// Subscribe to order updates
+const subscription = client.orders.watchStatus.subscribe(
+  { orderId: "order_123" },
+  {
+    onData(order) {
+      console.log("Order status changed:", order.status);
+      // Update external WMS
+      await externalWMS.updateOrderStatus(order.id, order.status);
+    },
+  }
+);
+```
+
+### 2. Customer Portal Integration
+
+Build custom customer portal using API:
+
+```typescript
+// Fetch customer data
+const customer = await client.customers.getById.query({
+  id: customerId,
+});
+
+// Fetch customer orders
+const orders = await client.orders.list.query({
+  customerId: customerId,
+  status: ["pending", "in_production", "shipped"],
+});
+
+// Fetch invoices
+const invoices = await client.finance.invoices.query({
+  customerId: customerId,
+  paid: false,
+});
+```
+
+### 3. Inventory Sync
+
+Sync inventory from external system:
+
+```typescript
+// Bulk update inventory
+for (const sku of skus) {
+  await client.products.updateInventory.mutate({
+    sku: sku,
+    quantity: externalInventory[sku].quantity,
+    reason: "Daily inventory sync from external system",
+  });
+}
+```
+
+### 4. Reporting & Analytics
+
+Export data for BI tools:
+
+```typescript
+// Fetch all orders for date range
+const orders = await client.orders.list.query({
+  createdAfter: "2025-01-01",
+  createdBefore: "2025-12-31",
+});
+
+// Calculate metrics
+const totalRevenue = orders.reduce((sum, order) => sum + order.total, 0);
+const averageOrderValue = totalRevenue / orders.length;
+
+// Export to CSV
+const csv = convertToCSV(orders);
+await fs.writeFile("orders-2025.csv", csv);
+```
+
+---
+
+## Error Handling
+
+### Error Response Format
+
+```json
+{
+  "error": {
+    "code": "UNAUTHORIZED",
+    "message": "Invalid API key",
+    "data": {
+      "path": "orders.getById",
+      "input": { "id": "order_123" }
+    }
+  }
+}
+```
+
+### Common Error Codes
+
+| Code | HTTP Status | Description |
+|------|-------------|-------------|
+| `UNAUTHORIZED` | 401 | Invalid or missing authentication |
+| `FORBIDDEN` | 403 | Insufficient permissions |
+| `NOT_FOUND` | 404 | Resource not found |
+| `BAD_REQUEST` | 400 | Invalid input (validation failed) |
+| `CONFLICT` | 409 | Resource already exists or state conflict |
+| `TOO_MANY_REQUESTS` | 429 | Rate limit exceeded |
+| `INTERNAL_SERVER_ERROR` | 500 | Server error (contact support) |
+
+**Learn More:** [Error Handling](/api-reference/errors)
+
+---
+
+## Webhooks (Coming Soon)
+
+Subscribe to real-time events:
+
+**Available Events:**
+- `order.created` - New order placed
+- `order.statusChanged` - Order status updated
+- `shipment.delivered` - Shipment delivered
+- `invoice.paid` - Invoice payment recorded
+- `task.completed` - Task marked complete
+
+**Webhook Configuration:**
+```typescript
+await client.webhooks.create.mutate({
+  url: "https://your-app.com/webhooks/limn",
+  events: ["order.created", "order.statusChanged"],
+  secret: "webhook_secret_xyz",
+});
+```
+
+**Learn More:** [Webhooks](/api-reference/webhooks)
+
+---
+
+## SDKs & Client Libraries
+
+### Official SDKs
+
+**TypeScript/JavaScript:**
+```bash
+npm install @trpc/client @trpc/server
+```
+
+**Python (Community):**
+```bash
+pip install limn-api-client
+```
+
+**Ruby (Community):**
+```bash
+gem install limn-api
+```
+
+**Learn More:** [SDKs & Libraries](/api-reference/sdks)
+
+---
+
+## Changelog
+
+**Latest Version:** v1.0.0 (January 2025)
+
+**Recent Changes:**
+- Initial public API release
+- 90+ tRPC endpoints across 20 modules
+- API key authentication
+- Rate limiting (1,000 req/hour)
+- Comprehensive TypeScript types
+
+**Learn More:** [Changelog](/api-reference/changelog)
+
+---
+
+## Support
+
+**API Questions:**
+- Email: api-support@limn.us.com
+- Slack: #api-support (internal only)
+
+**Bug Reports:**
+- Email: support@limn.us.com
+- Include: endpoint, request/response, error message
+
+**Feature Requests:**
+- Email: feature-requests@limn.us.com
+- Describe use case and desired endpoint
+
+**Status Page:**
+- https://status.limn.us.com (coming soon)
+
+---
+
+## Next Steps
+
+1. **[Quick Start Guide](/api-reference/quickstart)** - Get your first API call working in 5 minutes
+2. **[Authentication Guide](/api-reference/authentication)** - Generate API keys and authenticate
+3. **[Endpoint Reference](/api-reference/endpoints)** - Browse all available endpoints
+4. **[Rate Limits](/api-reference/rate-limits)** - Understand usage limits
+5. **[Error Handling](/api-reference/errors)** - Handle errors gracefully
+
+---
+
+**Last Updated:** January 2025
+**API Version:** 1.0.0
+**Maintained By:** Engineering Team

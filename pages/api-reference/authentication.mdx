@@ -1,0 +1,370 @@
+# Authentication
+
+Learn how to authenticate with the Limn Systems Enterprise API using API keys, OAuth 2.0, or session cookies.
+
+## Authentication Methods
+
+### 1. API Keys (Recommended)
+
+**Best For:**
+- Server-to-server integrations
+- Background jobs and scheduled tasks
+- External applications
+
+**Security:**
+- Long-lived tokens (no expiration unless set)
+- Can be rotated without user interaction
+- Scoped permissions (read-only, write, admin)
+
+**Generation (Admin Only):**
+1. Navigate to **Administration > Integrations > API Keys**
+2. Click **"Generate New API Key"**
+3. Configure permissions and expiration
+4. Copy key immediately (shown only once)
+
+**Usage:**
+```typescript
+import { createTRPCProxyClient, httpBatchLink } from '@trpc/client';
+
+const client = createTRPCProxyClient({
+  links: [
+    httpBatchLink({
+      url: 'https://app.limn.us.com/api/trpc',
+      headers() {
+        return {
+          Authorization: `Bearer ${process.env.LIMN_API_KEY}`,
+        };
+      },
+    }),
+  ],
+});
+```
+
+### 2. OAuth 2.0
+
+**Best For:**
+- User-authorized third-party applications
+- Mobile apps
+- Web apps requiring user consent
+
+**Flows:**
+- Authorization Code Flow (recommended for web apps)
+- Client Credentials Flow (for machine-to-machine)
+
+**Authorization Code Flow:**
+
+**Step 1: Redirect to Authorization Endpoint**
+```
+https://app.limn.us.com/oauth/authorize?
+  response_type=code&
+  client_id=YOUR_CLIENT_ID&
+  redirect_uri=https://your-app.com/callback&
+  scope=read:orders write:tasks&
+  state=RANDOM_STATE_STRING
+```
+
+**Step 2: User Authorizes**
+- User logs in (if not already logged in)
+- User sees consent screen listing requested permissions
+- User clicks "Authorize" or "Deny"
+
+**Step 3: Receive Authorization Code**
+```
+https://your-app.com/callback?
+  code=AUTH_CODE_HERE&
+  state=RANDOM_STATE_STRING
+```
+
+**Step 4: Exchange Code for Access Token**
+```bash
+curl -X POST https://app.limn.us.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=authorization_code" \
+  -d "code=AUTH_CODE_HERE" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET" \
+  -d "redirect_uri=https://your-app.com/callback"
+```
+
+**Response:**
+```json
+{
+  "access_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "scope": "read:orders write:tasks"
+}
+```
+
+**Step 5: Use Access Token**
+```typescript
+const client = createTRPCProxyClient({
+  links: [
+    httpBatchLink({
+      url: 'https://app.limn.us.com/api/trpc',
+      headers() {
+        return {
+          Authorization: `Bearer ${accessToken}`,
+        };
+      },
+    }),
+  ],
+});
+```
+
+### 3. Session Cookies
+
+**Best For:**
+- Internal web application (limn.us.com)
+
+**Not Recommended For:**
+- External integrations (use API keys instead)
+
+**Usage:**
+- Handled automatically by web application
+- Session cookie set on login
+- Valid for 30 days (with "Remember Me")
+
+---
+
+## API Key Management
+
+### Generating API Keys
+
+**Admin Dashboard:**
+1. **Administration > Integrations > API Keys**
+2. Click **"Generate New API Key"**
+3. Fill form:
+   - **Name:** Descriptive name (e.g., "Production WMS Integration")
+   - **Permissions:** Select required scopes
+   - **Rate Limit:** Default 1,000 req/hour (adjustable)
+   - **Expires:** Optional expiration date
+4. Click **"Generate"**
+5. **Copy key immediately** (never shown again)
+
+**Key Format:**
+```
+limn_api_sk_1234567890abcdef1234567890abcdef
+```
+
+### Permission Scopes
+
+**Read Scopes:**
+- `read:orders` - View orders, quotes, line items
+- `read:products` - View products, inventory, collections
+- `read:customers` - View customers, contacts, leads
+- `read:tasks` - View tasks and assignments
+- `read:invoices` - View invoices and payments
+- `read:shipments` - View shipment tracking
+- `read:*` - Read access to all modules
+
+**Write Scopes:**
+- `write:orders` - Create/update orders and quotes
+- `write:products` - Manage products and inventory
+- `write:tasks` - Create/assign/complete tasks
+- `write:invoices` - Record payments
+- `write:shipments` - Create shipments
+- `write:*` - Write access to all modules
+
+**Admin Scopes:**
+- `admin:users` - Manage users and permissions
+- `admin:settings` - Configure system settings
+- `admin:api_keys` - Manage API keys
+- `admin:*` - Full administrative access
+
+### Rotating API Keys
+
+**Recommended Rotation Schedule:**
+- **Production keys:** Every 90 days
+- **Development keys:** Every 180 days
+- **Compromised keys:** Immediately
+
+**Rotation Process:**
+1. Generate new API key with same permissions
+2. Update application to use new key
+3. Test new key in staging/development
+4. Deploy to production
+5. Revoke old key after confirming new key works
+6. Monitor for authentication errors
+
+### Revoking API Keys
+
+**Immediate Revocation:**
+1. **Administration > Integrations > API Keys**
+2. Find key in list
+3. Click **three-dot menu > "Revoke"**
+4. Confirm revocation
+5. Key becomes invalid immediately
+
+**Result:**
+- All requests with revoked key return `401 Unauthorized`
+- Applications using revoked key must update to new key
+
+---
+
+## OAuth 2.0 Setup
+
+### Registering OAuth Applications
+
+**Admin Dashboard:**
+1. **Administration > Integrations > OAuth Apps**
+2. Click **"Register New Application"**
+3. Fill form:
+   - **Application Name:** Your app name
+   - **Description:** What your app does
+   - **Homepage URL:** https://your-app.com
+   - **Redirect URIs:** https://your-app.com/callback (comma-separated list)
+   - **Scopes:** Select required permissions
+4. Click **"Register"**
+5. Receive:
+   - **Client ID:** `oauth_client_1234567890abcdef`
+   - **Client Secret:** `oauth_secret_1234567890abcdef` (store securely)
+
+### Available OAuth Scopes
+
+Same as API Key scopes (see above).
+
+### Token Lifetimes
+
+**Access Tokens:**
+- **Lifetime:** 1 hour (3,600 seconds)
+- **Use:** Make API requests
+- **Renewal:** Use refresh token
+
+**Refresh Tokens:**
+- **Lifetime:** 30 days
+- **Use:** Obtain new access tokens
+- **Renewal:** Receive new refresh token with each access token refresh
+
+### Refreshing Access Tokens
+
+```bash
+curl -X POST https://app.limn.us.com/oauth/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=refresh_token" \
+  -d "refresh_token=REFRESH_TOKEN_HERE" \
+  -d "client_id=YOUR_CLIENT_ID" \
+  -d "client_secret=YOUR_CLIENT_SECRET"
+```
+
+**Response:**
+```json
+{
+  "access_token": "NEW_ACCESS_TOKEN",
+  "token_type": "Bearer",
+  "expires_in": 3600,
+  "refresh_token": "NEW_REFRESH_TOKEN",
+  "scope": "read:orders write:tasks"
+}
+```
+
+---
+
+## Security Best Practices
+
+### API Key Security
+
+**DO:**
+- Store keys in environment variables or secret managers (AWS Secrets Manager, HashiCorp Vault)
+- Use separate keys for dev/staging/production
+- Implement key rotation schedule
+- Revoke unused keys immediately
+- Monitor API key usage for anomalies
+
+**DON'T:**
+- Commit keys to version control (.git, .env files)
+- Share keys via email, Slack, or other insecure channels
+- Use production keys in development
+- Hardcode keys in application code
+- Expose keys in client-side JavaScript
+
+### OAuth Security
+
+**State Parameter:**
+- Always include random `state` parameter in authorization requests
+- Verify `state` matches when receiving authorization code
+- Prevents CSRF attacks
+
+**PKCE (Proof Key for Code Exchange):**
+- Required for mobile apps and SPAs
+- Prevents authorization code interception attacks
+
+**Redirect URI Validation:**
+- Only register specific redirect URIs (no wildcards)
+- Never accept `localhost` or `http://` in production
+
+### Rate Limiting & Abuse Prevention
+
+**Automatic Rate Limiting:**
+- 1,000 requests/hour per API key
+- 100 requests/minute per API key
+- 10 concurrent requests per API key
+
+**Abuse Detection:**
+- Unusual traffic patterns flagged
+- Excessive failed authentication attempts blocked
+- IP-based rate limiting for suspicious activity
+
+---
+
+## Troubleshooting
+
+### 401 Unauthorized
+
+**Possible Causes:**
+- Invalid API key
+- Expired API key
+- Revoked API key
+- Missing `Authorization` header
+- Malformed `Authorization` header
+
+**Solutions:**
+1. Verify API key is correct (copy from admin dashboard)
+2. Check key hasn't expired
+3. Ensure header format: `Authorization: Bearer YOUR_API_KEY`
+4. Generate new API key if necessary
+
+### 403 Forbidden
+
+**Possible Causes:**
+- Insufficient permissions for requested resource
+- API key lacks required scope
+- Customer-scoped data access violation
+
+**Solutions:**
+1. Check API key permissions (Administration > API Keys)
+2. Request additional scopes from administrator
+3. Verify accessing data within permitted customer scope
+
+### OAuth Error Responses
+
+**invalid_request:**
+- Missing required parameter (e.g., `client_id`, `redirect_uri`)
+- Check request parameters
+
+**invalid_client:**
+- Invalid `client_id` or `client_secret`
+- Verify OAuth app credentials
+
+**invalid_grant:**
+- Authorization code expired (10 minutes)
+- Authorization code already used
+- Request new authorization code
+
+**unsupported_grant_type:**
+- Incorrect `grant_type` parameter
+- Use `authorization_code` or `refresh_token`
+
+---
+
+## Next Steps
+
+1. **[Quick Start](/api-reference/quickstart)** - Make your first API call
+2. **[API Endpoints](/api-reference/endpoints)** - Browse available endpoints
+3. **[Rate Limits](/api-reference/rate-limits)** - Understand usage limits
+4. **[Error Handling](/api-reference/errors)** - Handle errors gracefully
+
+---
+
+**Last Updated:** January 2025

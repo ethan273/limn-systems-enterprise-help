@@ -1,0 +1,381 @@
+# API Endpoints
+
+Browse all 90+ Limn Systems Enterprise API endpoints organized by module.
+
+## Overview
+
+The Limn Systems Enterprise API provides comprehensive access to platform functionality via 90+ type-safe tRPC endpoints across 20 modules.
+
+**Endpoint Categories:**
+- **[Core Business Logic](#core-business-logic)** - 12 modules (85 endpoints)
+- **[Platform Services](#platform-services)** - 8 modules (15 endpoints)
+
+---
+
+## Core Business Logic
+
+### CRM & Sales (18 endpoints)
+
+Manage contacts, leads, customers, and sales pipeline.
+
+**Endpoints:**
+- `crm.contacts.list` - List all contacts with filters
+- `crm.contacts.getById` - Get single contact by ID
+- `crm.contacts.create` - Create new contact
+- `crm.contacts.update` - Update contact details
+- `crm.contacts.delete` - Delete contact
+- `crm.contacts.convertToLead` - Convert contact to lead
+- `crm.leads.list` - List all leads
+- `crm.leads.getById` - Get lead details
+- `crm.leads.convertToProspect` - Convert lead to prospect
+- `crm.prospects.list` - List all prospects
+- `crm.prospects.getById` - Get prospect details
+- `crm.prospects.convertToClient` - Convert prospect to client
+- `crm.customers.list` - List all customers
+- `crm.customers.getById` - Get customer details
+- `crm.activities.list` - List CRM activities
+- `crm.activities.create` - Log CRM activity
+- `crm.pipeline.get` - Get sales pipeline view
+- `crm.analytics.get` - Get CRM analytics
+
+**[View Full Documentation](/api-reference/endpoints/crm)**
+
+---
+
+### Orders (15 endpoints)
+
+Manage quotes, orders, and line items.
+
+**Endpoints:**
+- `orders.list` - List orders with filters
+- `orders.getById` - Get order details
+- `orders.create` - Create new order
+- `orders.update` - Update order
+- `orders.delete` - Delete order
+- `orders.cancel` - Cancel order
+- `orders.convertQuoteToOrder` - Convert quote to order
+- `orders.lineItems.add` - Add line item
+- `orders.lineItems.update` - Update line item
+- `orders.lineItems.remove` - Remove line item
+- `orders.status.update` - Update order status
+- `orders.watchStatus` - Subscribe to status changes (WebSocket)
+- `orders.analytics.get` - Get order analytics
+- `quotes.list` - List quotes
+- `quotes.create` - Create quote
+
+**[View Full Documentation](/api-reference/endpoints/orders)**
+
+---
+
+### Products (12 endpoints)
+
+Manage products, inventory, and collections.
+
+**Endpoints:**
+- `products.list` - List products
+- `products.getById` - Get product details
+- `products.create` - Create product
+- `products.update` - Update product
+- `products.delete` - Delete product
+- `products.duplicate` - Duplicate product
+- `products.updateInventory` - Update inventory quantity
+- `products.inventory.list` - List inventory levels
+- `products.collections.list` - List collections
+- `products.collections.create` - Create collection
+- `products.materials.list` - List materials
+- `products.materials.create` - Create material
+
+**[View Full Documentation](/api-reference/endpoints/products)**
+
+---
+
+### Production (10 endpoints)
+
+Manage work orders and production tracking.
+
+**Endpoints:**
+- `production.workOrders.list` - List work orders
+- `production.workOrders.getById` - Get work order details
+- `production.workOrders.create` - Create work order
+- `production.workOrders.updateStatus` - Update work order status
+- `production.workOrders.reportDelay` - Report production delay
+- `production.factories.list` - List factory partners
+- `production.factories.assign` - Assign factory to work order
+- `production.capacity.get` - Get factory capacity
+- `production.analytics.get` - Get production analytics
+- `production.watchStatus` - Subscribe to production updates (WebSocket)
+
+**[View Full Documentation](/api-reference/endpoints/production)**
+
+---
+
+### Shipping (8 endpoints)
+
+Manage shipments and tracking (SEKO WMS integration).
+
+**Endpoints:**
+- `shipping.create` - Create shipment (SEKO WMS)
+- `shipping.getQuote` - Get shipping quote
+- `shipping.list` - List shipments
+- `shipping.getById` - Get shipment details
+- `shipping.getTracking` - Get tracking information
+- `shipping.labels.generate` - Generate shipping labels (PDF/ZPL/PNG)
+- `shipping.watchTracking` - Subscribe to tracking updates (WebSocket)
+- `shipping.analytics.get` - Get shipping analytics
+
+**[View Full Documentation](/api-reference/endpoints/shipping)**
+
+---
+
+### Finance (10 endpoints)
+
+Manage invoices, payments, and QuickBooks sync.
+
+**Endpoints:**
+- `finance.invoices.list` - List invoices
+- `finance.invoices.getById` - Get invoice details
+- `finance.invoices.create` - Create invoice
+- `finance.invoices.send` - Send invoice to customer
+- `finance.payments.record` - Record payment
+- `finance.payments.list` - List payments
+- `finance.quickbooks.sync` - Trigger QuickBooks sync
+- `finance.quickbooks.status` - Get sync status
+- `finance.analytics.get` - Get financial analytics
+- `finance.reports.generate` - Generate financial reports
+
+**[View Full Documentation](/api-reference/endpoints/finance)**
+
+---
+
+### Documents (7 endpoints)
+
+Manage document uploads and approvals.
+
+**Endpoints:**
+- `documents.upload` - Upload document
+- `documents.list` - List documents
+- `documents.getById` - Get document details
+- `documents.delete` - Delete document
+- `documents.requestApproval` - Request document approval
+- `documents.approve` - Approve document
+- `documents.reject` - Reject document with feedback
+
+**[View Full Documentation](/api-reference/endpoints/documents)**
+
+---
+
+### Tasks (6 endpoints)
+
+Manage tasks and assignments.
+
+**Endpoints:**
+- `tasks.list` - List tasks
+- `tasks.getById` - Get task details
+- `tasks.create` - Create task
+- `tasks.update` - Update task
+- `tasks.delete` - Delete task
+- `tasks.mobile.sync` - Sync mobile tasks (offline-first)
+
+**[View Full Documentation](/api-reference/endpoints/tasks)**
+
+---
+
+### Design (5 endpoints)
+
+Manage design projects and submissions.
+
+**Endpoints:**
+- `design.projects.list` - List design projects
+- `design.projects.getById` - Get project details
+- `design.projects.create` - Create project
+- `design.submissions.create` - Submit design deliverables
+- `design.submissions.approve` - Approve design submission
+
+**[View Full Documentation](/api-reference/endpoints/design)**
+
+---
+
+### Partners (4 endpoints)
+
+Manage factory partners and sourcing agents.
+
+**Endpoints:**
+- `partners.list` - List partners
+- `partners.getById` - Get partner details
+- `partners.create` - Create partner
+- `partners.update` - Update partner details
+
+**[View Full Documentation](/api-reference/endpoints/partners)**
+
+---
+
+### Quality Control (6 endpoints)
+
+Manage QC inspections and defect tracking.
+
+**Endpoints:**
+- `qc.inspections.list` - List inspections
+- `qc.inspections.getById` - Get inspection details
+- `qc.inspections.create` - Create inspection
+- `qc.inspections.submit` - Submit inspection report
+- `qc.defects.report` - Report defect
+- `qc.analytics.get` - Get QC analytics
+
+**[View Full Documentation](/api-reference/endpoints/qc)**
+
+---
+
+### Marketing (4 endpoints)
+
+Manage email campaigns and Flipbooks.
+
+**Endpoints:**
+- `marketing.campaigns.list` - List campaigns
+- `marketing.campaigns.create` - Create campaign
+- `marketing.flipbooks.create` - Create Flipbook
+- `marketing.analytics.get` - Get campaign analytics
+
+**[View Full Documentation](/api-reference/endpoints/marketing)**
+
+---
+
+## Platform Services
+
+### Authentication (5 endpoints)
+
+Manage authentication and sessions.
+
+**Endpoints:**
+- `auth.login` - Log in with email/password
+- `auth.logout` - Log out current session
+- `auth.magicLink.send` - Send magic link email
+- `auth.mfa.enroll` - Enroll in MFA
+- `auth.sessions.list` - List active sessions
+
+**[View Full Documentation](/api-reference/endpoints/auth)**
+
+---
+
+### User Management (8 endpoints)
+
+Manage users and profiles.
+
+**Endpoints:**
+- `users.list` - List users
+- `users.getById` - Get user details
+- `users.create` - Create user
+- `users.update` - Update user profile
+- `users.delete` - Delete user
+- `users.search` - Search users
+- `users.invite` - Send portal invite
+- `users.getCurrentUser` - Get current user details
+
+**[View Full Documentation](/api-reference/endpoints/users)**
+
+---
+
+### RBAC & Permissions (7 endpoints)
+
+Manage roles and permissions.
+
+**Endpoints:**
+- `rbac.roles.list` - List roles (15 built-in)
+- `rbac.roles.assign` - Assign role to user
+- `rbac.roles.remove` - Remove role from user
+- `rbac.permissions.list` - List permissions
+- `rbac.permissions.grant` - Grant permission to user
+- `rbac.permissions.revoke` - Revoke permission from user
+- `rbac.permissions.compare` - Compare user permissions
+
+**[View Full Documentation](/api-reference/endpoints/rbac)**
+
+---
+
+### Dashboards (10 endpoints)
+
+Access specialized dashboards and metrics.
+
+**Endpoints:**
+- `dashboards.admin.get` - Get admin dashboard
+- `dashboards.sales.get` - Get sales dashboard
+- `dashboards.design.get` - Get design dashboard
+- `dashboards.production.get` - Get production dashboard
+- `dashboards.finance.get` - Get finance dashboard
+- `dashboards.crm.get` - Get CRM dashboard
+- `dashboards.qc.get` - Get QC dashboard
+- `dashboards.projects.get` - Get projects dashboard
+- `dashboards.orders.get` - Get orders dashboard
+- `dashboards.tasks.get` - Get tasks dashboard
+
+**[View Full Documentation](/api-reference/endpoints/dashboards)**
+
+---
+
+### Notifications (4 endpoints)
+
+Manage notifications and preferences.
+
+**Endpoints:**
+- `notifications.list` - List notifications
+- `notifications.markRead` - Mark notification as read
+- `notifications.preferences.get` - Get notification preferences
+- `notifications.preferences.update` - Update notification preferences
+
+**[View Full Documentation](/api-reference/endpoints/notifications)**
+
+---
+
+### Search (2 endpoints)
+
+Global search functionality.
+
+**Endpoints:**
+- `search.global` - Global search (Cmd/Ctrl+K)
+- `search.advanced` - Advanced search with filters
+
+**[View Full Documentation](/api-reference/endpoints/search)**
+
+---
+
+### Automation (6 endpoints)
+
+Manage workflow automation rules and alerts.
+
+**Endpoints:**
+- `automation.rules.list` - List automation rules
+- `automation.rules.create` - Create automation rule
+- `automation.rules.update` - Update automation rule
+- `automation.alerts.list` - List automation alerts
+- `automation.logs.list` - List execution logs
+- `automation.execute` - Manually execute workflow
+
+**[View Full Documentation](/api-reference/endpoints/automation)**
+
+---
+
+### Analytics (5 endpoints)
+
+Cross-module analytics and reporting.
+
+**Endpoints:**
+- `analytics.overview.get` - Get platform overview
+- `analytics.export` - Export analytics data to CSV
+- `analytics.custom.create` - Create custom report
+- `analytics.trends.get` - Get trend analysis
+- `analytics.comparison.get` - Compare time periods
+
+**[View Full Documentation](/api-reference/endpoints/analytics)**
+
+---
+
+## Next Steps
+
+1. Browse specific endpoint documentation using navigation sidebar
+2. Try endpoints in [Quick Start Guide](/api-reference/quickstart)
+3. Learn about [Authentication](/api-reference/authentication)
+4. Understand [Rate Limits](/api-reference/rate-limits)
+
+---
+
+**Last Updated:** January 2025
+**Total Endpoints:** 90+

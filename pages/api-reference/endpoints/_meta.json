@@ -1,0 +1,26 @@
+{
+  "index": {
+    "title": "Endpoints Overview",
+    "type": "page"
+  },
+  "crm": "CRM & Sales",
+  "orders": "Orders",
+  "products": "Products",
+  "production": "Production",
+  "shipping": "Shipping",
+  "finance": "Finance",
+  "documents": "Documents",
+  "tasks": "Tasks",
+  "design": "Design",
+  "partners": "Partners",
+  "qc": "Quality Control",
+  "marketing": "Marketing",
+  "auth": "Authentication",
+  "users": "User Management",
+  "rbac": "RBAC & Permissions",
+  "dashboards": "Dashboards",
+  "notifications": "Notifications",
+  "search": "Search",
+  "automation": "Automation",
+  "analytics": "Analytics"
+}
