@@ -13,6 +13,7 @@ Limn Systems Enterprise is a comprehensive platform that brings together design,
 - **Order Management** - Create and track orders from quote to delivery
 - **Production Tracking** - Real-time manufacturing progress monitoring
 - **Quality Control** - Comprehensive QC inspection workflows
+- **Mobile Tasks** - Offline-capable mobile task management with photo capture
 - **Portal Access** - Dedicated portals for customers, designers, and factories
 - **Automation** - Workflow engine with smart automation rules
 
@@ -42,15 +43,16 @@ Limn Systems Enterprise is a comprehensive platform that brings together design,
 
 ### Core Modules
 - **Dashboards** (10 specialized views) - Admin, Sales, Design, Production, Finance, CRM, QC, Projects, Orders, Tasks
-- **Task Management** - Assignments, workflows, deadlines
+- **Task Management** - Assignments, workflows, deadlines, mobile offline support
 - **CRM & Sales** - Leads, contacts, opportunities, pipelines
 - **Design Management** - Boards, mood boards, submissions, approvals
 - **Product Catalog** - 4000+ materials, collections, SKUs
 - **Order Processing** - Quotes, orders, tracking, delivery
 - **Production Tracking** - Work orders, schedules, progress
-- **Shipping & Logistics** - SEKO integration, tracking
+- **Shipping & Logistics** - SEKO WMS integration (19 endpoints), multi-format label storage, tracking timeline
 - **Finance & Invoicing** - QuickBooks integration, payments
-- **Document Management** - Supabase storage, versioning
+- **Document Management** - Supabase storage, versioning, approval workflows
+- **HR & Employees** - OAuth authentication, admin allowlist, partner contact management
 
 ### Portal System
 
@@ -133,8 +135,10 @@ Limn Systems Enterprise is a comprehensive platform that brings together design,
 
 ### Key Features
 - **Core RBAC** - Roles, permissions, user assignments
+- **Inline Permission Editor** - Grant/revoke individual permissions with audit trail
+- **Permission Comparison View** - Role vs user vs effective permissions analysis
 - **Advanced Features** - Conditions, delegation, approval workflows
-- **Multi-Tenancy** - Tenant isolation, cross-tenant access
+- **Multi-Tenancy** - Tenant isolation, cross-tenant access, customer-scoped permissions
 - **Permission Templates** - Reusable patterns
 - **Session Constraints** - IP, time, device, location-based access
 
@@ -176,8 +180,13 @@ Use the search bar above to find specific topics, or browse the categories in th
 - Portal access system: Complete implementation
 - Automation system: 6,000+ lines of production code
 - Logger migration: 100% complete (Pino universal logger)
-- Email campaign system: Production ready
-- RBAC system: All 5 phases complete
+- Email campaign system: Production ready with Flipbooks
+- RBAC system: All 5 phases complete + inline editor & comparison view
+- Mobile Tasks: Offline-capable PWA with photo capture and sync
+- SEKO WMS Integration: 19 API endpoints, multi-format labels (PDF/ZPL/PNG), tracking timeline
+- HR Management: Employee OAuth authentication, admin allowlist, partner contacts
+- Manufacturer Capabilities: Inline-editable arrays (specializations, capabilities, certifications, languages)
+- Modal Removal: Eliminated all create/edit modal dialogs for consistent UX
 
 ### Production Metrics
 - **Uptime**: 99.9% SLA
