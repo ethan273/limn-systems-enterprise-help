@@ -285,6 +285,247 @@ const canAccessOrders = await hasAnyPermission(userId, [
 ]);
 ```
 
+### Managing User Permissions
+
+**Location:** Admin > Users > [User Detail] > Permissions Tab
+
+The RBAC system provides two powerful tools for managing user-specific permissions that override role-based defaults.
+
+#### Inline Permission Editor
+
+**Overview:**
+The Inline Permission Editor allows administrators to grant or revoke individual permissions for a specific user without changing their assigned role. User-specific permissions always override role-based permissions.
+
+**Key Features:**
+- **Add Permission Form** - Grant new permissions with full context
+- **Permission Table** - View all user-specific overrides
+- **Grant/Deny Support** - Both positive and negative permissions
+- **Customer Scoping** - Restrict permissions to specific customers (multi-tenant)
+- **Audit Trail** - Track who granted permission, when, and why
+
+**Adding a Permission:**
+
+1. Navigate to Admin > Users > [Select User] > Permissions Tab
+2. Click **"Add Permission"** button
+3. Fill in permission details:
+   - **Module/Resource** (required) - e.g., `orders`, `invoices`, `customers`
+   - **Action** (required) - Select from: view, edit, create, delete, approve
+   - **Access Type** (required) - Grant (Allow) or Deny (Restrict)
+   - **Scope** - Global (all customers) or Customer-specific (coming soon)
+   - **Reason** (required) - Justification for audit trail
+4. Click **"Grant Permission"**
+5. Permission takes effect immediately
+6. User receives email notification (if enabled)
+
+**Permission Fields:**
+
+| Field | Type | Description | Example |
+|-------|------|-------------|---------|
+| Module/Resource | Text | The resource being protected | `orders`, `invoices`, `products` |
+| Action | Select | The action being allowed/denied | `view`, `create`, `edit`, `delete`, `approve` |
+| Access Type | Select | Whether to grant or deny access | Grant (Allow) or Deny (Restrict) |
+| Scope | Select | Global or customer-specific | Global (All Customers) |
+| Reason | Textarea | Justification for permission change | "Temporary access for Q4 audit" |
+
+**Revoking a Permission:**
+
+1. Locate permission in the permissions table
+2. Click trash icon in Actions column
+3. Confirm revocation
+4. Permission removed immediately
+5. User reverts to role-based permissions for that resource/action
+
+**Use Cases:**
+
+**Temporary Elevated Access:**
+```
+User: jane.smith@limn.us.com (role: analyst)
+Grant: edit_invoices (normally analysts can only view)
+Reason: "Q4 financial audit - temporary edit access until Dec 31"
+Duration: Manual revocation after Dec 31
+```
+
+**Explicit Denial:**
+```
+User: contractor@external.com (role: designer)
+Deny: delete_projects (designers normally can delete their own)
+Reason: "External contractor - prevent accidental deletion"
+Duration: Permanent restriction
+```
+
+**Customer-Scoped Access:**
+```
+User: account.manager@limn.us.com (role: manager)
+Grant: view_invoices for customer_id: "abc-123"
+Reason: "Account manager for Acme Corp only"
+Duration: Until customer relationship ends
+```
+
+**Inline Editor UI Components:**
+
+- **Permission Table** - Shows all user-specific permissions with columns:
+  - Module/Resource - Resource name (orders, invoices, etc.)
+  - Action - Badge showing action (view, create, edit, delete, approve)
+  - Access - Badge (green "Granted" or red "Denied")
+  - Scope - Badge (blue "Customer Scoped" or gray "Global")
+  - Reason - Truncated reason with hover tooltip
+  - Granted At - Date permission was added
+  - Actions - Trash icon to revoke permission
+
+- **Add Permission Form** - Inline expandable form with validation:
+  - Required field indicators (*)
+  - Real-time validation
+  - Toast notifications for success/error
+  - Auto-refresh permission list after changes
+
+**API Endpoints:**
+
+```typescript
+// Fetch user permissions
+api.rbac.getUserPermissions.useQuery({ userId })
+
+// Grant permission
+api.rbac.assignPermission.useMutation({
+  userId, resource, action, allowed, customerId, reason
+})
+
+// Revoke permission
+api.rbac.revokePermission.useMutation({
+  permissionId, userId
+})
+```
+
+#### Permission Comparison View
+
+**Overview:**
+The Permission Comparison View provides a side-by-side analysis of a user's permissions from three sources: role-based permissions, user-specific overrides, and final effective permissions. This tool is essential for debugging permission issues and understanding permission inheritance.
+
+**Key Features:**
+- **Three-Column Comparison** - Role, User, Effective permissions
+- **Color-Coded Badges** - Green (allowed), Red (denied), Gray (not set)
+- **Resource Filtering** - Filter by module/resource name
+- **Action Filtering** - Filter by action type (view, create, edit, delete, etc.)
+- **Conflict Highlighting** - Identifies where user permissions override role
+- **Permission Source Tracking** - Shows whether permission comes from role or user
+
+**Accessing Comparison View:**
+
+1. Navigate to Admin > Users > [Select User] > Permissions Tab
+2. Click **"Permission Comparison"** tab (if available)
+3. View three-column layout:
+   - **Role Permissions** (left) - Permissions from assigned role(s)
+   - **User Permissions** (center) - User-specific overrides
+   - **Effective Permissions** (right) - Final computed permissions
+
+**Comparison View Columns:**
+
+| Column | Description | Badge Colors |
+|--------|-------------|-------------|
+| Role Permissions | Permissions inherited from user's assigned role(s) | Green (allowed), Gray (not set) |
+| User Permissions | User-specific overrides set via inline editor | Green (allowed), Red (denied) |
+| Effective Permissions | Final permissions after applying overrides | Green (allowed), Red (denied) |
+
+**Filtering Options:**
+
+1. **Resource Filter** - Text input to filter by module/resource name
+   - Example: Type "orders" to show only order-related permissions
+   - Case-insensitive partial matching
+
+2. **Action Filter** - Dropdown to filter by action type
+   - Options: All, View, Create, Edit, Delete, Approve, Share, Manage
+   - Shows count of matching permissions
+
+**Permission Resolution Rules:**
+
+The effective permissions are calculated using this hierarchy:
+
+1. **Start with role permissions** (base permissions from assigned role)
+2. **Apply user-specific grants** (additions beyond role)
+3. **Apply user-specific denials** (explicit restrictions)
+4. **Result: Effective permissions** (final access control)
+
+**Example:**
+
+```
+User: john.doe@limn.us.com
+Role: Manager (role_id: xyz-789)
+
+Role Permissions:
+- view_orders: GRANTED (from manager role)
+- create_orders: GRANTED (from manager role)
+- edit_orders: GRANTED (from manager role)
+- delete_orders: NOT SET (managers cannot delete)
+
+User Permissions:
+- delete_orders: GRANTED (special override for this user)
+- create_invoices: DENIED (explicit restriction)
+
+Effective Permissions:
+- view_orders: GRANTED (from role)
+- create_orders: GRANTED (from role)
+- edit_orders: GRANTED (from role)
+- delete_orders: GRANTED (user override adds this)
+- create_invoices: DENIED (user override restricts this)
+```
+
+**Use Cases:**
+
+**Debug Permission Issue:**
+```
+Symptom: User reports they cannot delete orders
+Diagnosis: Check comparison view
+Result: Role grants delete_orders, but user permission explicitly denies it
+Solution: Remove user-level denial or change reason for restriction
+```
+
+**Audit Permission Changes:**
+```
+Scenario: Security audit requires documenting elevated access
+Process: Export comparison view for all users with overrides
+Result: Report showing which users have permissions beyond their role
+```
+
+**Multi-Tenant Permission Verification:**
+```
+Scenario: Ensure account managers only see their assigned customers
+Process: Check effective permissions for customer_id scoping
+Result: Verify all customer-related permissions are properly scoped
+```
+
+**API Endpoints:**
+
+```typescript
+// Fetch all permission data for comparison
+api.rbac.getUserDetails.useQuery({ userId })
+// Returns:
+// - rolePermissions: Permission[] (from assigned roles)
+// - userPermissions: Permission[] (user-specific overrides)
+// - effectivePermissions: Permission[] (final computed permissions)
+
+// Permission interface
+interface Permission {
+  id: string;
+  resource: string;          // e.g., "orders", "invoices"
+  action: string;            // e.g., "view", "create", "edit", "delete"
+  allowed: boolean;          // true (granted) or false (denied)
+  customer_id: string | null; // null = global, UUID = customer-scoped
+  source: "role" | "user" | "effective";
+  reason?: string;           // audit trail justification
+  granted_at?: string;       // ISO timestamp
+  granted_by?: string;       // user ID who granted permission
+}
+```
+
+**Best Practices:**
+
+1. **Document All Overrides** - Always provide detailed reason for user-specific permissions
+2. **Review Regularly** - Quarterly audit of all user permission overrides
+3. **Minimize Overrides** - Use roles for common access patterns, overrides for exceptions
+4. **Use Denials Sparingly** - Explicit denials can be confusing; consider role change instead
+5. **Customer Scoping** - Always scope permissions to customers when possible (multi-tenant)
+6. **Temporary Access** - Set calendar reminders to revoke temporary elevated access
+7. **Comparison View for Troubleshooting** - Always check comparison view before changing permissions
+
 ---
 
 ## Permission Delegation
