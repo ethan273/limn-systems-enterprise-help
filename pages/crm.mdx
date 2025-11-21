@@ -313,13 +313,34 @@ Click any client to see comprehensive information:
 
 ## CRM Lifecycle (Funnel Progression)
 
-The CRM supports automatic funnel progression with data inheritance.
+The CRM supports automatic funnel progression with data inheritance across five distinct lifecycle stages.
 
 ### Complete Funnel Flow
 
 ```
-Contact → Lead → Prospect → Client
+Ambassador → Contact → Lead → Prospect → Client
 ```
+
+**Lifecycle Stages:**
+- **Ambassador** - Initial stage for all new contacts (default)
+- **Contact** - Qualified contact with verified information
+- **Lead** - Contact showing active buying intent
+- **Prospect** - Qualified lead with strong interest (cold/warm/hot temperature)
+- **Client** - Converted customer with signed contract
+
+### Stage 0: Ambassador (Default)
+
+**What:** All new contacts start as "ambassadors" by default
+
+**Purpose:** Represents individuals in your network who may become contacts, leads, or clients in the future
+
+**Characteristics:**
+- Initial lifecycle stage for all new records
+- May be early-stage relationships, referral sources, or industry contacts
+- Not yet qualified as active sales opportunities
+- Can be nurtured over time until showing buying signals
+
+**Progression:** Ambassador → Contact (when contact information is verified and relationship is established)
 
 ### Stage 1: Contact → Lead
 
@@ -380,14 +401,22 @@ Contact → Lead → Prospect → Client
 **Access:** View funnel statistics on CRM Dashboard
 
 **Metrics Tracked:**
-- Total at each stage (contacts, leads, prospects, clients)
-- Conversion counts:
-  - Contacts converted to leads
-  - Contacts converted to prospects
-  - Contacts converted to clients
-  - Leads as prospects
-  - Leads converted to customers
-- Conversion rates (percentages)
+- Total at each stage (ambassadors, contacts, leads, prospects, clients)
+- Conversion counts (last 30 days):
+  - Ambassadors converted to leads
+  - Leads converted to prospects
+  - Prospects converted to clients
+- Conversion rates with trend analysis:
+  - Ambassador → Lead rate (percentage + trend vs previous 30 days)
+  - Lead → Prospect rate (percentage + trend vs previous 30 days)
+  - Prospect → Client rate (percentage + trend vs previous 30 days)
+- Trend indicators (up/down arrows showing improvement or decline)
+
+**Advanced Analytics:**
+- **30-Day Comparison** - Compare current 30 days vs previous 30 days
+- **Conversion Velocity** - How quickly contacts move through the funnel
+- **Stage Duration** - Average days spent in each lifecycle stage
+- **Drop-Off Analysis** - Identify where prospects are leaving the funnel
 
 ---
 
@@ -436,6 +465,71 @@ Activities log all interactions with contacts, leads, and clients.
 - Most recent 50 activities displayed
 - Sorted by creation date (newest first)
 - Filterable by type and status
+
+---
+
+## Advanced CRM Analytics
+
+The CRM includes a comprehensive analytics system that tracks conversion rates, trends, and funnel performance across all lifecycle stages.
+
+### Analytics Dashboard
+
+**Access:** Navigate to `/crm` dashboard for real-time analytics
+
+**Key Metrics:**
+
+**Lifecycle Stage Totals:**
+- Total Ambassadors - All contacts at ambassador stage
+- Total Contacts - Contacts with verified information
+- Total Leads - Active leads in sales pipeline
+- Total Prospects - Qualified leads (cold/warm/hot)
+- Total Clients - Converted customers
+
+**Conversion Tracking (30-Day Window):**
+
+| Conversion Path | Metrics Tracked |
+|-----------------|----------------|
+| Ambassador → Lead | Count, Rate (%), Trend vs Previous Period |
+| Lead → Prospect | Count, Rate (%), Trend vs Previous Period |
+| Prospect → Client | Count, Rate (%), Trend vs Previous Period |
+
+**Trend Analysis:**
+- **Positive Trend** - Green up arrow (+%), conversion rate improved vs previous 30 days
+- **Negative Trend** - Red down arrow (-%), conversion rate declined vs previous 30 days
+- **No Change** - Gray indicator (0%), conversion rate unchanged
+
+### Understanding Conversion Rates
+
+**Calculation Method:**
+```
+Conversion Rate = (Conversions in Period / Total at Starting Stage) x 100
+```
+
+**Example:**
+- Total Ambassadors: 500
+- Converted to Lead (last 30 days): 50
+- Ambassador → Lead Rate: 10%
+- Previous Period Rate: 8%
+- Trend: +25% improvement (green up arrow)
+
+### Using Analytics to Improve Sales
+
+**Identify Bottlenecks:**
+1. Compare conversion rates across all stages
+2. Focus on the stage with lowest conversion rate
+3. Investigate common reasons for drop-off
+4. Implement targeted improvements
+
+**Track Improvement:**
+1. Make process changes (better follow-up, improved messaging)
+2. Monitor trend indicators over next 30 days
+3. Positive trends indicate effective changes
+4. Negative trends signal need for course correction
+
+**Optimize Sales Process:**
+- **High Ambassador → Lead Rate** - Effective outreach and qualification
+- **Low Lead → Prospect Rate** - Improve lead nurturing and follow-up
+- **High Prospect → Client Rate** - Strong closing process
 
 ---
 
