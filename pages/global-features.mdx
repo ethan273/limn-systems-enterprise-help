@@ -4,36 +4,678 @@ System-wide features available throughout the application.
 
 ## Overview
 
-Global features are available across all modules and provide core functionality for search, notifications, messaging, settings, and more.
+Global features are available across all modules and provide core functionality that enhances productivity, efficiency, and user experience throughout Limn Systems Enterprise.
 
-## Key Features
+**Key Capabilities:**
+- **Global Search** - Find anything instantly with Cmd/Ctrl+K
+- **Notifications Center** - Stay informed with real-time alerts
+- **User Profile & Settings** - Customize your experience
+- **Theme Customization** - Light/dark mode support
+- **Offline Mode (PWA)** - Work without internet, sync when online
+- **File Storage** - Hybrid Supabase + Google Drive storage
+- **Keyboard Shortcuts** - Accelerate workflows with hotkeys
+- **Help & Support** - In-app documentation and support access
 
-- **Global Search** - Search across all entities and documents
-- **Notifications** - In-app notification system
-- **Messaging** - Internal messaging and communication
-- **User Settings** - Personal preferences and settings
-- **Theme** - Light/dark mode and visual customization
-- **Offline Mode** - Work offline with sync when online
-- **Storage** - File storage and management
+---
 
-## Search Capabilities
+## Global Search (Cmd/Ctrl+K)
 
-The global search feature allows you to quickly find:
-- Orders and projects
-- Customers and contacts
-- Products and materials
-- Documents and files
-- Tasks and workflows
+The global search feature provides instant access to any record, document, or resource across the entire platform.
 
-## Notifications
+### Accessing Global Search
 
-Receive real-time notifications for:
-- Task assignments
-- Order updates
-- Approval requests
-- System alerts
-- Messages and mentions
+**Method 1: Keyboard Shortcut**
+- Press `Cmd+K` (Mac) or `Ctrl+K` (Windows/Linux)
+- Search modal appears instantly
 
-## Getting Started
+**Method 2: Click Icon**
+- Click search icon in top-right corner of top bar
+- Search modal opens
 
-Learn how to use global features to work more efficiently across the platform.
+### Search Capabilities
+
+**Searchable Entities:**
+- **Contacts & CRM** - Search by name, email, company
+- **Orders** - Search by order number, customer name, PO number
+- **Products** - Search by SKU, name, collection, material type
+- **Projects** - Search by project name, customer, designer
+- **Tasks** - Search by title, assignee, description, project
+- **Documents** - Search by filename, document name, tags
+- **Invoices** - Search by invoice number, customer name, amount
+- **Work Orders** - Search by WO number, factory partner, product
+- **Leads** - Search by name, company, email, source
+- **Customers** - Search by name, company, email, phone
+
+**Search Behavior:**
+- **Real-Time Results** - Updates as you type (300ms debounce)
+- **Fuzzy Matching** - Forgives typos and partial matches
+- **Recent Searches** - Last 10 searches saved locally for quick re-access
+- **Result Ranking** - Most relevant results shown first
+- **Context-Aware** - Results prioritized based on your current module
+
+### Advanced Search Syntax
+
+**Exact Match:**
+```
+"order 1234"
+```
+Finds only exact phrase "order 1234"
+
+**Module Filter:**
+```
+@crm John Smith
+```
+Searches only within CRM module
+
+**Status Filter:**
+```
+status:active
+```
+Filters results by status field
+
+**Date Filter:**
+```
+created:2025-01-15
+```
+Filters by creation date
+
+**Multiple Filters:**
+```
+@orders status:active created:2025-01
+```
+Searches orders module for active orders created in January 2025
+
+### Keyboard Navigation in Search
+
+- `Arrow Down` - Next result
+- `Arrow Up` - Previous result
+- `Enter` - Navigate to selected result
+- `Tab` - Cycle through result categories
+- `Esc` - Close search modal
+
+### Search Tips
+
+**For Best Results:**
+1. Start typing immediately (no need to select search box)
+2. Use partial matches (e.g., "john sm" finds "John Smith")
+3. Search by unique identifiers (order #, invoice #, SKU)
+4. Use module filters when you know the record type
+5. Leverage recent searches for frequently accessed records
+
+**Performance:**
+- First 50 results shown per category
+- Average search time: <300ms
+- Local caching for instant repeat searches
+
+---
+
+## Notifications Center
+
+Stay informed with real-time notifications for important events, assignments, and updates.
+
+### Accessing Notifications
+
+**Notification Icon:**
+- Located in top-right corner of top bar
+- Bell icon with unread count badge (red circle with number)
+- Click to open Notifications Center panel
+
+**Notification Panel:**
+- Slides out from right side
+- Shows most recent 50 notifications
+- Grouped by date (Today, Yesterday, This Week, Earlier)
+- Unread notifications shown with blue dot
+
+### Notification Types
+
+**Task Notifications:**
+- **Task Assigned** - New task assigned to you
+- **Task Due Soon** - Task due within 24 hours
+- **Task Completed** - Task you created was completed
+- **Task Commented** - Someone commented on your task
+
+**Order Notifications:**
+- **Order Status Changed** - Order moved to new status
+- **Order Shipped** - Order shipped to customer
+- **Order Delivered** - Delivery confirmed
+- **Order Cancelled** - Order cancelled by customer or admin
+
+**Production Notifications:**
+- **Work Order Started** - Factory began production
+- **Work Order Completed** - Production finished
+- **Quality Issue** - QC inspection failed
+- **Production Delayed** - Estimated completion date changed
+
+**Approval Notifications:**
+- **Approval Requested** - Document or design needs your approval
+- **Approval Granted** - Your submission was approved
+- **Approval Rejected** - Changes requested on your submission
+- **Approval Overdue** - Approval request past due date
+
+**System Notifications:**
+- **System Maintenance** - Scheduled maintenance window
+- **Feature Update** - New features or improvements
+- **Security Alert** - Account security requires attention
+- **Data Export Ready** - Requested export file is ready for download
+
+**Communication Notifications:**
+- **Mentioned in Note** - Someone @mentioned you in a note
+- **Message Received** - New internal message
+- **Comment Reply** - Someone replied to your comment
+
+### Managing Notifications
+
+**Mark as Read:**
+- Click notification to mark as read and navigate to related record
+- Click "Mark as Read" button without navigating
+
+**Mark All as Read:**
+- Click "Mark All as Read" button at bottom of panel
+- Clears all unread badges
+
+**Dismiss Notification:**
+- Click X icon on individual notification
+- Removes from notification list permanently
+
+**Notification Actions:**
+- **View** - Navigate to related record
+- **Dismiss** - Remove notification
+- **Snooze** - Hide for 1 hour, 4 hours, or 24 hours
+
+### Notification Settings
+
+**Access:** User Menu > Settings > Notifications
+
+**Configuration Options:**
+
+**Delivery Channels:**
+- **In-App** - Show in Notifications Center (always enabled)
+- **Email** - Send email notifications
+- **Browser Push** - Browser push notifications (if enabled)
+- **SMS** - Text message notifications (premium feature)
+
+**Notification Frequency:**
+- **Immediate** - Deliver as they happen
+- **Digest** - Batch into hourly, daily, or weekly summary
+- **Custom Schedule** - Define specific delivery windows
+
+**Quiet Hours:**
+- **Enabled** - Suppress notifications during specified hours
+- **Time Range** - Set start and end times (e.g., 9 PM - 7 AM)
+- **Days** - Select which days quiet hours apply (e.g., weekends)
+
+**Per-Type Settings:**
+Each notification type can be configured individually:
+- Enable/Disable
+- Delivery channel (in-app, email, push, SMS)
+- Priority (low, normal, high, urgent)
+
+**Example Configuration:**
+```
+Task Assignments:
+  - In-App: Enabled
+  - Email: Enabled
+  - Push: Enabled
+  - Priority: High
+
+Order Updates:
+  - In-App: Enabled
+  - Email: Digest (daily at 8 AM)
+  - Push: Disabled
+  - Priority: Normal
+```
+
+---
+
+## User Profile & Settings
+
+Customize your account, preferences, and security settings.
+
+### Accessing User Profile
+
+**User Menu:**
+- Click profile picture or initials in top-right corner
+- Dropdown menu appears with options
+
+**Menu Options:**
+- View Profile
+- Settings
+- Help & Documentation
+- Logout
+
+### Profile Management
+
+**Access:** User Menu > Profile
+
+**Profile Fields:**
+- **Profile Picture** - Upload custom avatar (max 5MB, JPG/PNG)
+- **Display Name** - How your name appears to others
+- **Email** - Primary email address (verified)
+- **Phone** - Contact phone number
+- **Job Title** - Your role or position
+- **Department** - Your department (if applicable)
+- **Bio** - Short description (up to 500 characters)
+
+**Profile Visibility:**
+- Internal employees: Visible to all users
+- External users: Visible only to authorized contacts
+
+### General Settings
+
+**Access:** User Menu > Settings > General
+
+**Language & Localization:**
+- **Language** - Interface language (English, Spanish, Mandarin)
+- **Timezone** - Your local timezone (auto-detected, can override)
+- **Date Format** - MM/DD/YYYY (US) or DD/MM/YYYY (International)
+- **Time Format** - 12-hour (AM/PM) or 24-hour
+- **Currency** - Default currency (USD, EUR, CNY, etc.)
+
+**Display Preferences:**
+- **Density** - Comfortable, Compact, or Spacious layout
+- **Font Size** - Small, Medium, or Large
+- **Animations** - Enable or disable UI animations
+- **Sidebar** - Auto-collapse on small screens (default: enabled)
+
+### Notification Settings
+
+**Access:** User Menu > Settings > Notifications
+
+See "Notification Settings" section above for full details.
+
+### Security Settings
+
+**Access:** User Menu > Settings > Security
+
+**Password Management:**
+- **Change Password** - Update your password
+- **Password Requirements** - Min 12 characters, uppercase, lowercase, number, symbol
+- **Last Changed** - Date of last password change
+- **Force Reset** - Admin can force password reset
+
+**Multi-Factor Authentication (MFA):**
+- **Status** - Enabled or Disabled
+- **Method** - TOTP (Google Authenticator, Authy)
+- **Backup Codes** - Generate backup codes for emergency access
+- **Required For** - super_admin role requires MFA (mandatory)
+
+**Active Sessions:**
+- **Current Session** - This device/browser
+- **Other Sessions** - Other logged-in devices
+- **Revoke** - End session remotely
+- **Session Timeout** - Auto-logout after 30 minutes of inactivity (configurable)
+
+**API Keys (Admin Only):**
+- **Generate Key** - Create new API access token
+- **Key List** - View all active API keys
+- **Revoke Key** - Disable API key immediately
+- **Expiration** - Keys expire after 90 days (renewable)
+
+### Privacy Settings
+
+**Access:** User Menu > Settings > Privacy
+
+**Data Sharing:**
+- **Activity Status** - Show online/offline status to others
+- **Last Seen** - Show last active time
+- **Read Receipts** - Show when you've read messages
+- **Typing Indicators** - Show when you're typing
+
+**Email Preferences:**
+- **Marketing Emails** - Receive product updates and tips
+- **Survey Invitations** - Participate in user research
+- **Newsletter** - Monthly newsletter subscription
+
+---
+
+## Theme Customization
+
+Personalize the visual appearance of the application with light and dark themes.
+
+### Switching Themes
+
+**Access:** User Menu > Theme or Settings > Appearance
+
+**Available Themes:**
+- **Light Mode** - Bright background, dark text (default)
+- **Dark Mode** - Dark background, light text
+- **Auto (System)** - Match your operating system theme preference
+
+**Toggle Theme:**
+- Click theme toggle in user menu
+- Changes take effect immediately
+- Preference saved to your profile
+
+### Theme Features
+
+**Light Mode:**
+- White/light gray backgrounds
+- Black/dark gray text
+- Suitable for bright environments
+- Reduces screen glare in daylight
+
+**Dark Mode:**
+- Dark gray/black backgrounds
+- Light gray/white text
+- Reduces eye strain in low-light environments
+- Saves battery on OLED screens
+- Popular for extended work sessions
+
+**Auto Mode:**
+- Automatically switches based on OS settings
+- Typically dark at night, light during day
+- Syncs with macOS Night Shift or Windows Dark Mode
+
+### Accessibility Considerations
+
+**High Contrast:**
+- Both themes meet WCAG AA contrast standards
+- Text contrast ratio >=4.5:1 for body text
+- Text contrast ratio >=3:1 for large text
+
+**Color Blindness Support:**
+- Themes avoid red/green only indicators
+- Use shapes, icons, and labels in addition to color
+- Status badges use consistent visual patterns
+
+---
+
+## Offline Mode (Progressive Web App)
+
+Work without an internet connection and sync automatically when online.
+
+### PWA Capabilities
+
+**Offline Features:**
+- **Task Creation** - Create tasks offline, sync when online
+- **Photo Capture** - Capture photos offline, upload when online
+- **Local Storage** - IndexedDB for offline data persistence
+- **Background Sync** - Automatic sync when connection restored
+- **Sync Indicators** - Visual feedback for sync status
+
+**Supported Offline Operations:**
+- View cached data (tasks, orders, contacts)
+- Create new tasks with offline mode
+- Capture QC inspection photos
+- Edit form data (saved locally until online)
+
+**Not Available Offline:**
+- Real-time data (requires server)
+- Search (requires database connection)
+- File uploads >5MB (requires bandwidth)
+- Reports and analytics (requires computation)
+
+### Installing as PWA
+
+**Desktop (Chrome/Edge):**
+1. Visit app in browser
+2. Click install icon in address bar (+ or computer icon)
+3. Click "Install" in prompt
+4. App opens in standalone window
+
+**Mobile (iOS Safari):**
+1. Visit app in Safari
+2. Tap Share icon (square with arrow)
+3. Scroll and tap "Add to Home Screen"
+4. Tap "Add" to confirm
+5. App appears on home screen
+
+**Mobile (Android Chrome):**
+1. Visit app in Chrome
+2. Tap three-dot menu
+3. Tap "Add to Home Screen" or "Install App"
+4. Tap "Install" to confirm
+5. App appears in app drawer
+
+### Offline Sync Behavior
+
+**Sync Strategy:**
+- **NetworkOnly** for admin routes (prevents stale data)
+- **CacheFirst** for static assets (images, CSS, JS)
+- **Runtime Caching** for API responses (with expiration)
+
+**Sync Indicators:**
+- **Green Cloud** - Synced, online
+- **Yellow Cloud with Arrows** - Syncing in progress
+- **Red Cloud with X** - Sync failed, retry available
+- **Gray Cloud** - Offline mode, will sync when online
+
+**Conflict Resolution:**
+- Server version wins for conflicts
+- User notified if their offline changes were overwritten
+- Option to review and re-apply changes manually
+
+---
+
+## File Storage
+
+Limn Systems uses a hybrid storage architecture for optimal performance and cost.
+
+### Storage Architecture
+
+**Hybrid Strategy:**
+- **Supabase Storage** - Files <50MB (documents, images, labels)
+- **Google Drive** - Files >=50MB (CAD files, videos, large PDFs)
+- **Automatic Routing** - System automatically selects storage based on file size
+
+**Storage Buckets:**
+
+| Bucket Name | Purpose | Max File Size | File Types |
+|-------------|---------|---------------|------------|
+| task-attachments | Task photos and attachments | 50MB | Images, PDFs, Office docs |
+| shop-drawings | Production technical drawings | 50MB | PDF, DWG, DXF, CAD |
+| shipping-labels | Multi-format shipping labels | 10MB | PDF, ZPL, PNG |
+| document-files | General document storage | 50MB | All document types |
+| prototype-images | Product prototype photos | 50MB | Images only |
+
+**Google Drive (>=50MB):**
+- CAD files (Solidworks, Rhino, AutoCAD)
+- Video files (product demos, factory tours)
+- Large PDF portfolios
+- High-resolution image sets
+
+### Upload Capabilities
+
+**Supported File Types:**
+- **Documents** - PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX
+- **Images** - JPG, JPEG, PNG, GIF, SVG, WEBP
+- **CAD** - DWG, DXF, STEP, IGES, STL
+- **Archives** - ZIP, RAR, 7Z
+- **Other** - TXT, CSV, JSON, XML
+
+**Upload Methods:**
+- **Click to Upload** - Click upload button, select files
+- **Drag and Drop** - Drag files directly into upload zone
+- **Bulk Upload** - Select multiple files at once (up to 20 files)
+- **Mobile** - Use camera to capture and upload instantly
+
+**Upload Progress:**
+- Real-time progress bar
+- Estimated time remaining
+- Cancel upload option
+- Retry on failure
+
+### File Management
+
+**File Actions:**
+- **Preview** - View file in browser (PDFs, images)
+- **Download** - Download to local device
+- **Share** - Generate shareable link (with expiration)
+- **Delete** - Remove file (soft delete, recoverable for 30 days)
+- **Version** - Upload new version, track version history
+
+**File Metadata:**
+- Filename, size, type
+- Upload date and uploader
+- Last modified date
+- Tags and categories
+- Access permissions
+
+---
+
+## Keyboard Shortcuts
+
+Accelerate your workflow with comprehensive keyboard shortcuts.
+
+### Global Shortcuts
+
+**Navigation:**
+- `Cmd/Ctrl + K` - Open global search
+- `Cmd/Ctrl + H` - Go to home dashboard
+- `Cmd/Ctrl + /` - Show keyboard shortcut help
+- `Cmd/Ctrl + [` - Go back
+- `Cmd/Ctrl + ]` - Go forward
+- `Esc` - Close modal/dialog
+
+**Actions:**
+- `Cmd/Ctrl + N` - Create new record (context-aware)
+- `Cmd/Ctrl + S` - Save current form
+- `Cmd/Ctrl + Enter` - Submit form
+- `Cmd/Ctrl + P` - Print current page
+- `Cmd/Ctrl + F` - Find on page (browser default)
+
+**Editing:**
+- `Tab` - Navigate to next form field
+- `Shift + Tab` - Navigate to previous form field
+- `Enter` - Submit form (when focused on button)
+- `Cmd/Ctrl + Z` - Undo last change
+- `Cmd/Ctrl + Shift + Z` - Redo last undone change
+
+### Module-Specific Shortcuts
+
+**List Views:**
+- `Arrow Up/Down` - Navigate through rows
+- `Enter` - Open selected record
+- `Delete` - Delete selected record (with confirmation)
+- `Cmd/Ctrl + A` - Select all records
+- `Cmd/Ctrl + Click` - Open record in new tab
+
+**Search:**
+- `Arrow Up/Down` - Navigate search results
+- `Tab` - Cycle through result categories
+- `Enter` - Go to selected result
+- `Esc` - Close search modal
+
+**Tables:**
+- `Arrow Keys` - Navigate cells
+- `Enter` - Edit cell
+- `Tab` - Next column
+- `Shift + Tab` - Previous column
+
+### Accessibility Shortcuts
+
+**Screen Reader:**
+- `Cmd/Ctrl + Alt + H` - Toggle screen reader mode
+- `Cmd/Ctrl + Alt + K` - Read current element
+- `Tab` - Navigate to next interactive element
+
+**Keyboard-Only Navigation:**
+- All features accessible via keyboard
+- Focus indicators visible on all elements
+- Skip navigation links provided
+
+---
+
+## Help & Support
+
+Access in-app documentation and support resources.
+
+### Help Center Access
+
+**In-App Documentation:**
+- Click Help icon (?) in top-right corner
+- Opens this help center in new tab
+- Searchable documentation
+- Step-by-step guides and tutorials
+
+**Contextual Help:**
+- Click (?) icon next to form fields
+- Tooltip appears with field explanation
+- Links to related documentation
+
+### Support Channels
+
+**Internal Employees:**
+- **Slack**: #support channel
+- **Email**: support@limn.us.com
+- **Emergency**: Contact your administrator
+- **Response Time**: <2 hours during business hours
+
+**External Users:**
+- **Email**: support@limn.us.com
+- **Portal**: Submit support ticket via portal
+- **Response Time**: <24 hours
+
+### Feedback & Feature Requests
+
+**Submit Feedback:**
+- User Menu > Submit Feedback
+- Describe issue or feature request
+- Include screenshots (optional)
+- Track status of submitted feedback
+
+**Feature Requests:**
+- Email: feedback@limn.us.com
+- Include use case and business justification
+- Reviewed quarterly by product team
+
+---
+
+## Additional Global Features
+
+### Multi-Language Support (Coming Soon)
+
+**Supported Languages:**
+- English (current)
+- Spanish (planned)
+- Mandarin (planned)
+
+**Language Selection:**
+- User Menu > Settings > General > Language
+- Changes interface language
+- Does not translate user-generated content
+
+### Accessibility Features
+
+**Keyboard Navigation:**
+- All features accessible via keyboard only
+- Logical tab order
+- Focus indicators visible
+
+**Screen Reader Support:**
+- ARIA labels on all interactive elements
+- Alt text on all images
+- Semantic HTML structure
+
+**Visual Accessibility:**
+- WCAG AA contrast compliance
+- Resizable text (up to 200%)
+- No critical information conveyed by color alone
+
+---
+
+## Tips for Using Global Features
+
+1. **Master Cmd+K** - Fastest way to navigate anywhere
+2. **Configure Notifications** - Reduce noise, increase signal
+3. **Use Keyboard Shortcuts** - Save 2-3 seconds per action
+4. **Install as PWA** - Native app-like experience
+5. **Set Up Offline Mode** - Work on mobile without connectivity
+6. **Customize Theme** - Reduce eye strain with dark mode
+7. **Organize Files** - Use consistent naming conventions
+8. **Enable MFA** - Protect your account with two-factor
+
+---
+
+## Next Steps
+
+- [Navigation Guide](/getting-started/navigation) - Master platform navigation
+- [First Steps by Role](/getting-started/first-steps) - Role-specific onboarding
+- [Module-Specific Guides](/modules) - Deep dive into specific modules
+
+---
+
+**Need Help?**
+- Documentation: help.limn.us.com
+- Internal Employees: #support Slack channel
+- External Users: support@limn.us.com
