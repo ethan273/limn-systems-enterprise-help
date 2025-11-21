@@ -76,6 +76,106 @@ Procurement specialists conducting factory audits, quality inspections, and supp
 
 Add partners through type-specific forms with required fields: company_name, primary_contact, primary_email. Configure capacity metrics, specializations, certifications, and payment terms.
 
+### Manufacturer Capabilities & Specializations
+
+**Location:** Partners > Factories > [Factory Name] > Capabilities & Specializations section
+
+Factory partners support four editable capability arrays that define their manufacturing expertise, certifications, and communication capabilities. These fields use inline tag-based editing for easy management.
+
+**Specializations** (Array of Strings)
+
+Manufacturing specializations and primary production methods.
+
+**Common Specializations:**
+- Woodworking (furniture, cabinetry, joinery)
+- Metalworking (welding, fabrication, machining)
+- Upholstery (fabric, leather, foam work)
+- Glass Fabrication (cutting, edging, tempering)
+- Ceramic Production (slip casting, glazing, firing)
+- Custom Fabrication (mixed materials, unique processes)
+
+**Usage:** Helps match factories to appropriate production orders based on required manufacturing processes.
+
+**Capabilities** (Array of Strings)
+
+Specific technical capabilities and equipment available at the factory.
+
+**Common Capabilities:**
+- CNC Machining (3-axis, 5-axis)
+- Powder Coating (color matching, finish quality)
+- Welding (MIG, TIG, spot welding)
+- Laser Cutting (wood, metal, acrylic)
+- 3D Printing (prototyping, small batch production)
+- Hand Finishing (sanding, staining, polishing)
+- Assembly & Packaging (kitting, custom packaging)
+- Rush Production (expedited turnaround capability)
+
+**Usage:** Enables granular filtering when selecting factories for complex production requirements.
+
+**Certifications** (Array of Strings)
+
+Quality certifications, compliance standards, and industry accreditations.
+
+**Common Certifications:**
+- ISO 9001 (Quality Management System)
+- FSC Certified (sustainable wood sourcing)
+- CARB Compliant (California Air Resources Board - formaldehyde emissions)
+- GREENGUARD (low chemical emissions)
+- OSHA Compliant (workplace safety)
+- ISO 14001 (Environmental Management)
+- SA8000 (Social Accountability - labor standards)
+- BIFMA (Business and Institutional Furniture Manufacturers Association)
+
+**Usage:** Ensures factories meet client requirements for regulatory compliance and quality standards.
+
+**Languages** (Array of Strings)
+
+Languages spoken by factory staff for communication with design/production teams.
+
+**Common Languages:**
+- English
+- Mandarin (China)
+- Cantonese (Hong Kong, Guangdong)
+- Spanish
+- Vietnamese
+- Italian
+- German
+
+**Usage:** Facilitates effective communication, reduces misunderstandings, and improves production coordination.
+
+**Editing Capabilities Fields:**
+
+1. Navigate to Partners > Factories > [Factory Name]
+2. Scroll to "Capabilities & Specializations" card
+3. Click "Edit" button to enable inline editing mode
+4. Add items: Type value, press Enter or click "Add" button
+5. Remove items: Click X icon next to each tag
+6. Save changes: Click "Save" button or Cancel to discard
+7. Changes sync immediately to database
+
+**Best Practices:**
+
+- **Be Specific:** Use detailed capability names ("5-Axis CNC Machining" not just "CNC")
+- **Standardize Terms:** Use consistent naming across all factories for easier filtering
+- **Keep Current:** Update capabilities when factory adds new equipment
+- **Compliance First:** Always verify certifications before adding (request documentation)
+- **Language Proficiency:** Only list languages with fluent staff members
+- **Remove Outdated:** Delete expired certifications or discontinued capabilities
+
+**Use Cases:**
+
+**Automated Factory Matching:** System can automatically suggest factories based on product requirements:
+```
+Product requires: CNC Machining, FSC Certified, Mandarin-speaking
+System filters to: Factories with all three capabilities
+```
+
+**Compliance Reporting:** Export factories by certification for client audits or RFP responses.
+
+**Capacity Planning:** Identify factories with rush production capability for urgent orders.
+
+**Communication Efficiency:** Route design questions to factories with appropriate language capabilities.
+
 ### Partner Status
 
 - **Active**: Operational partner accepting work
