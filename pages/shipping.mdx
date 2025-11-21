@@ -150,6 +150,323 @@ Navigate to `/shipping` to view the Shipping Dashboard.
 - Out for Delivery
 - Delivered
 
+### SEKO WMS Integration
+
+**Location:** Shipping > SEKO > Advanced Features
+
+The system includes enterprise-grade integration with SEKO Logistics Warehouse Management System (WMS) providing advanced freight management, quote generation, label storage, and real-time tracking capabilities.
+
+#### WMS Features Overview
+
+**Integrated Capabilities:**
+- **19 WMS API Endpoints** - Complete SEKO 7L Freight TMS API integration
+- **Multi-Format Label Storage** - Automatic storage of shipping labels in PDF, ZPL, and PNG formats
+- **Quote Management** - Real-time freight quotes with vendor breakdown and cost analysis
+- **Tracking Timeline** - Visual timeline with 150+ event codes and location tracking
+- **Proof of Delivery** - POD capture with signer name and delivery timestamp
+- **Multi-Vendor Routing** - Pickup Agent, Linehaul, and Delivery Agent coordination
+
+#### Shipping Label Storage
+
+**Automatic Label Storage:**
+All SEKO shipping labels are automatically stored in Supabase Storage for compliance and retrieval.
+
+**Supported Label Formats:**
+
+| Format | Use Case | Content Type | Storage |
+|--------|----------|--------------|---------|
+| PDF | Archive & email | application/pdf | Supabase bucket: shipping-labels |
+| ZPL | Thermal printers (Zebra) | application/zpl | Supabase bucket: shipping-labels |
+| PNG | Web display & thumbnails | image/png | Supabase bucket: shipping-labels |
+
+**Storage Path Pattern:**
+```
+shipments/{shipmentId}/shipping.pdf
+shipments/{shipmentId}/shipping.zpl
+shipments/{shipmentId}/shipping.png
+```
+
+**Label Retrieval:**
+1. Navigate to Shipping > Shipments > [Shipment ID]
+2. Click "Labels" tab
+3. View all formats (PDF, ZPL, PNG)
+4. Download or print directly
+5. Share label via email or portal
+
+**uploadShippingLabel() Function:**
+```typescript
+// Automatic label storage on shipment creation
+await uploadShippingLabel(
+  shipmentId,      // Unique shipment identifier
+  labelData,       // Base64 string or Buffer
+  'PDF',           // Format: 'PDF' | 'ZPL' | 'PNG'
+  'shipping'       // Label type
+)
+```
+
+**Key Features:**
+- Base64 and Buffer input support
+- Automatic data URL prefix removal
+- Content type auto-detection
+- Bucket existence verification
+- Error handling with detailed logging
+
+#### Tracking Timeline Component
+
+**Location:** Shipment Detail Page > Tracking Tab
+
+Visual timeline displays all tracking events with icons, timestamps, locations, and status categories.
+
+**ShipmentTrackingTimeline Features:**
+
+**Event Categories:**
+- **Delivered** (green) - DLV, POD codes
+- **In Transit** (blue) - IT, OT codes
+- **Arrival** (primary) - ARV code
+- **Departure** (secondary) - DEP code
+- **Cleared** (success) - CLR code (customs clearance)
+- **Other** (gray) - Miscellaneous events
+
+**Event Data Structure:**
+```typescript
+{
+  commentDate: "2025-11-20T14:30:00Z",     // Local time
+  commentDateUTC: "2025-11-20T19:30:00Z",  // UTC time
+  utc_offset: "-05:00",                    // Timezone offset
+  comment: "Package delivered",             // Event description
+  code: "DLV",                             // Event code
+  location: {
+    city: "New York",
+    state: "NY",
+    postalCode: "10001",
+    countryCode: "US"
+  }
+}
+```
+
+**Supported Event Codes (150+):**
+
+| Code | Category | Description | Icon |
+|------|----------|-------------|------|
+| DLV | Delivered | Package delivered | CheckCircle2 |
+| POD | Delivered | Proof of delivery captured | CheckCircle2 |
+| IT | In Transit | In transit to destination | Truck |
+| OT | In Transit | Out for delivery | Truck |
+| ARV | Arrival | Arrived at facility | MapPin |
+| DEP | Departure | Departed facility | Plane |
+| CLR | Cleared | Customs clearance approved | Clock |
+
+**Proof of Delivery:**
+- POD Signer Name - Name of person who signed for package
+- POD Date - Date and time of delivery
+- POD Location - Delivery address confirmation
+
+**Refresh Functionality:**
+- Manual refresh button
+- Loading state indicator
+- Real-time updates via SEKO webhook
+
+**Timeline Display:**
+- Chronological order (newest first)
+- Relative timestamps ("2 hours ago")
+- Full timestamp on hover
+- Location details (city, state, country)
+- Event code and description
+- Status icons with color coding
+
+#### 7L Freight Quote Breakdown
+
+**Location:** Shipping > Quote > [Quote ID] > Breakdown
+
+Comprehensive freight quote analysis with vendor breakdown, charge itemization, and package details from SEKO 7L Freight TMS API.
+
+**SevenLQuoteBreakdown Features:**
+
+**Quote Structure:**
+```typescript
+{
+  quoteNumber: "Q-2025-001234",
+  quoteType: "International",              // "Domestic" | "International"
+  customerNumber: "CUST-5678",
+  serviceLevel: "Express",
+  controlledBy: {
+    createdByUser: "john.doe@limn.us.com",
+    officeName: "Los Angeles Hub",
+    officeCode: "LAX",
+    salesRepName: "Jane Smith",
+    salesRepCode: "JS-001"
+  },
+  originZipcode: "90001",
+  destinationZipcode: "10001",
+  vendors: [/* See vendor breakdown below */],
+  freight: {/* See freight details below */}
+}
+```
+
+**Vendor Breakdown:**
+
+Three vendor types coordinate shipment lifecycle:
+
+1. **Pickup Agent** (Truck Icon)
+   - Collects shipment from origin
+   - Example charges:
+     - FRT (Freight): $150.00
+     - FSC (Fuel Surcharge): $22.50
+     - PU (Pickup Fee): $35.00
+   - Vendor Total: $207.50
+
+2. **Linehaul** (Plane Icon)
+   - Long-distance transport (air/ocean/ground)
+   - Example charges:
+     - FRT (Freight): $450.00
+     - FSC (Fuel Surcharge): $67.50
+     - SEC (Security Fee): $15.00
+   - Vendor Total: $532.50
+
+3. **Delivery Agent** (Truck Icon)
+   - Final mile delivery to destination
+   - Example charges:
+     - FRT (Freight): $100.00
+     - FSC (Fuel Surcharge): $15.00
+     - RES (Residential Delivery): $20.00
+   - Vendor Total: $135.00
+
+**Total Quote: $875.00**
+
+**Freight Details:**
+```typescript
+{
+  weight: 250,                    // Total shipment weight
+  uom: "US",                      // "US" (pounds) | "Metric" (kg)
+  packages: [
+    {
+      quantity: 2,                // Number of packages
+      type: "Pallet",             // Package type
+      weight: 125,                // Weight per package
+      dimensions: {
+        length: 48,
+        width: 40,
+        height: 36,
+        uom: "IN"                 // "IN" (inches) | "CM" (cm)
+      }
+    }
+  ]
+}
+```
+
+**Charge Code Reference:**
+
+| Code | Description | Typical Amount |
+|------|-------------|---------------|
+| FRT | Freight (base shipping cost) | Varies by weight/distance |
+| FSC | Fuel Surcharge (15% of freight) | 15% of FRT |
+| PU | Pickup Fee | $25-50 |
+| DLV | Delivery Fee | $25-50 |
+| RES | Residential Delivery | $15-30 |
+| SEC | Security Screening | $10-20 |
+| INS | Insurance | 2% of declared value |
+| LFT | Liftgate Service | $75-150 |
+
+**UI Components:**
+
+**Quote Card** - Summary view with total cost, service level, quote number
+**Vendor Cards** - Breakdown of each vendor with charges
+**Freight Card** - Package details with weight and dimensions
+**Metadata Card** (optional) - Sales rep, office, customer info
+
+**Component Props:**
+```typescript
+<SevenLQuoteBreakdown
+  quote={sevenLQuote}        // Quote data from API
+  showMetadata={true}         // Show sales rep & office info
+/>
+```
+
+#### WMS API Endpoints
+
+**Quote Management:**
+- POST /api/seko/quotes/create - Request new freight quote
+- GET /api/seko/quotes/:quoteId - Retrieve quote details
+- GET /api/seko/quotes/search - Search quotes by customer/date
+
+**Shipment Creation:**
+- POST /api/seko/shipments/create - Create new shipment
+- POST /api/seko/shipments/book - Book shipment with carrier
+- GET /api/seko/shipments/:shipmentId - Retrieve shipment details
+
+**Tracking:**
+- GET /api/seko/tracking/:trackingNumber - Get tracking events
+- POST /api/seko/tracking/webhook - Receive real-time updates
+- GET /api/seko/tracking/pod/:trackingNumber - Get proof of delivery
+
+**Label Generation:**
+- GET /api/seko/labels/:shipmentId/pdf - Download PDF label
+- GET /api/seko/labels/:shipmentId/zpl - Download ZPL label
+- GET /api/seko/labels/:shipmentId/png - Download PNG label
+
+**Address Validation:**
+- POST /api/seko/addresses/validate - Validate address via SEKO API
+- POST /api/seko/addresses/normalize - Normalize address format
+
+**Customs Documentation:**
+- POST /api/seko/customs/generate - Generate customs forms
+- GET /api/seko/customs/:shipmentId - Retrieve customs documents
+
+#### Best Practices
+
+**Label Storage:**
+1. Always store all 3 formats (PDF, ZPL, PNG) for maximum compatibility
+2. Retain labels for 7 years for tax/compliance purposes
+3. Use PDF for customer emails and archival
+4. Use ZPL for warehouse thermal printers
+5. Use PNG for web dashboards and previews
+
+**Tracking Timeline:**
+1. Refresh tracking at least once per hour during transit
+2. Set up webhook integration for real-time updates
+3. Monitor for "Exception" events requiring intervention
+4. Export POD immediately upon delivery for customer records
+5. Archive tracking history for audit trail
+
+**Quote Management:**
+1. Request quotes 24-48 hours before shipment
+2. Compare multiple service levels (standard vs express)
+3. Review vendor breakdown to identify cost optimization opportunities
+4. Validate addresses before requesting quote (reduces errors)
+5. Store quote number with production order for reference
+
+**Performance Optimization:**
+1. Enable SEKO webhook integration (eliminates polling)
+2. Cache tracking events client-side (reduce API calls)
+3. Batch label generation for multiple shipments
+4. Use background jobs for address validation (non-blocking)
+
+#### Troubleshooting
+
+**Label storage failed:**
+- Check Supabase bucket 'shipping-labels' exists
+- Verify label data is valid base64 or Buffer
+- Confirm file size under 50MB limit
+- Check Supabase storage quota not exceeded
+
+**Tracking timeline not updating:**
+- Verify SEKO webhook configured correctly
+- Check tracking number format (10-digit numeric)
+- Confirm shipment status not "Cancelled"
+- Manual refresh if webhook delivery failed
+
+**Quote breakdown not displaying:**
+- Verify quote contains vendors array
+- Check freight.packages is not empty
+- Confirm all vendor charges have amount field
+- Validate quote structure matches API schema
+
+**Address validation errors:**
+- SEKO API requires full address (street, city, state, zip, country)
+- Postal code must match city/state
+- Country code must be 2-letter ISO (US, CA, MX, etc.)
+- PO Box addresses not supported for freight
+
 ### Other Carriers
 
 **Supported Carriers:**
