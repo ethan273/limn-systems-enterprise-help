@@ -1,43 +1,3421 @@
 # Admin & System Management
 
-System administration, user management, and integration monitoring.
-
 ## Overview
 
-The admin system provides comprehensive tools for managing users, roles, approvals, portals, APIs, security, and system settings.
+The Administration module provides comprehensive system management tools for configuring users, managing access, monitoring security, and maintaining system health. Admin features are exclusively available to users with `admin` or `super_admin` roles.
 
-## Key Modules
+**Key Capabilities:**
 
-### User & Access Management
-- **User Management** - Manage user accounts
-- **Role Management** - Configure roles and permissions
-- **Approvals** - Approve user requests
-- **Portal Management** - Manage portal access
+- **User & Access Management** - User accounts, roles, permissions, portal access
+- **Approval Workflows** - Review and approve external user registration requests
+- **Portal Management** - Manage portal access for customers, designers, factories, and QC teams
+- **Security & Monitoring** - Activity logs, security events, audit trails
+- **API Management** - API keys, integrations, webhook monitoring
+- **Email & Communication** - Email campaigns, templates, delivery tracking
+- **System Configuration** - Global settings, feature flags, environment variables
+- **Analytics & Reporting** - Admin dashboard with system-wide metrics
+- **Data Management** - Export tools, data migrations, backups
 
-### API & Integration Management
-- **API Management** - Manage API keys and access
-- **API Key Rotation** - Rotate API keys securely
-- **API Health** - Monitor API health and performance
-- **API Security** - API security settings
-- **Integration Status** - Monitor integration health
+**Access Requirements:**
+
+- **Minimum Role:** `admin`
+- **Recommended Role:** `super_admin` for full access
+- **Authentication:** @limn.us.com email via Google Workspace SSO
+- **Navigation:** Main menu > Admin section
+
+---
+
+## Quick Navigation
+
+### User & Access
+- [User Management](#user-management) - Create, edit, deactivate user accounts
+- [User Approvals](#user-approvals) - Approve pending registrations (NEW)
+- [Portal Access Management](#portal-access-management) - Manage portal access post-approval (NEW)
+- [Role Management](#role-management) - Configure system roles
+- [Permissions Management](#permissions-management) - Fine-grained permission control
 
 ### Security & Monitoring
-- **Security Events** - Security event monitoring
-- **Activity Logs** - System activity logs
-- **System Settings** - Global system configuration
-- **Data Export** - Export system data
+- [Security Events](#security-events) - Monitor security incidents
+- [Activity Logs](#activity-logs) - View system activity trail
+- [Activity Templates](#activity-templates) - Configure activity tracking
 
-## Key Features
+### API & Integrations
+- [API Key Management](#api-key-management) - Generate and manage API keys
+- [API Management Dashboard](#api-management-dashboard) - Monitor API health
+- [Integration Status](#integration-status) - QuickBooks, SEKO, Resend status
 
-- User lifecycle management
-- Role-based access control
-- Approval workflows
-- API management
-- Security monitoring
-- Activity logging
+### Communication
+- [Email Campaigns](#email-campaigns) - Create and manage campaigns
+- [Email Templates](#email-templates) - Design reusable email templates
+
+### System Tools
+- [Admin Dashboard](#admin-dashboard) - System-wide analytics
+- [Data Export](#data-export) - Export system data
+- [System Settings](#system-settings) - Global configuration
+
+---
+
+## User Management
+
+### Overview
+
+Comprehensive user account lifecycle management for internal employees and external users.
+
+**Access:** `/admin/users` or `/admin/user-management`
+
+**Features:**
+- Create new user accounts
+- Edit user profiles (name, email, role, status)
+- Deactivate/reactivate users
+- Reset user passwords
+- View user activity history
+- Bulk user operations
+- User search and filtering
+
+### Creating New Users
+
+**Process:**
+
+1. Navigate to **Admin > Users**
+2. Click **"Add User"** button in top right
+3. Fill in user details form:
+   - **Email*** (required, must be unique)
+   - **First Name*** (required)
+   - **Last Name*** (required)
+   - **Role** (select from dropdown)
+   - **User Type** (employee, contractor, etc.)
+   - **Department** (optional)
+   - **Phone** (optional)
+   - **Start Date** (optional)
+4. Click **"Create User"**
+5. System creates user record
+6. Magic link email sent to user (if external)
+7. User appears in users list
+
+**Validation Rules:**
+
+- Email must be unique across system
+- Email must be valid format (user@domain.com)
+- First and last name required
+- Role must be valid system role
+- Cannot create super_admin users (must be granted separately)
+
+**Auto-Generated Fields:**
+
+- User ID (UUID)
+- Created timestamp
+- Created by (your user ID)
+- Default password (random, 16 characters)
+- Activation token (for first login)
+
+### Editing User Details
+
+**Process:**
+
+1. Navigate to **Admin > Users**
+2. Find user via search or scroll
+3. Click user row to open details
+4. Click **"Edit"** button in top right
+5. Modify any editable fields:
+   - First Name
+   - Last Name
+   - Email (careful - changes login)
+   - Phone
+   - Department
+   - User Type
+   - Status (active, inactive, suspended)
+6. Click **"Save Changes"**
+7. Changes saved immediately
+8. Audit log entry created
+
+**Non-Editable Fields:**
+
+- User ID (system-generated)
+- Created date
+- Created by
+- Registration date
+- Last login (system-managed)
+
+**Email Change Warning:**
+
+Changing a user's email address will:
+- Update their login email
+- Invalidate existing sessions (force re-login)
+- Send notification to both old and new email
+- Require email verification at new address
+- Update all associated records (tasks, projects, etc.)
+
+### User Roles Management
+
+**Assigning Roles:**
+
+1. Open user details (Admin > Users > Select User)
+2. Scroll to **"Roles"** section
+3. Click **"Assign Role"** button
+4. Select role from dropdown:
+   - super_admin (highest permissions)
+   - admin (system administration)
+   - manager (team management)
+   - team_lead (senior team member)
+   - developer (technical staff)
+   - designer (design team)
+   - analyst (reporting and analysis)
+   - user (standard employee)
+   - viewer (read-only access)
+5. Optionally add reason (for audit trail)
+6. Click **"Assign"**
+7. Role assigned immediately
+8. User gains role permissions instantly
+9. Email notification sent to user
+
+**Removing Roles:**
+
+1. Open user details
+2. Find role in **"Roles"** section
+3. Click **"Remove"** icon next to role
+4. Confirm removal in dialog
+5. Optionally add reason
+6. Role removed immediately
+7. User loses role permissions
+8. Active sessions terminated (force re-login)
+9. Email notification sent
+
+**Role Hierarchy:**
+
+Roles have implicit hierarchy. Higher roles include permissions of lower roles:
+
+1. **super_admin** (highest) - ALL permissions
+2. **admin** - All except super_admin operations
+3. **manager** - Team and project management
+4. **team_lead** - Senior team member
+5. **developer** - Technical operations
+6. **designer** - Design operations
+7. **analyst** - Reporting and analysis
+8. **user** - Standard operations
+9. **viewer** (lowest) - Read-only access
+
+**Best Practices:**
+
+- **Principle of Least Privilege** - Assign minimum role needed
+- **Document Reasons** - Always add reason when assigning elevated roles
+- **Regular Audits** - Review role assignments quarterly
+- **Temporary Elevated Access** - Use permission delegation for temporary needs (see RBAC module)
+
+### Deactivating Users
+
+**When to Deactivate:**
+
+- Employee leaves company
+- Contractor project complete
+- Extended leave (>3 months)
+- Security incident requiring immediate lockout
+- Account no longer needed
+
+**Process:**
+
+1. Navigate to **Admin > Users**
+2. Find user to deactivate
+3. Click user row to open details
+4. Click **"Deactivate"** button
+5. Confirmation dialog appears
+6. Select reason from dropdown:
+   - Employee left company
+   - Contractor project complete
+   - Security incident
+   - Extended leave
+   - Other (specify)
+7. Add optional notes
+8. Click **"Confirm Deactivation"**
+9. User account deactivated immediately
+10. All active sessions terminated
+11. User cannot log in
+12. Email notification sent (optional)
+
+**Effects of Deactivation:**
+
+- User cannot log in (authentication blocked)
+- Existing sessions terminated immediately
+- Tasks remain assigned but marked "unassigned user"
+- Historical data preserved (audit logs, activity)
+- Created records remain (orders, projects, etc.)
+- Ownership transferred to manager or admin
+- Portal access revoked (if external user)
+- API keys disabled (if any)
+
+**Reactivating Users:**
+
+1. Navigate to **Admin > Users**
+2. Filter by **"Inactive"** status
+3. Find deactivated user
+4. Click user row to open details
+5. Click **"Reactivate"** button
+6. Add optional reason
+7. Click **"Confirm"**
+8. User account reactivated
+9. User can log in again
+10. Previous roles and permissions restored
+11. Email notification sent
+
+**Important:** Deactivation is SOFT DELETE - data preserved. Use **"Delete User"** only for spam/test accounts (permanent, cannot undo).
+
+### Bulk User Operations
+
+**Available Bulk Actions:**
+
+- Assign role to multiple users
+- Change user type (employee, contractor)
+- Change department
+- Export user list (CSV)
+- Send announcement email
+
+**Process:**
+
+1. Navigate to **Admin > Users**
+2. Select users via checkboxes (left column)
+3. Click **"Bulk Actions"** dropdown at top
+4. Select action
+5. Configure action parameters in dialog
+6. Preview changes (shows affected users)
+7. Click **"Execute"** to apply
+8. Changes applied in background
+9. Progress notification shown
+10. Completion notification when done
+
+**Example: Bulk Role Assignment**
+
+1. Select 10 users (checkboxes)
+2. Bulk Actions > **"Assign Role"**
+3. Select role: "analyst"
+4. Add reason: "New reporting team members"
+5. Preview shows 10 users will get analyst role
+6. Click **"Execute"**
+7. All 10 users assigned analyst role
+8. 10 email notifications sent
+9. 10 audit log entries created
+
+**Limitations:**
+
+- Maximum 100 users per bulk operation
+- Cannot bulk assign super_admin role (security)
+- Cannot bulk delete users (safety)
+- Operations logged individually for audit
+
+### User Search & Filtering
+
+**Search Bar:**
+
+Located at top of users list. Searches across:
+- First name
+- Last name
+- Email
+- Department
+- User type
+
+**Advanced Filters:**
+
+Click **"Filters"** button to expand filter panel.
+
+**Available Filters:**
+
+**1. Status**
+- Active (default)
+- Inactive
+- Suspended
+- All
+
+**2. Role**
+- super_admin
+- admin
+- manager
+- team_lead
+- developer
+- designer
+- analyst
+- user
+- viewer
+
+**3. User Type**
+- Employee
+- Contractor
+- Partner
+- External
+
+**4. Department**
+- (Dropdown populated from departments in system)
+
+**5. Last Login**
+- Last 7 days
+- Last 30 days
+- Last 90 days
+- More than 90 days ago
+- Never logged in
+
+**6. Created Date**
+- Today
+- Last 7 days
+- Last 30 days
+- Custom range (date picker)
+
+**Applying Filters:**
+
+1. Click **"Filters"** button
+2. Select desired filters
+3. Click **"Apply Filters"**
+4. List updates immediately
+5. Active filters shown as chips above list
+6. Click chip "X" to remove filter
+7. Click **"Clear All"** to reset
+
+**Sorting:**
+
+Click column headers to sort:
+- Name (A-Z or Z-A)
+- Email (A-Z or Z-A)
+- Role (hierarchy order)
+- Last Login (newest or oldest)
+- Created Date (newest or oldest)
+
+### User Activity History
+
+**Viewing Activity:**
+
+1. Navigate to **Admin > Users**
+2. Click user row to open details
+3. Scroll to **"Activity History"** section
+4. View activity log entries
+
+**Activity Types Tracked:**
+
+- Login/logout events
+- Password changes
+- Profile updates
+- Role assignments/removals
+- Permission grants/revocations
+- Task creations/completions
+- Order creations/updates
+- Project assignments
+- Document uploads/downloads
+- API key usage
+- Portal access events (if external user)
+
+**Activity Log Format:**
+
+Each entry shows:
+- Timestamp (date and time)
+- Action type (icon + label)
+- Description (details of action)
+- IP address (for security tracking)
+- Device/browser info (for security tracking)
+- Location (approximate, from IP)
+
+**Filtering Activity:**
+
+- Filter by action type (dropdown)
+- Filter by date range (date picker)
+- Search by description (text search)
+- Export to CSV (for analysis)
+
+**Security Use Cases:**
+
+- Investigate suspicious login attempts
+- Audit user's actions for compliance
+- Track permission usage for optimization
+- Identify inactive users for cleanup
+- Monitor high-privilege user activities
+
+---
+
+## User Approvals
+
+### Overview (NEW - January 2025)
+
+The User Approvals module allows admins to review and approve registration requests from external users (customers, designers, factories, QC teams) before granting portal access.
+
+**Access:** `/admin/approvals`
+
+**Features:**
+- View pending registration requests
+- Review request details (name, email, company, requested portal type)
+- Approve or reject requests
+- Configure portal type and module permissions during approval
+- Send magic link invitation emails
+- View approval history
+- Bulk approval operations
+
+**Why This Matters:**
+
+Before Nov 2025, all external users were manually created by admins. The new approval workflow allows external users to self-register via public form, then admins review and approve. This:
+- Reduces admin workload (no manual account creation)
+- Improves security (admin review before access)
+- Faster onboarding (user submits request anytime)
+- Better audit trail (request reason captured)
+
+### Approval Dashboard
+
+**Dashboard Layout:**
+
+**Summary Cards** (Top)
+- Pending Requests - Count of requests awaiting approval
+- Approved Today - Count of requests approved today
+- Rejected Today - Count of requests rejected today
+- Average Approval Time - Average time from request to approval
+
+**Request Table** (Main)
+
+Columns:
+- Requested Date
+- Name (first + last)
+- Email
+- Company Name
+- Requested Portal Type (customer, designer, factory, qc)
+- Status (pending, approved, rejected)
+- Actions (Approve, Reject, View Details)
+
+**Filters** (Above table)
+- Status: All, Pending, Approved, Rejected
+- Portal Type: All, Customer, Designer, Factory, QC
+- Date Range: Today, Last 7 days, Last 30 days, Custom
+
+### Reviewing Requests
+
+**Process:**
+
+1. Navigate to **Admin > Approvals**
+2. Pending requests shown first (default filter)
+3. Click request row to view details
+4. Details panel slides in from right
+
+**Request Details Panel Shows:**
+
+**Contact Information:**
+- Full Name
+- Email Address
+- Phone Number (if provided)
+- Company Name
+- Company Website (if provided)
+
+**Request Information:**
+- Requested Portal Type
+- Reason for Access (text field from request form)
+- Additional Notes (if provided)
+- Requested Date/Time
+- Request Source (public form, referral, etc.)
+
+**Verification Information:**
+- Email verified? (Yes/No - link clicked)
+- Company domain match? (email domain matches company website)
+- Duplicate check (similar requests from same email/company)
+- Risk score (low, medium, high - based on heuristics)
+
+### Approving Requests
+
+**Basic Approval Process:**
+
+1. Open request details (click row)
+2. Review all information carefully
+3. Click **"Approve"** button at bottom of details panel
+4. Approval configuration dialog opens
+
+**Approval Configuration Dialog:**
+
+**Step 1: Portal Type** (Pre-filled from request)
+- Customer
+- Designer
+- Factory
+- QC
+
+Can change if user requested wrong type.
+
+**Step 2: Module Permissions**
+
+**For Customer Portal:**
+- [x] Orders (view and manage orders)
+- [x] Documents (access documents)
+- [ ] Financials (view invoices and payments) - Optional
+- [x] Shipping (track shipments)
+- [x] Profile (manage profile)
+
+**For Designer Portal:**
+- [x] Projects (manage design projects)
+- [x] Submissions (submit designs)
+- [x] Documents (access project documents)
+- [ ] Quality (view quality reports) - Optional
+- [x] Settings (account settings)
+
+**For Factory Portal:**
+- [x] Orders (view production orders)
+- [x] Quality (QC inspections)
+- [x] Shipping (shipping and logistics)
+- [x] Documents (technical documents)
+- [x] Settings (account settings)
+
+**For QC Portal:**
+- [x] Inspections (perform inspections)
+- [x] History (view inspection history)
+- [x] Upload (upload inspection photos)
+- [x] Documents (access QC documents)
+- [x] Settings (account settings)
+
+**Recommended Configurations:**
+
+**Standard Customer:**
+- Orders, Documents, Shipping, Profile
+- Exclude Financials (unless they handle payments)
+
+**Standard Designer:**
+- Projects, Submissions, Documents, Settings
+- Exclude Quality (unless they review feedback)
+
+**Standard Factory:**
+- ALL modules (factories need full access)
+
+**Standard QC:**
+- ALL modules (QC needs full access)
+
+**Step 3: Entity Linkage**
+
+**For Customer Portal:**
+- Select Customer Record (dropdown search)
+- Creates link: portal_access.customer_id = selected customer
+
+**For Partner Portals (Designer/Factory/QC):**
+- Select Partner Record (dropdown search)
+- Creates link: portal_access.partner_id = selected partner
+
+**Important:** Entity linkage is REQUIRED. Portal access will filter all data based on this linkage (data isolation).
+
+**Step 4: Review & Confirm**
+
+Preview shows:
+- Portal type to be granted
+- Modules to be enabled
+- Entity linkage
+- User email (will receive magic link)
+
+Click **"Approve & Send Invite"** to execute.
+
+**What Happens After Approval:**
+
+1. `portal_access` record created in database:
+   - user_id: From request
+   - portal_type: Selected type
+   - allowed_modules: Selected modules array
+   - customer_id or partner_id: Selected entity
+   - is_active: true
+   - granted_by: Your user ID
+   - granted_at: Current timestamp
+
+2. Magic link email sent to user's email:
+   - Subject: "Your Limn Portal Access Has Been Approved"
+   - Contains: Magic link URL (valid 24 hours)
+   - Instructions: Click link, set password, access portal
+
+3. Request status updated to "approved"
+4. Approval logged in admin activity log
+5. Request removed from pending list
+6. Success toast notification shown
+
+**User's Next Steps:**
+
+1. User receives email
+2. Clicks magic link
+3. Redirected to password setup page
+4. Creates password (min 8 chars)
+5. Redirected to portal dashboard
+6. Can now access portal with configured modules
+
+### Rejecting Requests
+
+**When to Reject:**
+
+- Suspicious email or company information
+- Cannot verify company legitimacy
+- User does not meet criteria for portal access
+- Duplicate request (user already has access)
+- Request appears automated/spam
+
+**Process:**
+
+1. Open request details
+2. Click **"Reject"** button at bottom
+3. Rejection reason dialog opens
+4. Select reason from dropdown:
+   - Cannot verify company information
+   - Duplicate request
+   - Does not meet criteria
+   - Suspicious activity
+   - Other (specify)
+5. Add optional detailed notes (visible to other admins only)
+6. Optional: Send rejection email to user (checkbox)
+7. Click **"Confirm Rejection"**
+
+**What Happens After Rejection:**
+
+1. Request status updated to "rejected"
+2. Rejection reason and notes saved
+3. Rejected by (your user ID) and rejected at (timestamp) recorded
+4. If "Send email" checked: Rejection email sent to user
+5. Request moved to rejected list
+6. Rejection logged in admin activity log
+
+**Rejection Email (if enabled):**
+
+Subject: "Portal Access Request Status"
+
+Body (template):
+```
+Hello [Name],
+
+Thank you for your interest in accessing our portal system.
+
+After reviewing your request, we are unable to approve access at this time.
+
+If you believe this is an error or have questions, please contact:
+support@limn.us.com
+
+Best regards,
+Limn Systems Team
+```
+
+Note: Does not include specific rejection reason (for privacy/security).
+
+### Bulk Approval Operations
+
+**Use Case:**
+
+When you have multiple requests from same company or verified batch of requests.
+
+**Process:**
+
+1. Navigate to **Admin > Approvals**
+2. Filter to pending requests
+3. Select multiple requests (checkboxes)
+4. Click **"Bulk Actions"** dropdown
+5. Select **"Bulk Approve"**
+6. Bulk configuration dialog opens
+
+**Bulk Configuration:**
+
+**Step 1: Portal Type**
+- Must be same portal type for all selected requests
+- If mixed types, error shown - must approve separately
+
+**Step 2: Module Configuration**
+- Same module configuration for all selected users
+- Use standard configurations for consistency
+
+**Step 3: Entity Linkage**
+- If same company: Select one customer/partner for all
+- If different companies: Bulk approval not available - approve individually
+
+**Step 4: Confirm**
+- Shows count of users to be approved
+- Shows configuration summary
+- Click **"Approve All"** to execute
+
+**Execution:**
+
+- Each request processed individually
+- Magic link emails sent to each user
+- Progress bar shown
+- Completion notification when done
+- Any errors shown in list (e.g., duplicate email)
+
+**Limitations:**
+
+- Maximum 20 requests per bulk approval
+- All requests must be same portal type
+- All users must link to same entity (or none)
+- Cannot customize per-user during bulk
+
+### Approval History & Reporting
+
+**Viewing History:**
+
+1. Navigate to **Admin > Approvals**
+2. Change filter to **"Approved"** or **"Rejected"**
+3. View historical requests
+
+**Approval Reports:**
+
+Access via **"Reports"** button in top right.
+
+**Available Reports:**
+
+**1. Approval Velocity**
+- Requests per day (chart)
+- Average approval time (trend)
+- Pending backlog (count)
+- Approval rate (approved / total)
+
+**2. Portal Type Breakdown**
+- Requests by portal type (pie chart)
+- Approvals by portal type (bar chart)
+- Rejections by portal type (bar chart)
+
+**3. Admin Performance**
+- Approvals per admin (table)
+- Average approval time per admin
+- Rejection rate per admin
+
+**4. Rejection Analysis**
+- Rejection reasons (pie chart)
+- Rejected companies (table)
+- Rejection trends (line chart)
+
+**Export Options:**
+
+- Export all requests (CSV)
+- Export approved requests (CSV)
+- Export rejected requests (CSV)
+- Export report data (CSV)
+- Date range filter for exports
+
+---
+
+## Portal Access Management
+
+### Overview (NEW - November 2025)
+
+Post-approval management interface for updating portal user access, module permissions, and access status.
+
+**Access:** `/admin/portal-access`
+
+**Difference from User Approvals:**
+
+- **User Approvals:** Initial review and approval of NEW requests
+- **Portal Access Management:** Manage EXISTING portal users post-approval
+
+**Features:**
+- View all portal users (active and inactive)
+- Edit module permissions without re-approval
+- Change portal type (e.g., customer -> factory)
+- Revoke access (soft delete - reversible)
+- Reactivate revoked access
+- Delete access (hard delete - permanent)
+- Filter and search portal users
+- View access history and audit trail
+
+### Portal Access Dashboard
+
+**Dashboard Layout:**
+
+**Summary Cards** (Top)
+- Total Portal Users - Count of all portal users
+- Active Portal Users - Count with is_active = true
+- Customer Portal Users - Count with portal_type = 'customer'
+- Partner Portal Users - Sum of designer + factory + qc
+
+**User Table** (Main)
+
+Columns:
+- User Email
+- Name (from user_profiles)
+- Portal Type (Customer, Designer, Factory, QC)
+- Modules (comma-separated list)
+- Customer/Partner (linked entity name)
+- Status (Active, Revoked)
+- Last Accessed (timestamp)
+- Granted By (admin name)
+- Granted At (date)
+- Actions (Edit, Revoke/Reactivate, Delete)
+
+**Filters** (Above table)
+- Portal Type: All, Customer, Designer, Factory, QC
+- Status: All, Active, Revoked
+- Last Accessed: Last 7 days, Last 30 days, Last 90 days, Never
+
+**Pagination:**
+- 50 records per page
+- Previous/Next buttons
+- Jump to page (input field)
+
+### Editing Module Permissions
+
+**Use Case:**
+
+Customer initially granted only "orders" and "documents" modules. Now they need "financials" module to view invoices.
+
+**Process:**
+
+1. Navigate to **Admin > Portal Access**
+2. Find user via search or filter
+3. Click user row to select
+4. Click **"Edit Modules"** button
+5. Edit modules dialog opens
+
+**Edit Modules Dialog:**
+
+**Portal Type:** (Read-only, shown for reference)
+- Customer / Designer / Factory / QC
+
+**Current Modules:** (Shown as chips)
+- orders, documents
+
+**Available Modules:** (Checkboxes)
+
+For Customer Portal:
+- [x] orders
+- [x] documents
+- [ ] financials <- Check this to add
+- [x] shipping
+- [x] profile
+
+**Adding Module:**
+1. Check "financials" checkbox
+2. Module added to selection
+3. Preview shows: orders, documents, financials, shipping, profile
+
+**Removing Module:**
+1. Uncheck "orders" checkbox
+2. Module removed from selection
+3. Preview shows: documents, financials, shipping, profile
+
+**Validation:**
+- At least one module must be selected
+- Cannot save with zero modules (error shown)
+
+**Save:**
+1. Click **"Save Changes"**
+2. Database updated: allowed_modules array
+3. User's next page load reflects new modules
+4. Navigation shows/hides modules accordingly
+5. Middleware enforces new permissions immediately
+6. No need for user to log out/in
+7. Success toast shown
+8. Audit log entry created
+
+**Important:** Module changes take effect IMMEDIATELY. If user is currently on removed module page, they'll see error on next action. Recommend notifying user before removing modules.
+
+### Changing Portal Type
+
+**Use Case:**
+
+User initially approved as "customer" but should be "factory" (wrong portal type selected during approval).
+
+**Process:**
+
+1. Navigate to **Admin > Portal Access**
+2. Find user
+3. Click **"Edit"** button (not Edit Modules)
+4. Edit access dialog opens
+5. Change **"Portal Type"** dropdown to "factory"
+6. Modules section updates to show factory modules
+7. Select appropriate factory modules
+8. Update entity linkage (customer_id -> partner_id)
+9. Click **"Save Changes"**
+
+**Effects:**
+
+- portal_type field updated
+- allowed_modules reset to new portal's defaults
+- customer_id cleared, partner_id set (or vice versa)
+- User redirected to new portal on next login
+- Previous portal becomes inaccessible
+- Audit log entry created
+
+**Warning:**
+
+Changing portal type is MAJOR change. User will:
+- Lose access to previous portal
+- See completely different interface
+- Need to re-learn new portal navigation
+
+Recommend notifying user before making change.
+
+### Revoking Access (Soft Delete)
+
+**When to Revoke:**
+
+- Contract ended (designer, factory)
+- Customer churned (closed account)
+- Security incident (suspicious activity)
+- Temporary suspension (investigation)
+- User requested access removal
+
+**Process:**
+
+1. Navigate to **Admin > Portal Access**
+2. Find user to revoke
+3. Click **"Revoke"** button
+4. Revocation dialog opens
+5. Optionally add reason:
+   - Contract ended
+   - Security incident
+   - User request
+   - Other (specify)
+6. Optionally add notes (visible to admins only)
+7. Click **"Confirm Revocation"**
+
+**What Happens:**
+
+1. is_active field set to false
+2. revoked_at timestamp set to now
+3. revoked_by set to your user ID
+4. reason and notes saved to metadata field
+5. User's active sessions terminated immediately
+6. User cannot log in to portal (authentication blocked)
+7. User data preserved (not deleted)
+8. Audit log entry created
+9. Success toast shown
+
+**User Experience:**
+
+- Next login attempt: "Access revoked. Contact administrator."
+- Portal becomes completely inaccessible
+- No data deleted (orders, documents, etc. remain)
+- Can be reactivated later
+
+**Important:** Revocation is SOFT DELETE. Data preserved, reversible. Use Delete (below) for permanent removal.
+
+### Reactivating Revoked Access
+
+**Use Case:**
+
+User's access was revoked due to expired contract. Contract renewed, need to restore access.
+
+**Process:**
+
+1. Navigate to **Admin > Portal Access**
+2. Change filter to **"Revoked"** status
+3. Find revoked user
+4. Click **"Reactivate"** button
+5. Reactivation dialog opens
+6. Optionally add reason (e.g., "Contract renewed")
+7. Click **"Confirm Reactivation"**
+
+**What Happens:**
+
+1. is_active field set to true
+2. revoked_at cleared
+3. revoked_by cleared
+4. User can log in again immediately
+5. Previous modules and portal type restored
+6. No data loss (all preserved during revocation)
+7. Audit log entry created
+8. Success toast shown
+
+**User Experience:**
+
+- Can log in immediately
+- All previous access restored
+- No setup needed
+- Welcome back!
+
+### Deleting Access (Hard Delete)
+
+**When to Delete:**
+
+- Test account (no longer needed)
+- Spam registration (fake account)
+- Duplicate account (user has another account)
+- Data cleanup (very old inactive account)
+
+**Warning:**
+
+Deletion is PERMANENT and CANNOT BE UNDONE.
+
+**Process:**
+
+1. Navigate to **Admin > Portal Access**
+2. Find user to delete
+3. Click **"Delete"** button (red, trash icon)
+4. Confirmation dialog opens with WARNING
+5. Must check confirmation checkbox: "I understand this is permanent"
+6. Optionally add reason (for audit log)
+7. Click **"Delete Permanently"** (red button)
+
+**What Happens:**
+
+1. portal_access record DELETED from database
+2. User cannot log in (no access record exists)
+3. User's profile remains (user_profiles table)
+4. Associated data remains (orders, documents, etc.)
+5. Cannot be reactivated (record gone)
+6. Must re-approve from scratch if needed later
+7. Deletion logged in admin activity log (before delete)
+
+**Important:**
+
+- Deletion removes portal_access record ONLY
+- User's profile and data remain in system
+- Use Revoke (soft delete) unless certain you need permanent removal
+- Deleting test/spam accounts is fine
+- Deleting real customer accounts requires careful consideration
+
+### Filtering & Searching Portal Users
+
+**Search Bar:**
+
+Type to search across:
+- User email
+- User name (first + last)
+- Company name (customer or partner)
+
+**Portal Type Filter:**
+
+- All (default)
+- Customer
+- Designer
+- Factory
+- QC
+
+**Status Filter:**
+
+- All
+- Active (is_active = true)
+- Revoked (is_active = false)
+
+**Last Accessed Filter:**
+
+- All Time
+- Last 7 days
+- Last 30 days
+- Last 90 days
+- Never logged in (last_accessed_at IS NULL)
+
+**Applying Filters:**
+
+1. Select filters from dropdowns
+2. List updates automatically
+3. Active filters shown as chips above table
+4. Click chip "X" to remove filter
+5. Click "Clear All" to reset
+
+**Sorting:**
+
+Click column headers to sort:
+- Email (A-Z, Z-A)
+- Name (A-Z, Z-A)
+- Portal Type (alphabetical)
+- Last Accessed (newest, oldest)
+- Granted At (newest, oldest)
+
+### Viewing Access History
+
+**Per-User History:**
+
+1. Navigate to **Admin > Portal Access**
+2. Click user row to select
+3. Scroll to **"Access History"** section at bottom
+4. View timeline of access events
+
+**Events Tracked:**
+
+- Access granted (with modules)
+- Modules updated (diff shown)
+- Portal type changed
+- Access revoked (with reason)
+- Access reactivated
+- Access deleted
+- Login events (from portal)
+- Failed login attempts
+- Module access attempts (authorized and unauthorized)
+
+**Event Format:**
+
+Each event shows:
+- Timestamp (date and time)
+- Event type (icon + label)
+- Description (details)
+- Changed by (admin name)
+- Old value -> New value (for updates)
+- Reason (if provided)
+
+**Export History:**
+
+- Click **"Export"** button
+- Select CSV or JSON format
+- Select date range
+- File downloads with all events
+
+**Security Use Cases:**
+
+- Audit who granted access (compliance)
+- Track module permission changes
+- Investigate unauthorized access attempts
+- Monitor usage patterns
+- Compliance reporting (SOC 2, GDPR)
+
+### Best Practices
+
+**1. Module Permissions**
+
+- **Start Minimal:** Grant only essential modules initially
+- **Progressive Disclosure:** Add modules when user requests
+- **Document Reasons:** Always note why modules granted/revoked
+- **Consistency:** Use same module configs for similar user types
+- **Review Regularly:** Audit module permissions quarterly
+
+**2. Revocation vs Deletion**
+
+- **Default to Revoke:** Use revocation (soft delete) for most cases
+- **Preserve Data:** Revocation keeps audit trail
+- **Delete Sparingly:** Only delete spam/test accounts
+- **Document Decisions:** Note reason for deletion in audit log
+
+**3. Portal Type Changes**
+
+- **Avoid if Possible:** Portal type changes are disruptive
+- **Notify User:** Always inform user before changing portal type
+- **Verify Entity:** Ensure correct customer/partner linkage
+- **Test First:** Have user test new portal before fully switching
+
+**4. Security**
+
+- **Monitor Last Accessed:** Identify inactive users for cleanup
+- **Review Failed Logins:** Investigate repeated failed attempts
+- **Audit Admin Actions:** Review who granted/revoked access
+- **Use Reasons:** Always document reasons for audit compliance
+
+---
+
+## Role Management
+
+**Location:** Admin > Roles
+
+Manage user role assignments with real-time statistics and bulk operations.
+
+### Overview
+
+The Role Management interface provides:
+- Role assignment and removal
+- Real-time role statistics
+- User search and filtering
+- Bulk role operations
+- Audit trail for all role changes
+
+**Available Roles:**
+- super_admin
+- admin
+- manager
+- team_lead
+- developer
+- designer
+- analyst
+- viewer
+
+### Viewing Role Statistics
+
+**Role Statistics Cards:**
+
+Each role displays:
+- Role name
+- Count of users with that role
+- "View Users" button to see detailed list
+
+**Features:**
+- Auto-updates when roles are assigned/removed
+- Click any card to view users with that role
+- Empty state when no roles assigned
+
+### Assigning Roles
+
+**Process:**
+
+1. Click **"Assign Role"** button in header
+2. Search for user by name or email
+3. Select user from dropdown
+4. Select role to assign
+5. Click **"Assign Role"** to confirm
+
+**Important Notes:**
+- Users can have multiple roles simultaneously
+- Role changes trigger user_type synchronization (super_admin/admin only)
+- All role assignments are logged for audit compliance
+
+### Viewing Users by Role
+
+**Process:**
+
+1. Click role statistics card or select from dropdown
+2. View table of users with that role
+
+**Table Columns:**
+- Name - User full name
+- Email - User email address
+- User Type - Account type badge
+- Status - Active/Inactive badge
+- Assigned At - Date role was assigned
+- Actions - Remove role button
+
+**Sorting:**
+- Click column headers to sort
+- Sort by name, email, or assigned date
+
+### Removing Roles
+
+**Process:**
+
+1. Navigate to role users table
+2. Click trash icon next to user
+3. Confirm removal in dialog
+
+**What Happens:**
+1. Role removed from user_roles table
+2. user_type field updated if admin/super_admin removed
+3. Audit log created with remover and target user info
+4. UI updates instantly (cache invalidation)
+
+**Security:**
+- Cannot remove own super_admin role (prevents lockout)
+- Requires admin or super_admin privileges
+- All removals logged with reason
+
+### Role Statistics
+
+**Metrics Displayed:**
+- Total users per role
+- Most common role assignments
+- Recent role changes (via Activity Logs)
+
+### Best Practices
+
+**1. Role Assignment Strategy**
+- **Start Minimal:** Assign lowest necessary role initially
+- **Progressive Elevation:** Increase role privileges as user proves trustworthiness
+- **Regular Audits:** Review role assignments quarterly
+- **Document Reasons:** Always note why roles granted/revoked (in Activity Logs)
+
+**2. Role Hierarchy**
+- **super_admin:** Full system access, cannot be locked out
+- **admin:** Administrative access, can manage users
+- **manager:** Department-level access
+- **team_lead:** Team-level access
+- **developer/designer/analyst:** Specialized access
+- **viewer:** Read-only access
+
+**3. Security Considerations**
+- **Limit super_admin:** Only 2-3 super admins recommended
+- **Monitor admin:** Track all admin actions via Activity Logs
+- **Audit Regularly:** Review Security Events for unauthorized role changes
+
+---
+
+## Permission Management
+
+**Location:** Admin > Permissions
+
+Manage user-specific permissions with fine-grained control and customer-scoped access.
+
+### Overview
+
+The Permission Management system provides:
+- User-specific permission overrides (override role defaults)
+- Customer-scoped permissions (multi-tenant isolation)
+- Module + Action granularity
+- Audit trail with reasons (SOC 2 compliance)
+- Permission comparison views
+- Analytics dashboard
+
+**Key Concepts:**
+- **User-Specific Permissions:** Override role-based defaults
+- **Customer Scope:** Restrict access to specific customer data
+- **Actions:** view, edit, create, delete, approve
+- **Modules:** orders, invoices, payments, customers, etc.
+
+### User Selection
+
+**Left Panel - User List:**
+
+**Features:**
+- Search users by name or email
+- User cards show:
+  - Full name
+  - Email address
+  - User type badge
+- Click user to view/manage their permissions
+
+**Search:**
+- Type to filter user list in real-time
+- Search matches name and email
+
+### Granting Permissions
+
+**Process:**
+
+1. Select user from left panel
+2. Choose module (e.g., "Orders")
+3. Select action(s):
+   - [x] View - Read-only access
+   - [x] Edit - Modify existing records
+   - [x] Create - Create new records
+   - [ ] Delete - Delete records
+   - [ ] Approve - Approve pending requests
+4. Choose scope:
+   - **All Customers (Global)** - Access to all customer data
+   - **Specific Customer** - Restrict to one customer only
+5. Enter reason (required for SOC 2 compliance)
+6. Click **"Grant Permission"**
+
+**Example Use Cases:**
+
+**Customer Service Representative:**
+```
+Module: Orders
+Actions: View, Edit
+Scope: All Customers (Global)
+Reason: Customer service rep needs to view and update orders for support tickets
+```
+
+**External Consultant:**
+```
+Module: Projects
+Actions: View
+Scope: Specific Customer (Acme Corp)
+Reason: Consultant hired by Acme Corp to review project status, no access to other clients
+```
+
+**Finance Manager:**
+```
+Module: Invoices
+Actions: View, Edit, Create, Approve
+Scope: All Customers (Global)
+Reason: Finance manager responsible for billing across all customers
+```
+
+### Permission History
+
+**Table Columns:**
+- **Module** - Which module (orders, invoices, etc.)
+- **Action** - Which action (view, edit, create, delete, approve)
+- **Status** - Granted (green check) or Denied (red X)
+- **Scope** - All Customers or specific customer name
+- **Granted By** - Admin who granted permission
+- **Granted At** - Date and time
+- **Reason** - Compliance note explaining why
+- **Actions** - Revoke button
+
+### Revoking Permissions
+
+**Process:**
+
+1. Find permission in history table
+2. Click **"Revoke"** button
+3. Confirm revocation
+
+**What Happens:**
+1. Permission removed immediately
+2. User's active sessions updated
+3. Audit log created with revoker info
+4. UI updates instantly
+
+### Multi-Tenant Isolation
+
+**Customer-Scoped Permissions:**
+
+**Global Access:**
+- Permission applies to ALL customers
+- User sees data across entire system
+- Use for internal staff only
+
+**Customer-Specific Access:**
+- Permission applies to ONE customer only
+- User ONLY sees that customer's data
+- Use for external consultants, client portal users
+
+**Example Scenarios:**
+
+**Internal Employee (Global):**
+```
+User: john@limn.us.com
+Module: Orders
+Scope: All Customers (Global)
+Result: Can view orders for ALL customers
+```
+
+**External Consultant (Scoped):**
+```
+User: jane@consultant.com
+Module: Projects
+Scope: Customer ID abc123 (Acme Corp)
+Result: Can ONLY view projects for Acme Corp, no other customers visible
+```
+
+### Permission Analytics
+
+**Navigate:** Admin > Permissions > Analytics
+
+**Metrics:**
+- Permission distribution by module
+- Most granted actions
+- Users with most permissions
+- Customer-scoped vs global permissions ratio
+- Recent permission changes
+
+---
+
+## Security Events Dashboard
+
+**Location:** Admin > Security Events
+
+Real-time monitoring of security events, audit trails, and compliance tracking.
+
+### Overview
+
+The Security Events Dashboard provides:
+- Real-time event monitoring (updates every 5 seconds)
+- Advanced filtering by severity, date, user
+- Statistics with interactive charts
+- CSV export for compliance audits
+- Automatic severity classification
+
+### Statistics Cards
+
+**Key Metrics:**
+- **Total Events** - All events in selected timeframe
+- **Critical Events** - Require immediate attention
+- **High Severity** - Security concerns
+- **Permission Denials** - Access attempts blocked
+
+**Time Periods:**
+- Last 7 days
+- Last 30 days (default)
+- Last 90 days
+
+### Severity Levels
+
+**critical** (Red):
+- System compromise attempts
+- Privilege escalation attempts
+- Mass data export attempts
+- Multiple failed login attempts
+
+**high** (Orange):
+- Unauthorized access attempts
+- Permission violations
+- Role changes without approval
+
+**medium** (Yellow):
+- Unusual activity patterns
+- Failed API calls
+- Session anomalies
+
+**low** (Blue):
+- Normal security events
+- Successful authentications
+- Expected permission checks
+
+**info** (Gray):
+- Routine audit events
+- Standard operations
+
+### Charts and Visualizations
+
+**Severity Distribution (Pie Chart):**
+- Shows percentage of events by severity
+- Click segments to filter events
+- Legend shows counts
+
+**Top Users by Activity (Bar Chart):**
+- Top 10 users with most security events
+- Helps identify unusual user activity
+- Sort by event count
+
+### Filtering Events
+
+**Available Filters:**
+
+1. **Time Period** - 7/30/90 days
+2. **Severity** - All, Critical, High, Medium, Low, Info
+3. **Search** - Free-text search across event metadata
+
+**Filter Combinations:**
+- Combine multiple filters for precise queries
+- Filters persist during session
+- Clear filters button to reset
+
+### Event Details
+
+**Each Event Shows:**
+- **Severity Badge** - Color-coded with icon
+- **Event Type** - Technical event name (e.g., "permission_denied")
+- **User Email** - Who triggered the event
+- **IP Address** - Where event originated
+- **Timestamp** - Date and time (localized)
+- **Metadata** - Expandable JSON details
+
+**Viewing Metadata:**
+1. Click "View metadata" dropdown
+2. See full JSON details
+3. Copy for reporting or debugging
+
+### Exporting Events
+
+**Process:**
+
+1. Apply desired filters
+2. Click **"Export CSV"** button in header
+3. CSV file downloads automatically
+
+**CSV Includes:**
+- All filtered events
+- All event fields
+- Formatted timestamps
+- Metadata as JSON string
+
+**Use Cases:**
+- SOC 2 compliance audits
+- Security incident investigations
+- Historical analysis
+- Executive reporting
+
+### Real-Time Monitoring
+
+**Live Updates:**
+- Dashboard refreshes every 5 seconds automatically
+- "Live monitoring active" indicator with pulsing dot
+- Manual refresh button available
+
+**Benefits:**
+- Catch security incidents as they happen
+- Monitor ongoing investigations
+- Track remediation effectiveness
+
+### Pagination
+
+**Navigation:**
+- 50 events per page
+- Previous/Next buttons
+- Page number display
+- Total count indicator
+
+### Additional Metrics
+
+**Bottom Cards:**
+- **Role Changes** - RBAC modifications count
+- **Failed Logins** - Authentication failures
+- **Real-Time Status** - Monitoring indicator
+
+### Best Practices
+
+**1. Daily Monitoring**
+- Check dashboard daily for critical events
+- Review high severity events immediately
+- Investigate anomalies
+
+**2. Weekly Reviews**
+- Export events for weekly security review
+- Look for patterns and trends
+- Update security policies
+
+**3. Incident Response**
+- Use filters to isolate incidents
+- Export affected events
+- Document response in audit logs
+
+**4. Compliance**
+- Export events monthly for compliance
+- Review permission denials
+- Audit user activity patterns
+
+---
+
+## Analytics Dashboard
+
+**Location:** Admin > Analytics
+
+Comprehensive analytics for system activity, users, and business metrics.
+
+### Overview
+
+The Analytics Dashboard provides:
+- System activity metrics
+- User distribution statistics
+- Business performance metrics (revenue, production, quality, inventory)
+- Recently active users
+- Time-range filtering (7/30/60/90 days)
+
+### Activity Statistics
+
+**Key Metrics:**
+
+**Total Users:**
+- Count of all user accounts
+- Active users badge (green)
+- Inactive users badge (gray)
+
+**Admin Actions:**
+- Count of admin operations
+- Last N days timeframe
+- Click to view Activity Logs
+
+**Security Events:**
+- Count of security-related events
+- Last N days timeframe
+- Click to view Security Events
+
+**Login Attempts:**
+- Total login attempts
+- Success count (green check)
+- Failed count (red X)
+- Helps identify authentication issues
+
+### Top Actions
+
+**Card: Top Actions (Last N days)**
+
+Shows most frequent admin actions with counts.
+
+**Example Actions:**
+- user.create - 156
+- role.assign - 89
+- permission.grant - 67
+- invoice.approve - 45
+
+**Use Cases:**
+- Identify most common workflows
+- Spot automation opportunities
+- Monitor admin workload
+
+### Most Active Users
+
+**Card: Most Active Users (Last N days)**
+
+Shows users with highest activity counts.
+
+**Display:**
+- User email
+- Action count badge
+- Sorted by activity (highest first)
+
+**Use Cases:**
+- Monitor power users
+- Identify training needs
+- Recognize productivity
+
+### User Distribution by Type
+
+**Grid: User Type Breakdown**
+
+Shows count of users by type:
+- Employees
+- Contractors
+- Designers
+- Manufacturers
+- Finance
+- Clients (customers)
+- Super Admins
+
+**Use Cases:**
+- Workforce composition analysis
+- License planning
+- Access control auditing
+
+### Recently Active Users Table
+
+**Columns:**
+- **User** - Full name
+- **Email** - Email address
+- **Type** - User type badge
+- **Department** - Department name
+- **Account Created** - Creation date and time with clock icon
+- **Status** - Active/Inactive badge
+
+**Sorting:**
+- Click column headers to sort
+- Default: Most recent first
+
+### Business Metrics
+
+**Revenue Analytics Card:**
+
+**Metrics:**
+- **Total Revenue** - Sum of all invoices
+- **Paid** - Total paid amount (green)
+- **Outstanding** - Unpaid amount (yellow)
+- **Invoices** - Total invoice count
+- **Paid Invoices** - Count of paid
+- **Overdue Invoices** - Count overdue (red)
+
+**Use Cases:**
+- Cash flow monitoring
+- Collections prioritization
+- Financial health assessment
+
+**Production Metrics Card:**
+
+**Metrics:**
+- **Total Orders** - All production orders
+- **Completed** - Finished orders (green)
+- **In Progress** - Active orders (blue)
+- **Pending** - Queued orders
+- **Completion Rate** - Percentage completed
+- **On-Time Rate** - Percentage delivered on time
+
+**Use Cases:**
+- Production capacity planning
+- Bottleneck identification
+- On-time delivery tracking
+
+**Quality Metrics Card:**
+
+**Metrics:**
+- **Total Reports** - All QC reports
+- **Passed** - Passed inspections (green)
+- **Failed** - Failed inspections (red)
+- **Pass Rate** - Percentage passed
+- **Total Defects** - Sum of all defects
+- **Avg Defects Per Report** - Defect rate
+
+**Use Cases:**
+- Quality trend analysis
+- Supplier performance
+- Process improvement
+
+**Inventory Overview Card:**
+
+**Metrics:**
+- **Total Items** - All inventory items
+- **Low Stock** - Items below threshold (yellow)
+- **Out of Stock** - Zero inventory (red)
+- **Health** - Overall inventory health percentage
+- **Over Stock** - Items above max threshold
+- **Total Value** - Sum of inventory value
+
+**Use Cases:**
+- Reorder planning
+- Stock optimization
+- Capital allocation
+
+### Time Range Selection
+
+**Dropdown Options:**
+- Last 7 days
+- Last 30 days (default)
+- Last 60 days
+- Last 90 days
+
+**Applies To:**
+- Activity statistics
+- Top actions list
+- Most active users list
+
+### Refreshing Data
+
+**Auto-Refresh:**
+- Dashboard auto-refreshes on page load
+- Always shows latest data
+- Caching disabled for accuracy
+
+**Manual Refresh:**
+- Reload page to force refresh
+- Use browser refresh (F5/Cmd+R)
+
+---
+
+## Activity Logs
+
+**Location:** Admin > Activity
+
+Monitor all system activity with three specialized log types: Admin, Security, and Login.
+
+### Overview
+
+The Activity Logs interface provides:
+- Three log types (Admin, Security, Login)
+- Advanced filtering with 4 filter dimensions
+- Real-time statistics
+- Pagination with 20/50/100 per page
+- Export functionality (via Security Events)
+
+### Activity Statistics
+
+**Stats Grid (Last 30 Days):**
+- **Admin Actions** - Count of admin operations
+- **Security Events** - Count of security incidents
+- **Login Attempts** - Total login attempts
+- **Failed Logins** - Failed authentication attempts (red)
+
+### Tab Navigation
+
+**Three Log Types:**
+
+**Admin Logs Tab:**
+- Administrative actions (create, update, delete)
+- User management operations
+- System configuration changes
+- Count displayed in tab label
+
+**Security Logs Tab:**
+- Security-relevant events
+- Permission violations
+- Unauthorized access attempts
+- Count displayed in tab label
+
+**Login Logs Tab:**
+- All authentication attempts
+- SSO logins
+- Magic link logins
+- Success/failure status
+- Count displayed in tab label
+
+### Filtering System
+
+**Four Filter Dimensions:**
+
+**1. Search (Free Text):**
+- Search across all log fields
+- Real-time filtering (300ms debounce)
+- Matches user names, emails, actions, resources
+
+**2. Action Filter:**
+- All Actions
+- Create
+- Update
+- Delete
+- Login
+- Logout
+
+**3. Created By Filter:**
+- All Users
+- Specific user (dropdown populated from user list)
+
+**4. Resource Type Filter (Admin Logs Only):**
+- All Resources
+- Invoices
+- Payments
+- Orders
+- Permissions
+- Users
+- User Roles
+- User Profiles
+- User Permissions
+- Portal Access
+- Customers
+- Projects
+- Shipments
+
+**Clear Filters Button:**
+- Appears when filters active
+- Resets all filters to default
+- Instant results
+
+### Admin Logs Table
+
+**Columns:**
+- **Timestamp** - Date and time (formatted as "MMM d, yyyy h:mm a")
+- **Action** - Action type badge (neutral color)
+- **User** - Email of user who performed action
+- **Resource** - Resource type with optional target user email
+- **IP Address** - Source IP address
+
+**Resource Display:**
+- Shows user-friendly resource names (e.g., "User Role" instead of "user_role")
+- Includes target user email when available
+- Two-line display (type + target)
+
+**Sorting:**
+- Click Timestamp column to sort by date
+- Default: Most recent first
+
+### Security Logs Table
+
+**Columns:**
+- **Timestamp** - Event time
+- **Action** - Action type badge (warning color)
+- **User** - User who triggered event
+- **Table** - Database table affected
+- **Record ID** - First 8 characters of record UUID
+- **IP Address** - Source IP
+
+**Use Cases:**
+- Audit database changes
+- Track data modifications
+- Investigate incidents
+
+### Login Logs Table
+
+**Columns:**
+- **Timestamp** - Login attempt time
+- **User** - User name
+- **Email** - Google email (for SSO)
+- **Type** - Login type badge (SSO, Magic Link, etc.)
+- **Status** - Success (green) or Failed (red)
+- **IP Address** - Source IP
+
+**Status Badges:**
+- **Success** - Green badge with checkmark
+- **Failed** - Red badge (investigate if repeated)
+
+### Pagination
+
+**Controls:**
+- Page size selector: 20, 50, or 100 rows per page
+- Previous/Next buttons
+- Current page indicator
+- Total count display
+
+### Empty States
+
+**No Logs Found:**
+- Friendly icon and message
+- Suggestions:
+  - "Try adjusting your filters" (if filters active)
+  - "No activity has been recorded" (if no filters)
+
+### Best Practices
+
+**1. Regular Monitoring**
+- Review Admin Logs daily for unusual activity
+- Check Security Logs for permission violations
+- Monitor Login Logs for failed authentication attempts
+
+**2. Incident Investigation**
+- Use filters to isolate specific users or time periods
+- Export filtered results for detailed analysis
+- Cross-reference with Security Events
+
+**3. Compliance Auditing**
+- Export logs monthly for compliance reporting
+- Review resource access patterns
+- Verify admin actions have proper authorization
+
+**4. Security Response**
+- Set up alerts for repeated failed logins
+- Investigate unusual IP addresses
+- Monitor for privilege escalation attempts
+
+---
+
+## API Key Management
+
+**Location:** Admin > API Keys
+
+Securely manage API credentials for all third-party integrations with rotation tracking and environment detection.
+
+### Overview
+
+The API Key Management system provides:
+- Centralized credential storage (encrypted at rest)
+- Service templates for easy setup
+- Rotation reminders and expiration tracking
+- Environment detection from .env files
+- Recommended API configurations
+
+**Supported Services:**
+- QuickBooks Online
+- Seiko Logistics
+- Google Drive
+- Stripe Payments
+- SendGrid Email
+- Custom APIs
+
+### Statistics Dashboard
+
+**Four Key Metrics:**
+- **Total Credentials** - All API keys stored
+- **Active** - Currently enabled credentials
+- **Expiring Soon** - Credentials expiring within 30 days (yellow)
+- **Need Rotation** - Credentials older than 90 days (requires rotation)
+
+### Environment Detection
+
+**Detected in Environment Files Card:**
+
+Shows APIs found in .env files with configuration status.
+
+**Each API Shows:**
+- Service name
+- Configuration status (green checkmark or yellow warning)
+- Required keys detected
+- Source file (.env, .env.local, etc.)
+
+**Configuration Status:**
+- **Configured** (Green) - All required keys present
+- **Incomplete** (Yellow) - Some keys missing
+
+**Example Display:**
+```
+QuickBooks Online (.env)
+[Green Check] Configured
+  - QUICKBOOKS_CLIENT_ID
+  - QUICKBOOKS_CLIENT_SECRET
+  - QUICKBOOKS_REDIRECT_URI
+```
+
+**Recommended APIs to Configure Card:**
+
+Shows recommended integrations not yet set up.
+
+**Each Recommendation Shows:**
+- Service name
+- Description
+- Required keys list
+- "Configure" button
+
+**Quick Setup:**
+1. Click **"Configure [Service]"** button
+2. Dialog pre-fills with service template
+3. Enter API credentials
+4. Save
+
+### Adding API Credentials
+
+**Process:**
+
+1. Click **"Add Credential"** button
+2. Select service type from template dropdown
+3. Enter display name (e.g., "QuickBooks Production")
+4. Enter unique service ID (e.g., "quickbooks_prod")
+5. Enter description (optional)
+6. Select environment (Production, Staging, Sandbox, Development)
+7. Enter credential fields (dynamic based on service)
+8. Click **"Add Credential"**
+
+**Service Templates:**
+
+**QuickBooks Online:**
+- client_id (text)
+- client_secret (password)
+- redirect_uri (text)
+- Recommended rotation: 180 days
+
+**Seiko Logistics:**
+- api_key (password)
+- api_secret (password)
+- account_id (text)
+- Recommended rotation: 90 days
+
+**Google Drive:**
+- client_id (text)
+- client_secret (password)
+- folder_id (text)
+- Recommended rotation: 365 days
+
+**Stripe Payments:**
+- publishable_key (text)
+- secret_key (password)
+- webhook_secret (password)
+- Recommended rotation: 90 days
+
+**SendGrid Email:**
+- api_key (password)
+- Recommended rotation: 90 days
+
+**Custom API:**
+- api_key (password)
+- Recommended rotation: 90 days
+
+### Credentials Table
+
+**Columns:**
+
+**Service:**
+- Service icon (key)
+- Display name (bold)
+- Service ID (muted, below name)
+
+**Environment:**
+- Badge with color coding:
+  - Production (green)
+  - Staging (blue)
+  - Sandbox (yellow)
+  - Development (gray)
+
+**Status:**
+- **Active** (green) - Currently enabled
+- **Inactive** (gray) - Disabled
+
+**Age & Rotation:**
+- Days old (e.g., "45 days old")
+- Rotation status:
+  - "Recently created" (green) - Less than 60 days
+  - "Consider rotating soon" (yellow) - 60-90 days
+  - "Rotation recommended" (red) - Over 90 days
+
+**Expires:**
+- Never (gray text)
+- Expired (red badge with alert icon)
+- Expiring soon (yellow badge with warning) - Less than 30 days
+- Days remaining (gray text) - 30+ days
+
+**Last Used:**
+- Never (gray)
+- Today
+- Yesterday
+- Nd ago (N days ago)
+
+**Actions:**
+- Edit button
+- Delete button (red, confirmation required)
+
+### Editing Credentials
+
+**What Can Be Edited:**
+- Display name
+- Description
+- Environment
+- Expiration date
+- Active status
+
+**What CANNOT Be Edited:**
+- Actual credential values (security requirement)
+- Service name
+- Service ID
+
+**To Rotate Credentials:**
+1. Create new credential with updated values
+2. Test integration
+3. Delete old credential
+4. Update expiration date
+
+### Expiration Tracking
+
+**Expiring Credentials Alert:**
+
+Yellow banner appears when credentials expire within 30 days.
+
+**Alert Shows:**
+- Count of expiring credentials
+- "View" button to filter table
+- Click "Show All" to remove filter
+
+**Setting Expiration:**
+- Set during creation (automatic based on service template)
+- Edit anytime via Edit dialog
+- Leave blank for "Never expires"
+
+### Security Features
+
+**Encryption:**
+- All credentials encrypted at rest in database
+- AES-256 encryption standard
+- Encrypted values never displayed in UI
+
+**Access Control:**
+- Only admins can view API Keys page
+- All credential operations logged
+- IP address tracked for auditing
+
+**Rotation Reminders:**
+- Visual indicators for age
+- Automatic expiration warnings
+- Recommended rotation periods per service
+
+### Best Practices
+
+**1. Rotation Schedule**
+- **Critical Services (90 days):** Stripe, Seiko, SendGrid
+- **Standard Services (180 days):** QuickBooks
+- **Low-Risk Services (365 days):** Google Drive
+- **Set Calendar Reminders:** 2 weeks before expiration
+
+**2. Environment Management**
+- **Production:** Live customer data, rotate every 90 days
+- **Staging:** Pre-production testing, rotate every 180 days
+- **Sandbox:** Vendor sandbox environment, rotate yearly
+- **Development:** Local development, rotate as needed
+
+**3. Security Hygiene**
+- **Never Share Credentials:** Each service should have unique credentials per environment
+- **Document Usage:** Always fill description field explaining credential purpose
+- **Monitor Last Used:** Credentials not used in 90 days should be reviewed
+- **Delete Unused:** Remove credentials for deprecated integrations immediately
+
+**4. Incident Response**
+- **Compromised Credential:**
+  1. Immediately deactivate (edit > set Active = false)
+  2. Create new credential with new values
+  3. Update application configuration
+  4. Delete old credential
+  5. Review Security Events for unauthorized usage
+
+**5. Compliance**
+- **SOC 2:** Rotate credentials per policy (typically 90 days)
+- **Audit Trail:** All operations logged in Admin Logs
+- **Access Control:** Limit to super_admin and admin roles only
+
+---
+
+## Admin Dashboard
+
+**Location:** Admin > Dashboard
+
+Central overview of administrative functions and system health.
+
+### Overview
+
+The Admin Dashboard provides:
+- High-level system statistics
+- Quick action buttons
+- Role distribution view
+- Pending actions summary
+- Recent activity overview
+
+### Overview Statistics
+
+**Four Key Metrics:**
+- **Total Users** - All user accounts with active/inactive breakdown
+- **Activity Logs** - Admin actions count (last 30 days)
+- **Security Events** - Security incidents count (last 30 days)
+- **Failed Logins** - Authentication failures (last 30 days, red)
+
+### Quick Actions
+
+**Grid of Action Buttons:**
+
+**Manage Users:**
+- Navigate to User Management
+- View and edit user accounts
+
+**Manage Roles:**
+- Navigate to Role Management
+- Assign/remove roles
+
+**View Activity:**
+- Navigate to Activity Logs
+- Monitor system operations
+
+**System Settings:**
+- Navigate to Settings
+- Configure system-wide options
+
+**Analytics:**
+- Navigate to Analytics Dashboard
+- View business metrics
+
+**Export Data:**
+- Navigate to Export page
+- Download system data
+
+### Role Distribution
+
+**Card: Role Distribution**
+
+Shows count of users by role.
+
+**Display:**
+- Role name with icon
+- User count badge
+- Top 6 roles shown
+
+**Empty State:**
+- "No roles assigned" message when no roles exist
+
+### Pending Actions
+
+**Card: Pending Actions**
+
+**Sign-up Approvals:**
+- Count of pending user registrations (yellow badge)
+- "View Approvals" button to navigate
+
+**Use Cases:**
+- Daily approval queue monitoring
+- New user onboarding tracking
+
+### Exportable Records
+
+**Card: Exportable Records**
+
+Shows count of records available for export by type:
+- Users
+- Admin Logs
+- Security Logs
+- Settings
+
+**Use Cases:**
+- Data export planning
+- Compliance reporting
+- Backup verification
+
+### Recent Activity
+
+**Card: Recent Activity**
+
+Shows top 5 most frequent actions.
+
+**Display:**
+- Action name
+- Count
+
+**Empty State:**
+- "No recent activity" when no actions recorded
+
+### Best Practices
+
+**1. Daily Dashboard Check**
+- Review failed logins for security issues
+- Check pending approvals count
+- Monitor activity spikes
+
+**2. Weekly Review**
+- Compare week-over-week statistics
+- Investigate anomalies
+- Update role distribution if needed
+
+**3. Quick Navigation**
+- Use Quick Actions for common tasks
+- Bookmark dashboard for easy access
+
+---
+
+## Email Campaigns
+
+**Location:** Admin > Email Campaigns
+
+Create and manage email marketing campaigns with tracking and analytics.
+
+### Overview
+
+The Email Campaigns system provides:
+- Campaign creation and management
+- Recipient list management
+- Send scheduling
+- Open and click tracking
+- Campaign analytics
+- Queue processing
+
+### Statistics Dashboard
+
+**Four Key Metrics:**
+- **Total Campaigns** - All campaigns created
+- **Total Sent** - Sum of emails sent across all campaigns
+- **Total Opens** - Sum of email opens
+- **Queue Pending** - Emails queued but not yet sent
+
+### Campaigns Table
+
+**Columns:**
+- **Name** - Campaign name
+- **Subject** - Email subject line (truncated if long)
+- **Recipients** - Total recipient count
+- **Status** - Campaign status badge:
+  - Draft (gray)
+  - Scheduled (blue)
+  - Sending (blue)
+  - Sent (default)
+  - Cancelled (red)
+- **Sent** - Count of successfully sent emails
+- **Opens** - Count of email opens
+- **Clicks** - Count of link clicks
+
+**Actions (Per Campaign):**
+- **Analytics** (bar chart icon) - View detailed campaign analytics
+- **Send** (paper plane icon) - Send draft campaign (draft only)
+- **Cancel** (X icon) - Cancel scheduled campaign (draft/scheduled only)
+- **Delete** (trash icon) - Delete campaign
+
+### Creating Campaigns
+
+**NOTE:** Campaign creation UI is at `/admin/email-campaigns/new` (to be documented separately).
+
+**Typical Workflow:**
+1. Click **"New Campaign"** button
+2. Enter campaign details
+3. Design email content
+4. Select recipient list
+5. Preview email
+6. Save as draft or send immediately
+
+### Sending Campaigns
+
+**Process:**
+
+1. Locate draft campaign in table
+2. Click **"Send"** button (paper plane icon)
+3. Confirm send action in dialog
+
+**What Happens:**
+1. Campaign status changes to "sending"
+2. Emails queued for delivery
+3. Queue processor sends emails (respects rate limits)
+4. Campaign status changes to "sent" when complete
+5. Statistics updated in real-time
+
+**Result Message:**
+- Success: "Campaign sent! N emails delivered."
+- Partial: "Campaign partially sent: N succeeded, M failed."
+
+### Cancelling Campaigns
+
+**Process:**
+
+1. Locate draft or scheduled campaign
+2. Click **"Cancel"** button (X icon)
+3. Confirm cancellation
+
+**What Happens:**
+1. Campaign status changes to "cancelled"
+2. Queued emails removed from queue
+3. No further emails sent
+
+**Use Cases:**
+- Discovered error in email content
+- Recipient list needs updating
+- Campaign no longer relevant
+
+### Queue Processing
+
+**Manual Queue Processing:**
+
+1. Click **"Process Queue"** button in header
+2. System processes all pending emails immediately
+
+**What Happens:**
+- All queued emails sent in batches
+- Rate limiting applied (respects Resend limits)
+- Failed emails logged with error details
+- Success/failure counts displayed
+
+**Result Message:**
+- "Queue processed: N sent, M failed."
+
+### Campaign Analytics
+
+**Navigate:** `/admin/email-campaigns/[id]/analytics`
+
+**Metrics (To Be Documented):**
+- Opens over time
+- Click-through rate
+- Geographic distribution
+- Device breakdown
+- Link performance
+
+### Filtering Campaigns
+
+**Status Filter Dropdown:**
+- All Campaigns (default)
+- Draft
+- Scheduled
+- Sending
+- Sent
+- Cancelled
+
+**Use Cases:**
+- View only active campaigns
+- Audit completed campaigns
+- Find drafts needing completion
+
+### Campaign Statuses
+
+**draft:**
+- Campaign created but not sent
+- Can edit all details
+- Can send or delete
+
+**scheduled:**
+- Campaign scheduled for future send
+- Cannot edit (must cancel first)
+- Can cancel or delete
+
+**sending:**
+- Campaign currently being sent
+- Cannot edit or cancel
+- Wait for completion
+
+**sent:**
+- Campaign fully sent
+- Cannot edit or resend
+- View analytics only
+
+**cancelled:**
+- Campaign cancelled before completion
+- Cannot resume
+- Can delete
+
+### Best Practices
+
+**1. Campaign Planning**
+- Draft campaigns in advance
+- Test with small recipient list first
+- Review subject lines for spam triggers
+
+**2. Timing**
+- Schedule campaigns for optimal open times
+- Avoid weekends/holidays
+- Stagger large campaigns
+
+**3. Monitoring**
+- Check queue status before sending
+- Monitor open rates within 24 hours
+- Review failed sends in logs
+
+**4. List Management**
+- Respect unsubscribe requests immediately
+- Segment recipients for targeted campaigns
+- Clean bounced emails regularly
+
+---
+
+## Email Templates
+
+**Location:** Admin > Email Templates
+
+Design and manage reusable email templates for campaigns and automated notifications.
+
+### Overview
+
+The Email Templates system provides:
+- Template creation with variable placeholders
+- Live preview with variable substitution
+- Template categories and organization
+- Version history tracking
+- Usage statistics
+
+### Templates Table
+
+**Columns:**
+- **Name** - Template name
+- **Subject** - Email subject line
+- **Variables** - List of placeholder variables (e.g., name, company)
+- **Category** - Template category (transactional, marketing, notification)
+- **Status** - Active or inactive badge
+- **Last Modified** - Date last updated
+- **Usage Count** - Number of times used in campaigns
+
+**Actions (Per Template):**
+- **Preview** (eye icon) - View rendered template with test data
+- **Edit** (pencil icon) - Edit template content and settings
+- **Delete** (trash icon) - Delete template (confirmation required)
+
+### Creating Templates
+
+**Process:**
+
+1. Click **"New Template"** button
+2. Enter template details:
+   - Name - Internal template name
+   - Subject line - Email subject (supports variables)
+   - Category - Transactional, Marketing, or Notification
+3. Design email body:
+   - HTML editor with formatting tools
+   - Insert variables using double curly braces: `{{variable_name}}`
+4. Define variables list
+5. Set active status
+6. Click **"Create Template"**
+
+**Variable Examples:**
+```
+Hello {{first_name}},
+
+Thank you for your order #{{order_number}}.
+
+Your items will ship to:
+{{shipping_address}}
+
+Best regards,
+{{company_name}}
+```
+
+### Template Preview
+
+**Live Preview Dialog:**
+
+**Features:**
+- Enter test values for all variables
+- Real-time preview rendering
+- Preview updates as you type
+- Copy preview HTML
+
+**Process:**
+1. Click **"Preview"** button on template
+2. Enter test values for each variable
+3. View rendered email
+4. Adjust variables and re-preview
+
+### Template Variables
+
+**Common Variables:**
+- `{{first_name}}` / `{{last_name}}` - User name
+- `{{email}}` - User email
+- `{{company_name}}` - Company name
+- `{{order_number}}` - Order ID
+- `{{order_date}}` - Order date
+- `{{shipping_address}}` - Formatted address
+- `{{tracking_number}}` - Shipment tracking
+- `{{invoice_number}}` - Invoice ID
+- `{{amount}}` - Currency amount
+- `{{due_date}}` - Payment due date
+
+**Custom Variables:**
+- Define any custom variable in template editor
+- Document variable purpose in description
+- Variables case-sensitive
+
+### Template Categories
+
+**Transactional:**
+- Order confirmations
+- Shipping notifications
+- Payment receipts
+- Account updates
+
+**Marketing:**
+- Newsletter campaigns
+- Product announcements
+- Promotional offers
+- Event invitations
+
+**Notification:**
+- System alerts
+- Password resets
+- Welcome emails
+- Reminder emails
+
+### Editing Templates
+
+**What Can Be Edited:**
+- Template name
+- Subject line
+- Body content (HTML + text)
+- Variables list
+- Category
+- Active status
+
+**Version History:**
+- Previous versions automatically saved
+- Restore earlier version if needed
+- Compare versions side-by-side
+
+### Usage Statistics
+
+**Metrics Tracked:**
+- Total times used in campaigns
+- Last used date
+- Associated campaigns
+- Average open rate (if available)
+
+### Best Practices
+
+**1. Variable Naming**
+- Use descriptive names (`{{customer_name}}` not `{{cn}}`)
+- Consistent naming across templates
+- Document all variables in template description
+
+**2. Design Principles**
+- Mobile-responsive HTML
+- Plain text fallback
+- Test in multiple email clients
+- Keep subject lines under 50 characters
+
+**3. Testing**
+- Always preview before use
+- Test with real data
+- Check variable substitution
+- Verify links and images
+
+**4. Organization**
+- Use clear template names
+- Assign correct categories
+- Deactivate unused templates
+- Delete obsolete templates
+
+---
+
+## Activity Templates
+
+**Location:** Admin > Activity Templates
+
+Manage reusable templates for CRM activities (emails, calls, meetings, tasks, notes).
+
+### Overview
+
+The Activity Templates system provides:
+- Templates for 5 activity types
+- Quick activity creation from templates
+- Template filtering and search
+- Usage tracking
+- Active/inactive status
+
+### Activity Types
+
+**Email Templates:**
+- Pre-written email bodies
+- Subject line templates
+- Follow-up email sequences
+- Response templates
+
+**Call Templates:**
+- Call scripts
+- Discussion points
+- Follow-up questions
+- Objection handling
+
+**Meeting Templates:**
+- Agenda templates
+- Meeting notes structure
+- Action items format
+- Follow-up plans
+
+**Task Templates:**
+- Task descriptions
+- Subtask checklists
+- Priority guidelines
+- Due date calculations
+
+**Note Templates:**
+- Note-taking structure
+- Customer interaction logs
+- Project status updates
+- Internal memos
+
+### Templates Table
+
+**Columns:**
+- **Name** - Template name
+- **Type** - Activity type badge with icon:
+  - Email (mail icon, blue)
+  - Call (phone icon, green)
+  - Meeting (calendar icon, purple)
+  - Task (checkbox icon, orange)
+  - Note (sticky note icon, gray)
+- **Description** - Template purpose
+- **Status** - Active/Inactive badge
+- **Usage Count** - Times used
+- **Last Used** - Date last used
+
+**Actions (Per Template):**
+- **Edit** - Edit template
+- **Delete** - Delete template (confirmation required)
+
+### Filtering Templates
+
+**Two Filter Dimensions:**
+
+**1. Activity Type:**
+- All
+- Email
+- Call
+- Meeting
+- Task
+- Note
+
+**2. Status:**
+- All
+- Active
+- Inactive
+
+**Combination:**
+- Filters work together
+- Clear filters button to reset
+
+### Creating Templates
+
+**Process:**
+
+1. Click **"New Template"** button
+2. Select activity type
+3. Enter template details:
+   - Name - Template name
+   - Description - What this template is for
+   - Content - Template body/script
+   - Variables (if applicable)
+4. Set active status
+5. Click **"Create Template"**
+
+### Using Templates in CRM
+
+**Integration Points:**
+- CRM contacts page - "New activity from template"
+- CRM companies page - Quick actions
+- Tasks module - Create task from template
+- Calendar - Schedule meeting from template
+
+**Workflow:**
+1. Navigate to CRM contact or company
+2. Click "New Activity" dropdown
+3. Select "From Template"
+4. Choose template
+5. Customize content
+6. Save activity
+
+### Template Content Structure
+
+**Email Template Example:**
+```
+Subject: Follow-up on {{meeting_date}} meeting
+
+Hi {{first_name}},
+
+Thank you for meeting with me yesterday. As discussed, I wanted to follow up on:
+
+- {{discussion_point_1}}
+- {{discussion_point_2}}
+- {{discussion_point_3}}
+
+Next steps:
+- {{action_item_1}}
+- {{action_item_2}}
+
+Let me know if you have any questions.
+
+Best regards,
+{{my_name}}
+```
+
+**Call Script Template Example:**
+```
+Introduction:
+"Hi {{first_name}}, this is {{my_name}} from {{company_name}}. Is now a good time to talk?"
+
+Discovery Questions:
+1. What challenges are you facing with {{pain_point}}?
+2. How are you currently handling {{process}}?
+3. What would an ideal solution look like?
+
+Next Steps:
+- Schedule demo
+- Send proposal
+- Follow-up call
+```
+
+### Best Practices
+
+**1. Template Organization**
+- Use clear, descriptive names
+- Write concise descriptions
+- Keep templates up-to-date
+- Deactivate obsolete templates
+
+**2. Content Quality**
+- Professional tone
+- Clear and concise
+- Actionable language
+- Personalization variables
+
+**3. Maintenance**
+- Review templates quarterly
+- Update based on feedback
+- Track usage statistics
+- Remove low-usage templates
+
+**4. Team Alignment**
+- Share best-performing templates
+- Document template purpose
+- Train team on usage
+- Collect improvement suggestions
+
+---
+
+## Data Export
+
+**Location:** Admin > Export
+
+Export system data in CSV or JSON format for compliance, backups, and analysis.
+
+### Overview
+
+The Data Export system provides:
+- Export in CSV or JSON formats
+- Multiple data types supported
+- Record count statistics
+- Quick export templates
+- One-click downloads
+
+### Export Statistics
+
+**Four Metrics Cards:**
+- **Users** - Total user records available
+- **Admin Logs** - Total admin action logs
+- **Security Logs** - Total security event logs
+- **Settings** - Total system settings
+
+**Use Cases:**
+- Capacity planning
+- Data backup verification
+- Compliance reporting
+- Historical analysis
+
+### Supported Data Types
+
+**Users:**
+- All user accounts
+- Profile data
+- Role assignments
+- Permission grants
+- Last login dates
+
+**Admin Logs:**
+- Last 1,000 admin actions
+- User management operations
+- System configuration changes
+- Timestamp and IP address
+
+**Security Logs:**
+- Last 1,000 security events
+- Permission violations
+- Failed access attempts
+- Audit trail data
+
+**Login Logs:**
+- Last 1,000 login attempts
+- Success/failure status
+- SSO and magic link logins
+- Timestamp and IP address
+
+**System Settings:**
+- All application settings
+- Configuration values
+- Feature flags
+- Integration settings
+
+### Export Configuration
+
+**Two-Step Process:**
+
+**Step 1: Select Data Type**
+- Users
+- Admin Logs
+- Security Logs
+- Login Logs
+- System Settings
+
+**Step 2: Select Format**
+- CSV (Comma-Separated Values) - Spreadsheet-friendly
+- JSON (JavaScript Object Notation) - Programming-friendly
+
+### Exporting Data
+
+**Main Export:**
+
+1. Select data type from dropdown
+2. Select format (CSV or JSON)
+3. Click **"Export Data"** button
+4. File downloads automatically
+
+**Export Filename Format:**
+- Users: `users-export-YYYY-MM-DD.csv`
+- Admin Logs: `admin-logs-export-YYYY-MM-DD.csv`
+- Security Logs: `security-logs-export-YYYY-MM-DD.csv`
+- Settings: `settings-export-YYYY-MM-DD.json`
+
+### Quick Export Templates
+
+**Three One-Click Exports:**
+
+**Quick Export: Users**
+- CSV button - Export users as CSV immediately
+- JSON button - Export users as JSON immediately
+
+**Quick Export: Admin Logs**
+- CSV button - Export admin logs as CSV
+- JSON button - Export admin logs as JSON
+
+**Quick Export: Settings**
+- CSV button - Export settings as CSV
+- JSON button - Export settings as JSON
+
+**Benefits:**
+- No configuration needed
+- Instant download
+- Most common export tasks
+- Time-saving shortcuts
+
+### CSV Format Details
+
+**Structure:**
+- First row contains column headers
+- Each subsequent row is one record
+- Comma-separated values
+- Quoted strings for text containing commas
+
+**Example (Users Export):**
+```
+id,name,email,user_type,is_active,created_at
+abc123,"John Doe",john@example.com,employee,true,2025-01-15T10:30:00Z
+def456,"Jane Smith",jane@example.com,contractor,true,2025-01-16T14:20:00Z
+```
+
+**Use Cases:**
+- Excel/Google Sheets analysis
+- Import to other systems
+- Mail merge operations
+- Reporting tools
+
+### JSON Format Details
+
+**Structure:**
+- Array of objects
+- Each object represents one record
+- Nested data preserved
+- Full data structure maintained
+
+**Example (Users Export):**
+```json
+[
+  {
+    "id": "abc123",
+    "name": "John Doe",
+    "email": "john@example.com",
+    "user_type": "employee",
+    "is_active": true,
+    "created_at": "2025-01-15T10:30:00Z",
+    "roles": ["admin", "manager"],
+    "metadata": {
+      "department": "Engineering"
+    }
+  }
+]
+```
+
+**Use Cases:**
+- API integration
+- Database imports
+- Programmatic processing
+- Complex data analysis
+
+### Export Limits
+
+**Record Limits:**
+- Users: All records (no limit)
+- Admin Logs: Last 1,000 records
+- Security Logs: Last 1,000 records
+- Login Logs: Last 1,000 records
+- Settings: All records (no limit)
+
+**Size Considerations:**
+- Large exports may take 10-30 seconds
+- CSV files smaller than JSON
+- Browser download progress bar shown
+
+### Best Practices
+
+**1. Regular Backups**
+- Export users monthly for backup
+- Export logs weekly for compliance
+- Store exports securely off-site
+- Test restore process quarterly
+
+**2. Compliance**
+- SOC 2: Export audit logs monthly
+- GDPR: Export user data on request
+- HIPAA: Maintain 7-year log archives
+- Document export procedures
+
+**3. Data Analysis**
+- Use CSV for spreadsheet analysis
+- Use JSON for database imports
+- Combine exports for comprehensive reports
+- Automate exports with API (if available)
+
+**4. Security**
+- Exports contain sensitive data
+- Encrypt exported files
+- Limit access to export feature
+- Delete exports after use
+
+---
+
+## API Management Dashboard
+
+**Location:** Admin > API Management
+
+Comprehensive API credential management with security monitoring, rotation tracking, and compliance tools.
+
+### Overview
+
+The API Management Dashboard provides:
+- Security score calculation (0-100)
+- Credential health overview
+- Quick action navigation
+- Status indicators
+- Integration monitoring
+
+### Security Dashboard
+
+**Four Key Metrics:**
+
+**Total Credentials:**
+- Count of all API credentials stored
+- Active vs inactive breakdown
+
+**Active Credentials:**
+- Currently enabled credentials
+- Green checkmark indicator
+
+**Expiring Soon:**
+- Credentials expiring within 30 days
+- Yellow warning indicator
+
+**Needs Rotation:**
+- Credentials over 90 days old
+- Red alert indicator
+
+### Security Score
+
+**Score Calculation (0-100):**
+- **100** = Perfect security posture
+- **80-99** = Good (green)
+- **60-79** = Needs attention (yellow)
+- **0-59** = Critical issues (red)
+
+**Factors:**
+- Percentage expiring soon (-30% of score)
+- Percentage needing rotation (-50% of score)
+- Percentage inactive (-20% of score)
+
+**Score Display:**
+- Large number with color coding
+- Circle indicator
+- Status message
+
+### Quick Actions Grid
+
+**Six Navigation Cards:**
+
+**View All Credentials:**
+- Navigate to credentials list
+- Manage all API keys
+- Key icon, primary color
+
+**Rotation Schedule:**
+- View rotation calendar
+- Schedule credential updates
+- Clock icon
+
+**Security Compliance:**
+- Compliance dashboard
+- Audit reports
+- Shield icon
+
+**Health Monitoring:**
+- API health checks
+- Uptime monitoring
+- Activity icon
+
+**Analytics:**
+- Usage analytics
+- Performance metrics
+- Bar chart icon
+
+**Credential Security:**
+- Security settings
+- Access controls
+- Lock icon
+
+### Subpages
+
+**Admin > API Management has 6 subpages:**
+
+1. **Credentials** - Main credential management (same as API Keys page)
+2. **Rotation Schedule** - Calendar view of rotation due dates
+3. **Health Monitoring** - API uptime and response time tracking
+4. **Analytics** - Usage statistics and performance metrics
+5. **Security Compliance** - SOC 2, GDPR, HIPAA compliance tools
+6. **Security Settings** - Access controls and audit configuration
+
+### Integration Status
+
+**Features:**
+- Real-time API health checks
+- Integration status badges (online/offline)
+- Last successful call timestamp
+- Error rate monitoring
+
+**Monitored Services:**
+- QuickBooks Online
+- Seiko Logistics
+- Google Drive
+- Stripe Payments
+- SendGrid Email
+
+### Best Practices
+
+**1. Regular Monitoring**
+- Check dashboard daily
+- Review security score weekly
+- Address issues immediately
+
+**2. Rotation Compliance**
+- Follow 90-day rotation schedule
+- Use rotation calendar
+- Document rotation activities
+
+**3. Security Alerts**
+- Subscribe to expiration notifications
+- Monitor failed API calls
+- Investigate anomalies
+
+**4. Compliance Tracking**
+- Export audit logs monthly
+- Review compliance dashboard
+- Update security policies
+
+---
+
+## System Settings
+
+**Location:** Admin > Settings
+
+Configure system-wide settings for email, workflows, and application behavior.
+
+### Overview
+
+The System Settings area provides:
+- Email configuration settings
+- Workflow automation rules
+- Global application preferences
+- Feature toggles
+- Integration settings
+
+**NOTE:** System Settings is organized into subpages. The main Settings landing page provides navigation to specialized configuration areas.
+
+### Settings Subpages
+
+**Admin > Settings > Email**
+- SMTP configuration
+- Email sender settings
+- Default email templates
+- Sending limits and throttling
+- Bounce handling
+
+**Admin > Settings > Workflows**
+- Workflow automation rules
+- Trigger configuration
+- Action definitions
+- Conditional logic
+- Workflow templates
+
+**Future Settings Areas (Planned):**
+- Notifications
+- Security
+- Integrations
+- Billing
+- Localization
+
+### Email Settings
+
+**SMTP Configuration:**
+- Host and port
+- Authentication credentials
+- SSL/TLS settings
+- From address and name
+
+**Sending Limits:**
+- Daily send limit
+- Hourly send limit
+- Rate throttling
+- Burst protection
+
+**Default Templates:**
+- System notification templates
+- Welcome email template
+- Password reset template
+- Verification email template
+
+### Workflow Settings
+
+**Automation Rules:**
+- Define workflow triggers (events, schedules, conditions)
+- Configure workflow actions (send email, create task, update record)
+- Set up conditional logic (if/then/else)
+- Test workflows before enabling
+
+**Workflow Templates:**
+- Pre-configured common workflows
+- Industry best practices
+- Custom workflow builder
+- Import/export workflows
+
+### Accessing Settings
+
+**Navigation:**
+1. Navigate to Admin module
+2. Click "Settings" in admin sidebar
+3. Select specific settings subpage
+4. Modify configuration
+5. Click "Save Changes"
+
+**Permissions:**
+- Only super_admin and admin roles can access
+- Changes logged in Admin Logs
+- Audit trail maintained
+
+### Best Practices
+
+**1. Configuration Management**
+- Document all settings changes
+- Test in staging before production
+- Maintain configuration backups
+- Review settings quarterly
+
+**2. Security**
+- Use strong SMTP credentials
+- Enable SSL/TLS for email
+- Rotate API keys regularly
+- Limit admin access
+
+**3. Workflow Safety**
+- Test workflows thoroughly
+- Start with inactive status
+- Monitor workflow execution
+- Set up error notifications
+
+---
+
+## Additional Admin Features
+
+The Administration module includes several other specialized features and tools:
+
+### Shipping Management (SEKO Analytics)
+- SEKO WMS integration monitoring
+- Shipping label generation status
+- Rate quote analytics
+- Tracking timeline visualization
+- **Location:** Admin > Shipping > SEKO Analytics
+
+### Integration Management
+- QuickBooks Online connection status
+- OAuth token management
 - Integration health monitoring
-- Data export tools
+- **Location:** Admin > Integrations > QuickBooks
 
-## Getting Started
+### User Detail View
+- Individual user management page
+- Full user profile and activity history
+- Role and permission assignment
+- Audit trail for specific user
+- **Location:** Admin > Users > [User ID]
 
-Learn how to administer users, manage security, and monitor system health.
+### Email Campaign Analytics
+- Campaign performance metrics
+- Open and click-through rates
+- Geographic distribution
+- Device breakdown
+- **Location:** Admin > Email Campaigns > [Campaign ID] > Analytics
+
+### Permission Analytics
+- Permission distribution visualizations
+- Usage trends over time
+- Most granted actions
+- Customer-scoped vs global comparison
+- **Location:** Admin > Permissions > Analytics
+
+---
+
+## Admin Module Summary
+
+The Administration module provides comprehensive tools for:
+- **User Management** - User accounts, roles, permissions
+- **Security** - Events monitoring, activity logs, audit trails
+- **Portal Access** - Customer/designer/factory/QC portal management
+- **API Management** - Credentials, rotation, compliance, monitoring
+- **Email** - Campaigns, templates, sending, analytics
+- **Data** - Export, analytics, reporting
+- **Settings** - System configuration, workflows, integrations
+- **Activity** - Templates, logging, tracking
+
+**Total Admin Pages:** 30+ pages across 15 major functional areas
+
+**Access Requirements:**
+- Most pages: super_admin or admin roles
+- Some pages: manager role with specific permissions
+- All actions logged for compliance and audit
+
+**Navigation:**
+- Access via main navigation sidebar
+- Admin module icon (shield or settings)
+- Breadcrumb navigation within admin pages
+- Quick actions in dashboard
+
+**Best Practices:**
+- Review security events daily
+- Process user approvals within 24 hours
+- Rotate API credentials every 90 days
+- Export audit logs monthly
+- Monitor system health regularly
+
+---
+
