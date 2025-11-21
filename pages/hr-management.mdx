@@ -1,0 +1,492 @@
+# HR & Employee Management
+
+## Overview
+
+The Limn Systems ERP includes employee and contact management features for both internal staff and external partner employees. While not a full-featured HR system with payroll or benefits administration, it provides essential employee authentication, user management, and partner contact tracking capabilities.
+
+**Key Areas:**
+- **Internal Employee Access** - OAuth authentication for @limn.us.com staff
+- **Admin Allowlist** - Pre-approved admin privilege provisioning
+- **Partner Employees** - Contact management for designer/factory/sourcing partner staff
+- **User & Role Management** - Comprehensive RBAC system (see [Administration](/admin))
+
+[!NOTE]
+This system focuses on authentication, access control, and contact management. For comprehensive user/role/permission management, see [Administration](/admin) and [Roles & Permissions](/rbac).
+
+---
+
+## Internal Employee Authentication
+
+**Location:** /login > Employee Login
+
+### Employee Login Flow
+
+Internal Limn Systems employees use Google OAuth with their @limn.us.com email addresses for secure, passwordless authentication.
+
+**Access Path:**
+1. Navigate to Login page
+2. Click "Employee Login" button
+3. Authenticate with Google OAuth
+4. Restricted to @limn.us.com domain only
+
+**Key Features:**
+- **Domain Restriction** - Only @limn.us.com Google accounts accepted
+- **OAuth 2.0** - Secure authentication via Google
+- **Auto-Redirect** - Successful login redirects to /dashboard
+- **Error Handling** - Clear messages for non-employee domains
+- **IT Support** - Contact it@limnsystems.com for auth issues
+
+**Security:**
+- OAuth tokens managed by Supabase Auth
+- Session validated on each request with `getUser()` (server-side validation)
+- Email domain checked client-side and server-side
+- Non-employee domains automatically signed out
+
+**Workflow:**
+```
+1. User clicks "Employee Login" on /login
+2. Redirected to Google OAuth consent screen
+3. User selects @limn.us.com Google account
+4. OAuth callback validates email domain
+5. If valid -> Create session, redirect to /dashboard
+6. If invalid -> Sign out, show error message
+```
+
+**Technical Details:**
+- **OAuth Provider:** Google
+- **Redirect URI:** `/auth/callback?type=employee`
+- **OAuth Scopes:** `openid email profile`
+- **Domain Filter:** `hd=limn.us.com` (Google Workspace domain)
+- **Account Picker:** Always shows account selector for multi-account users
+
+### Employee Access Requirements
+
+**Eligible Users:**
+- Limn Systems employees with @limn.us.com Google Workspace accounts
+- Contractors added to limn.us.com Google Workspace (if applicable)
+- IT-approved temporary accounts
+
+**Not Eligible:**
+- Customers (use Customer Portal access instead)
+- Partner employees (use Designer/Factory Portal access instead)
+- Contractors with external emails (contact IT for portal access)
+
+**Troubleshooting:**
+
+**Error: "Employee access requires a @limn.us.com email address"**
+- **Cause:** Signed in with non-@limn.us.com Google account
+- **Solution:** Sign out of Google, sign in with correct @limn.us.com account
+
+**Error: "Connection to authentication service failed"**
+- **Cause:** Network issues or Supabase service down
+- **Solution:** Check internet connection, try again in 5 minutes
+
+**Error: "OAuth Error: access_denied"**
+- **Cause:** User cancelled OAuth consent or Google blocked access
+- **Solution:** Try again, ensure Google account access not restricted
+
+**First-Time Login:**
+When an employee logs in for the first time:
+1. User record created in `users` table (Supabase Auth)
+2. User profile created in `user_profiles` table
+3. Default role assigned based on admin allowlist (if email pre-approved)
+4. Email verification bypassed for @limn.us.com domain (Google OAuth verified)
+
+---
+
+## Admin Allowlist Management
+
+**Location:** Admin > User Management
+
+Pre-approve email addresses for automatic admin privilege provisioning during first OAuth login. This ensures new employees receive appropriate access levels immediately without manual intervention.
+
+### Overview
+
+The Admin Allowlist enables HR or IT administrators to pre-configure user types and roles for employees before they log in for the first time. When an employee's email matches an allowlist entry, they automatically receive the configured privileges on first login.
+
+**Use Cases:**
+- **New Employee Onboarding** - Pre-provision admin access for new hires
+- **Role Changes** - Update allowlist before employee next login to change access level
+- **Temporary Elevated Access** - Grant admin privileges for specific project duration
+- **IT Automation** - Reduce manual user provisioning overhead
+
+### Allowlist Entries
+
+**Fields:**
+- **Email** (required) - Employee email address (e.g., john.doe@limn.us.com)
+- **User Type** (required) - super_admin, admin, finance, manager, employee
+- **Role** (required) - super_admin, admin, manager, team_lead, designer, developer, analyst, viewer
+- **Status** - Active or Inactive
+- **Notes** (optional) - Reason for access level, project assignment, etc.
+- **Granted By** (auto-filled) - User who created allowlist entry
+- **Created Date** (auto-filled) - When entry was added
+
+**User Types:**
+- **super_admin** - Full system access, can manage other admins
+- **admin** - Administrative access to most features
+- **finance** - Financial module access with audit controls
+- **manager** - Department management capabilities
+- **employee** - Standard user access (default)
+
+**Available Roles:**
+See [Roles & Permissions](/rbac) for complete role descriptions.
+
+### Adding Allowlist Entries
+
+**Navigate to Admin > User Management > Add to Allowlist**.
+
+**Step-by-Step:**
+1. Enter employee email address
+2. Select User Type from dropdown
+3. Select Role from dropdown
+4. Enter notes explaining why this access level (optional but recommended)
+5. Ensure Status is set to "Active"
+6. Click "Save"
+
+**Example:**
+```
+Email: jane.smith@limn.us.com
+User Type: admin
+Role: manager
+Notes: New Operations Manager, needs admin access for order/production oversight
+Status: Active
+```
+
+**Best Practices:**
+- **Document Justification** - Always include notes explaining access level
+- **Principle of Least Privilege** - Grant minimum access needed for role
+- **Regular Review** - Audit allowlist quarterly for accuracy
+- **Deactivate vs Delete** - Deactivate entries rather than deleting for audit trail
+
+### Allowlist Workflow
+
+**Pre-Login Provisioning:**
+```
+1. HR adds email to allowlist with user_type = admin, role = manager
+2. Employee completes first OAuth login with @limn.us.com account
+3. System checks allowlist during user profile creation
+4. Matches email -> Assigns user_type and role automatically
+5. Employee immediately has admin/manager access on first login
+```
+
+**Post-Login Updates:**
+If employee already logged in, allowlist entries do NOT automatically update existing users. You must manually update the user via Admin > Users.
+
+**Important:** Allowlist only affects NEW users on FIRST login. Existing users must be updated via Admin > Users page.
+
+### Managing Allowlist Entries
+
+**Editing Entries:**
+1. Click Edit icon next to allowlist entry
+2. Update User Type, Role, or Notes
+3. Changes apply to next NEW user with that email (not existing users)
+
+**Deactivating Entries:**
+1. Click Trash icon next to allowlist entry
+2. Confirm deactivation
+3. Entry marked Inactive (Status badge shows "Inactive")
+4. Email no longer receives auto-provisioned access on new logins
+
+**Reactivating Entries:**
+Deactivated entries cannot be reactivated via UI. Create new allowlist entry with same email.
+
+**Deleting Entries:**
+Soft delete only (sets `active = false`). Permanent deletion requires database access (contact IT/Engineering).
+
+### Security Considerations
+
+**Who Can Manage Allowlist:**
+- **super_admin** - Full CRUD access
+- **admin** - Read + create access (cannot deactivate super_admin entries)
+
+**Audit Trail:**
+All allowlist operations logged to `admin_logs` with:
+- Action (allowlist.create, allowlist.update, allowlist.delete)
+- Actor (user who made change)
+- Target (email address affected)
+- Changes (before/after values)
+- Timestamp
+
+**Compliance:**
+- **SOC 2** - Audit trail meets access control documentation requirements
+- **GDPR** - Email addresses stored with valid business purpose (access provisioning)
+- **Data Retention** - Deactivated entries retained for 7 years per audit policy
+
+---
+
+## Partner Employee Management
+
+**Location:** Partners > [Partner Name] > Employees Tab
+
+Manage employees and contacts for external partner companies (designers, factories, sourcing partners). Track employment status, roles, contact preferences, and portal access.
+
+### Overview
+
+Partner employees are individuals working for partner companies who interact with Limn Systems. This system manages their contact information, roles, employment status, and portal access.
+
+**Key Features:**
+- **Employment Tracking** - Start dates, end dates, status (active/inactive/terminated/on_leave)
+- **Department & Role** - Organize by department, track job titles
+- **Contact Preferences** - Primary contact, QC, production, finance roles
+- **Portal Access** - Enable/disable portal login for designers, factories, QC inspectors
+- **Multi-Language Support** - Track languages spoken for communication efficiency
+- **Soft Delete** - Mark employees inactive without losing historical data
+
+### Partner Employee Fields
+
+**Name & Identity:**
+- **First Name** (required)
+- **Last Name** (optional)
+- **Employee ID** - Partner's internal employee identifier
+- **Role/Title** (required) - Job title (e.g., "Senior Designer", "QC Manager", "Production Supervisor")
+
+**Contact Information:**
+- **Email** (required) - Work email address
+- **Phone** - Office phone number
+- **Mobile** - Mobile/cell phone number
+- **Preferred Contact Method** - Email, phone, mobile, WhatsApp, WeChat, etc.
+- **Timezone** - Employee's local timezone for scheduling calls
+- **Languages** - Languages spoken (array: English, Mandarin, Spanish, etc.)
+
+**Employment Details:**
+- **Department** - Department within partner company
+- **Employment Start Date** - Hire date
+- **Employment End Date** - Termination/departure date (if applicable)
+- **Employment Status** - active, inactive, terminated, on_leave
+
+**Role Flags:**
+- **Is Primary Contact** - Main point of contact for partner (only one per partner)
+- **Is QC Contact** - Quality control coordinator
+- **Is Production Contact** - Production floor coordinator
+- **Is Finance Contact** - Accounts payable/invoicing coordinator
+
+**Portal Access:**
+- **Portal Access Enabled** - Can log in to customer/designer/factory portal
+- **Portal Role** - Permissions within portal (viewer, editor, admin)
+
+**Other:**
+- **Notes** - Free-text notes about employee
+- **Active** - Whether employee record is active (soft delete flag)
+
+### Adding Partner Employees
+
+**Navigate to Partners > [Partner Name] > Employees Tab > Add Employee**.
+
+**Step-by-Step:**
+1. Enter first name and last name
+2. Enter job role/title
+3. Enter work email address
+4. (Optional) Add phone numbers, preferred contact method
+5. Select department from dropdown (or type new department)
+6. Set employment status (default: active)
+7. Check role flags (Is Primary, Is QC, Is Production, Is Finance)
+8. (Optional) Enable portal access if employee needs to log in
+9. (Optional) Add notes
+10. Click "Save"
+
+**Example:**
+```
+First Name: Ming
+Last Name: Chen
+Role: Senior QC Inspector
+Email: ming.chen@partnerfactory.com
+Mobile: +86-138-1234-5678
+Department: Quality Control
+Employment Status: active
+Is QC Contact: checked
+Languages: English, Mandarin
+Portal Access Enabled: checked (for inspection photo uploads)
+```
+
+**Best Practices:**
+- **Primary Contact** - Always designate one primary contact per partner
+- **QC/Production/Finance Contacts** - Multiple employees can have these flags
+- **Portal Access** - Only enable for employees who actively need system access
+- **Language Tracking** - Helps route communication to appropriate contacts
+
+### Managing Partner Employees
+
+**Editing Employees:**
+1. Navigate to Partners > [Partner Name] > Employees Tab
+2. Click Edit icon next to employee
+3. Update fields as needed
+4. Click "Save"
+
+**Setting Primary Contact:**
+1. Navigate to Partners > [Partner Name] > Employees Tab
+2. Click "Set as Primary" action next to employee
+3. Previous primary contact automatically demoted
+4. Only one primary contact allowed per partner
+
+**Deactivating Employees:**
+When partner employee leaves company or changes roles:
+1. Click "Deactivate" or trash icon next to employee
+2. System automatically:
+   - Sets `active = false`
+   - Sets `employment_status = terminated`
+   - Sets `employment_end_date = today`
+3. Employee record preserved for historical orders/communications
+
+**Filtering Employees:**
+- **By Employment Status** - Show only active, inactive, terminated, or on_leave
+- **By Department** - Filter to specific department
+- **By Active Status** - Show/hide deactivated employees
+
+**Searching Employees:**
+Use global search or partner-specific employee search to find employees by name, email, or role.
+
+### Portal Access for Partner Employees
+
+**Use Cases:**
+- **Designers** - Upload design files, view project status, track orders
+- **Factory QC** - Upload inspection photos, complete QC checklists
+- **Factory Production** - Update production status, upload progress photos
+- **Finance Contacts** - View invoices, download statements
+
+**Enabling Portal Access:**
+1. Edit partner employee record
+2. Check "Portal Access Enabled"
+3. Select "Portal Role" (viewer, editor, admin)
+4. Save changes
+5. System sends invitation email with magic link (passwordless login)
+
+**Portal Roles:**
+- **Viewer** - Read-only access to assigned projects/orders
+- **Editor** - Can upload files, update status, add comments
+- **Admin** - Full access to partner data, can invite other partner employees
+
+**Disabling Portal Access:**
+When employee leaves or no longer needs access:
+1. Edit employee record
+2. Uncheck "Portal Access Enabled"
+3. Save changes
+4. Employee can no longer log in to portal
+
+### Employee Search & Filtering
+
+**By Partner:**
+All employees for a specific partner automatically scoped to that partner.
+
+**By Department:**
+```
+Navigate to Partners > [Partner Name] > Employees Tab
+Select Department dropdown
+Choose department or "All Departments"
+```
+
+**By Employment Status:**
+```
+Navigate to Partners > [Partner Name] > Employees Tab
+Select Status dropdown
+Choose: All, Active, Inactive, Terminated, On Leave
+```
+
+**Global Search:**
+Use main navigation search bar to find employees across all partners by name or email.
+
+### Data Relationships
+
+**Partner Employees Link To:**
+- **Partner Company** - Parent company (designer, factory, sourcing partner)
+- **Orders** - Orders where this employee was contact
+- **Communications** - Email threads, phone logs with this employee
+- **Portal Sessions** - Login history if portal access enabled
+- **Audit Logs** - Changes to employee record
+
+**Related Documentation:**
+- [Partners Module](/partners) - Managing partner companies
+- [Portals](/portals) - Portal access for customers and partners
+- [Orders](/orders) - Order management and partner coordination
+
+---
+
+## Teams & Internal Organization
+
+The system includes `teams` and `team_members` tables for organizing internal employees into functional groups (Sales, Design, Production, QC, Shipping, Finance). However, UI for team management is not yet implemented.
+
+**Future Functionality (Roadmap):**
+- Team creation and management UI
+- Team-based task assignment
+- Team performance dashboards
+- Team communication channels
+
+**Current State:**
+Teams can be created via API or database, but there is no admin UI for team management. See [Architecture](/architecture) for database schema details.
+
+---
+
+## Integration with User Management
+
+Partner employee management is separate from internal user management:
+
+**Internal Users (Limn Systems Employees):**
+- Managed via Admin > Users
+- Authentication via OAuth or magic links
+- Assigned roles via RBAC system
+- See [Administration](/admin) and [Roles & Permissions](/rbac)
+
+**Partner Employees (External Contacts):**
+- Managed via Partners > [Partner] > Employees
+- Optional portal access (passwordless magic links)
+- Limited portal roles (viewer/editor/admin)
+- No access to internal system features
+
+**Key Difference:**
+Internal users have full ERP system access based on their role. Partner employees only access customer/designer/factory portals with limited functionality.
+
+---
+
+## Related Documentation
+
+- **[Administration](/admin)** - User management, roles, permissions, audit logs
+- **[Roles & Permissions](/rbac)** - Complete RBAC system documentation
+- **[Partners](/partners)** - Managing designer, factory, and sourcing partners
+- **[Portals](/portals)** - Customer and partner portal access
+- **[Documents](/documents)** - Employee document management (contracts, onboarding, certifications)
+
+---
+
+## Frequently Asked Questions
+
+**Q: Can I add non-@limn.us.com employees as internal users?**
+A: No. Internal employee authentication requires @limn.us.com Google Workspace accounts. For contractors or partners, use portal access instead.
+
+**Q: How do I change an employee's role after they've already logged in?**
+A: Admin allowlist only affects new users. For existing users, go to Admin > Users, find the user, and update their role manually.
+
+**Q: What's the difference between deactivating an allowlist entry vs deactivating a user?**
+A: Deactivating an allowlist entry prevents future auto-provisioning. Deactivating a user (Admin > Users) revokes their current access. Both are independent operations.
+
+**Q: Can partner employees access internal ERP features?**
+A: No. Partner employees only access portals (customer/designer/factory) with limited functionality. Internal ERP features require @limn.us.com employee accounts.
+
+**Q: How do I bulk import partner employees from a CSV?**
+A: Not yet supported. Contact engineering team for bulk import assistance.
+
+**Q: Can I set employment end dates in advance for temporary workers?**
+A: Yes. Enter future date in "Employment End Date" field. System will not automatically deactivate employee on that date - you must manually deactivate when appropriate.
+
+**Q: Do partner employees receive email notifications?**
+A: Yes, if their email is valid and they're set as relevant contact type (primary, QC, production, finance). See [Automation](/automation) for notification rules.
+
+**Q: Can multiple partner employees have portal access?**
+A: Yes. Enable portal access for as many employees as needed. Each receives unique magic link for passwordless login.
+
+---
+
+## Summary
+
+The Limn Systems ERP provides foundational employee and contact management capabilities:
+
+**Internal Employees:**
+- OAuth authentication with @limn.us.com domain restriction
+- Admin allowlist for automatic access provisioning
+- Comprehensive user/role/permission management via Admin module
+
+**Partner Employees:**
+- Contact tracking for external partner staff
+- Employment status and role management
+- Optional portal access for collaboration
+- Department and contact preference organization
+
+For advanced RBAC and user administration features, see [Administration](/admin) and [Roles & Permissions](/rbac).
